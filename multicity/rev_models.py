@@ -4,8 +4,8 @@ Post-freeze, supplementary. Nothing frozen and nothing of plan 9 is rewritten; o
 
 What is fitted (REV_EQ; #1 d, #2 ln d, #4 P_j, #5 E_j (LODES jobs), #6 N_j, #7 a_j; every numeral is a constant):
   an ablation ladder with POI count as the mass (gravity -> stretched exponential -> + area -> + a parametric
-  distance x size interaction -> Scaled kernel -> + a separate log N term); the separable twin of the Scaled kernel
-  (same inputs, same five constants, no coupling); the Scaled kernel with ln a_j instead of a_j^theta4 (invariant to
+  distance x size interaction -> Reach model -> + a separate log N term); the separable twin of the Reach model
+  (same inputs, same five constants, no coupling); the Reach model with ln a_j instead of a_j^theta4 (invariant to
   the area unit); the same comparisons with LODES employment as the mass (independent of the POI catalogue); a
   uniform-choice null model (pseudo-R2).
 Protocol = plan 9's: fitted on train x search blocks (300 sampled origins, 5 starts, seed 0), scored on the test
@@ -66,18 +66,18 @@ CONTRASTS = [
     ("str3_N", "grav_N", "stretched-exponential distance instead of a power law"),
     ("str3a_N", "str3_N", "+ log area"),
     ("int_N", "str3a_N", "+ parametric distance x size interaction"),
-    ("sk", "sep_N", "coupling: Scaled kernel vs its separable twin (same inputs, 5 constants each)"),
-    ("sk", "int_N", "Scaled kernel vs the interaction logit"),
-    ("sk", "str3_N", "Scaled kernel vs the strongest benchmark (both refitted here)"),
+    ("sk", "sep_N", "coupling: Reach model vs its separable twin (same inputs, 5 constants each)"),
+    ("sk", "int_N", "Reach model vs the interaction logit"),
+    ("sk", "str3_N", "Reach model vs the strongest benchmark (both refitted here)"),
     ("sk_plus", "sk", "+ a separate log N term"),
     ("sk_lna", "sk", "ln a instead of a^theta4"),
     ("sk", "sk_frozen", "refit here vs the frozen fit"),
-    ("sk_frozen", "tp_frozen", "Scaled kernel vs Tempered power law (frozen fits)"),
-    ("sk_frozen", "tr_frozen", "Scaled kernel vs Two-regime power law (frozen fits)"),
+    ("sk_frozen", "tp_frozen", "Reach model vs Tempered power law (frozen fits)"),
+    ("sk_frozen", "tr_frozen", "Reach model vs Two-regime power law (frozen fits)"),
     ("grav_E", "grav_P", "employment instead of population as the mass"),
     ("grav_N", "grav_E", "POI count instead of employment as the mass"),
-    ("sk_E", "str3_E", "employment mass: Scaled kernel vs stretched exponential"),
-    ("sk_E", "sep_E", "employment mass: coupling (Scaled kernel vs separable twin)"),
+    ("sk_E", "str3_E", "employment mass: Reach model vs stretched exponential"),
+    ("sk_E", "sep_E", "employment mass: coupling (Reach model vs separable twin)"),
     ("sk_E1", "sep_E1", "employment mass, shift held at +1: coupling"),
 ]
 FROZEN = {"sk_frozen": "c0355r1", "tp_frozen": "c0262", "tr_frozen": "c0514c1"}

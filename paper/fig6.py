@@ -1,6 +1,6 @@
 """Fig. 6 | Predicted flows in a city that was never used.
 
-Claim: with constants that no Denver trip entered, the scaled kernel reproduces the largest flows of the city; the
+Claim: with constants that no Denver trip entered, the Reach model reproduces the largest flows of the city; the
 earlier models — as published or with the POI count as the mass — put them in the wrong places.
   a  the 2,000 largest flows: observed above ours; power gravity, radiation and the stretched exponential of Guo et
      al., as published above the same model with the POI count as the mass (hero panel)
@@ -110,7 +110,7 @@ def build(d: dict, od: dict = None):
     shared = {}
     ax = fig.add_subplot(top[1, 0])
     flow_map(ax, g, t, win, key(OURS), P["ours"])
-    ax.text(0.5, 1.02, "Scaled kernel, ours", transform=ax.transAxes, fontsize=7, color=P["ours"], ha="center", va="bottom")
+    ax.text(0.5, 1.02, "Reach model, ours", transform=ax.transAxes, fontsize=7, color=P["ours"], ha="center", va="bottom")
     shared[OURS] = int((obs & (t[f"tier_{key(OURS)}"] > 0)).sum())
     under(ax, f"{shared[OURS]:,} in observed top {N_TOP:,}")
     for c, (f, name, _, _) in enumerate(FAMILIES, start=2):
@@ -127,7 +127,7 @@ def build(d: dict, od: dict = None):
                 ax.text(-0.035, 0.5, lab, transform=ax.transAxes, rotation=90, fontsize=6.5, color=colour, ha="right", va="center")
     style.panel_label(ax_obs, "a", dx=10, dy=4)
 
-    models = [(OURS, "Scaled kernel, ours", P["ours"], "o", "-", 1.5)] + \
+    models = [(OURS, "Reach model, ours", P["ours"], "o", "-", 1.5)] + \
              [(f"{f}_{v}", name, VERSION[v][1], mk, ls, 1.0) for f, name, mk, ls in FAMILIES for v in "PN"]
 
     def face(m, colour):                          # hollow = as published, filled = with the POI count (as in Fig. 5a)
@@ -162,7 +162,7 @@ def build(d: dict, od: dict = None):
                           alignment="left")
         leg.get_title().set_color(colour)
         ax_b.add_artist(leg)
-    ax_b.legend(handles=[Line2D([], [], color=P["ours"], lw=1.5, marker="o", ms=2.8, mec="white", mew=0.3, label="Scaled kernel, ours")],
+    ax_b.legend(handles=[Line2D([], [], color=P["ours"], lw=1.5, marker="o", ms=2.8, mec="white", mew=0.3, label="Reach model, ours")],
                 loc="lower right", bbox_to_anchor=(1.03, -0.02), fontsize=5.5, handlelength=2.6)
     style.panel_label(ax_b, "b", dx=26)
 
@@ -189,7 +189,7 @@ def build(d: dict, od: dict = None):
     ax_c.set_xlabel("Trip distance (km)", x=1.042)
     ax_c.set_ylabel("Predicted / observed trips")
     dark = P["heldout"]                            # the line style says which model; the colour is the version, named above each half
-    ax_c.legend(handles=[Line2D([], [], color=P["ours"], lw=1.5, label="Scaled kernel, ours")] +
+    ax_c.legend(handles=[Line2D([], [], color=P["ours"], lw=1.5, label="Reach model, ours")] +
                         [Line2D([], [], color=dark, lw=1.0, ls=ls, label=SHORT.get(name, name)) for _, name, _, ls in FAMILIES],
                 loc="upper center", bbox_to_anchor=(1.042, -0.27), ncols=2, fontsize=5.5, handlelength=2.6, labelspacing=0.25, columnspacing=1.6)
     style.panel_label(ax_c, "c", dx=26)

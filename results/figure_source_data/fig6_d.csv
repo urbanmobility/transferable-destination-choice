@@ -1,5 +1,5 @@
 model,label,version,cpc
-c0355r1,"Scaled kernel, ours",ours,0.5673000360137044
+c0355r1,"Reach model, ours",ours,0.5673000360137044
 grav_power_P,Gravity,as published,0.4943220928508004
 grav_power_N,Gravity,with POI count,0.5513441264541643
 rad_P,Radiation,as published,0.2707731743745246

@@ -13,7 +13,7 @@ Fixed here before anything is computed:
   references  gravity and M2 as before (fitted on train x search), scored on the same all-destination block.
   reported    per city NLL, CPC and share = (gravity - NLL) / (gravity - M2); then
               (1) median share and CPC with all destinations next to the block values;
-              (2) scaled kernel minus the strongest earlier model, local constants and uniform constants: paired share
+              (2) Reach model minus the strongest earlier model, local constants and uniform constants: paired share
                   difference on the 32 target cities (as C1 and C2) and on all 67, city-bootstrap interval, wins;
               (3) per city, block share against all-destination share (Spearman).
   not a test  3 of the 5 destination blocks were used to fit the constants, so for those destinations only the period

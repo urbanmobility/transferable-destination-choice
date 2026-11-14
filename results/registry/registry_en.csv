@@ -13,14 +13,14 @@ H3-01,Flexible model (banded): ed at 5-10 km ~ log population (-),"-0.166 [-0.23
 H3-02,"Flexible model (banded): slope of eN on ln d, median over cities (+)","0.143 [0.112, 0.155]",0.0000 (<0.001),yes,f9ad6c9f0358
 H4-01,Tempered power law: ed at 5-10 km ~ log population (-),"-0.148 [-0.214, -0.097]",0.0000 (<0.001),yes,2ea7ec6f3e3a
 H4-02,Two-regime power law: ed at 5-10 km ~ log population (-),"-0.116 [-0.189, -0.056]",0.0000 (<0.001),yes,0dc790925111
-H4-03,Scaled kernel: ed at 5-10 km ~ log population (-),"-0.104 [-0.189, -0.040]",0.0016 (0.016),yes,5994ef29e5ed
+H4-03,Reach model: ed at 5-10 km ~ log population (-),"-0.104 [-0.189, -0.040]",0.0016 (0.016),yes,5994ef29e5ed
 P7-01,Two-regime power law: turning distance r (km) ~ log population (-),"-2.791 [-4.889, -1.214]",0.0002 (0.0020),yes,0.84
-P7-02,"Scaled kernel: transfer loss, the extra test NLL (nats per visit) with median discovery-city parameters instead of the local fit ~ log population (+)","0.0026 [-0.0041, 0.0078]",0.4148 (1.0000),no,0.75
+P7-02,"Reach model: transfer loss, the extra test NLL (nats per visit) with median discovery-city parameters instead of the local fit ~ log population (+)","0.0026 [-0.0041, 0.0078]",0.4148 (1.0000),no,0.75
 P7-03,Tempered power law: ed at 5-10 km ~ main-road density (-),"-0.131 [-0.270, -0.034]",0.0104 (0.0936),no*,1.24
-P7-04,Scaled kernel: slope of eN on ln d ~ residential compactness (-),"-0.249 [-0.612, 0.056]",0.1240 (0.8992),no,1.15
-P7-05,Scaled kernel: slope of eN on ln d ~ subcentre job share (-),"-0.155 [-0.449, 0.033]",0.1124 (0.8992),no,0.98
+P7-04,Reach model: slope of eN on ln d ~ residential compactness (-),"-0.249 [-0.612, 0.056]",0.1240 (0.8992),no,1.15
+P7-05,Reach model: slope of eN on ln d ~ subcentre job share (-),"-0.155 [-0.449, 0.033]",0.1124 (0.8992),no,0.98
 P7-06,Flexible model: ed at 10-20 km ~ main-road density (-),"-0.131 [-0.397, 0.082]",0.2088 (1.0000),no,1.21
-P7-07,Scaled kernel: ed at 5-10 km ~ road circuity (+),"0.679 [-0.661, 1.980]",0.3312 (1.0000),no,1.24
+P7-07,Reach model: ed at 5-10 km ~ road circuity (+),"0.679 [-0.661, 1.980]",0.3312 (1.0000),no,1.24
 P7-08,Flexible model: ed at 1-2 km ~ road circuity (+),"0.533 [-1.196, 2.539]",0.5216 (1.0000),no,1.03
 P7-09,Flexible model: ed beyond 20 km ~ subcentre job share (+),"0.632 [-0.969, 3.091]",0.4220 (1.0000),no,1.47
 P7-10,Flexible model: ed at 10-20 km ~ Gini of tract population density (-),"-0.258 [-1.254, 0.963]",0.6816 (1.0000),no,1.21

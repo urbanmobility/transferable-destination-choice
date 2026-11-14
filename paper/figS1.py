@@ -3,7 +3,7 @@
 Size elasticity of the banded flexible model against distance, at one reference point shared by every city and band
 (rev_banded.py): a POI count; b employment as the banded mass; c employment with log POI count held fixed;
 d POI count, non-work visits. Thin lines: cities (bands with >= 1,000 training visits); thick: cross-city median.
-Panel a also shows the Scaled kernel's median at the same points. Text: the number of cities whose elasticity rises
+Panel a also shows the Reach model's median at the same points. Text: the number of cities whose elasticity rises
 with ln d (OLS slope > 0).
 """
 import numpy as np
@@ -44,8 +44,8 @@ def build():
         ax.plot(med.index, med.values, color=P["flexible"], lw=1.6, zorder=3, label="Flexible, median")
         ax.plot([], [], color=P["discovery"], lw=0.6, label="Flexible, cities")
         if v == "fixed":
-            sk = t[t["model"] == "Scaled kernel"].groupby("d_ref")["eN"].median()
-            ax.plot(sk.index, sk.values, color=P["ours"], lw=1.6, zorder=4, label="Scaled kernel, median")
+            sk = t[t["model"] == "Reach model"].groupby("d_ref")["eN"].median()
+            ax.plot(sk.index, sk.values, color=P["ours"], lw=1.6, zorder=4, label="Reach model, median")
             ax.legend(loc="upper left", fontsize=5.5, handlelength=1.6, labelspacing=0.3, frameon=False)
         n_up, n = rising(f)
         ax.text(0.97, 0.04, f"rising {n_up}/{n}", transform=ax.transAxes, ha="right", va="bottom", fontsize=6, color=P["ref"])
@@ -60,7 +60,7 @@ def build():
         style.panel_label(ax, "abcd"[k], dx=22)
         src[v] = f[["city", "band", "d_ref", "eN"]].assign(model="Flexible")
         if v == "fixed":
-            src[v] = pd.concat([src[v], t[t["model"] == "Scaled kernel"][["city", "band", "d_ref", "eN"]].assign(model="Scaled kernel")])
+            src[v] = pd.concat([src[v], t[t["model"] == "Reach model"][["city", "band", "d_ref", "eN"]].assign(model="Reach model")])
     lo = min(a.get_ylim()[0] for a in axes)
     hi = max(a.get_ylim()[1] for a in axes)
     for a in axes:

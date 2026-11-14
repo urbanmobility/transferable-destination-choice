@@ -17,11 +17,11 @@ OUT = Path(__file__).resolve().parents[3] / "manuscript" / "supp"
 SET = {"discovery": "D", "heldout": "H", "confirmation": "C"}
 MODEL = {"null_unif": "Uniform choice", "grav_P": "Power-law gravity, population", "grav_N": "Power-law gravity, POI",
          "str3_N": "Relaxed stretched exp., POI", "str3a_N": "+ $\\ln a_j$", "int_N": "+ $\\ln d$, $\\ln d\\cdot\\ln(N_j+1)$",
-         "sep_N": "Separable twin of the Scaled kernel", "sk": "Scaled kernel", "sk_lna": "Scaled kernel, $\\theta_4\\ln a_j$",
-         "sk_plus": "Scaled kernel $+\\ \\gamma\\ln(N_j+c)$", "sk_plus1": "Scaled kernel $+\\ \\gamma\\ln(N_j+1)$, shift $+1$",
-         "sep_E1": "Separable twin, employment, shift $+1$", "sk_E1": "Scaled kernel, employment, shift $+1$", "grav_E": "Power-law gravity, employment",
-         "str3_E": "Relaxed stretched exp., employment", "sep_E": "Separable twin, employment", "sk_E": "Scaled kernel, employment",
-         "sk_frozen": "Scaled kernel (frozen fit)", "tp_frozen": "Tempered power law (frozen fit)",
+         "sep_N": "Separable twin of the Reach model", "sk": "Reach model", "sk_lna": "Reach model, $\\theta_4\\ln a_j$",
+         "sk_plus": "Reach model $+\\ \\gamma\\ln(N_j+c)$", "sk_plus1": "Reach model $+\\ \\gamma\\ln(N_j+1)$, shift $+1$",
+         "sep_E1": "Separable twin, employment, shift $+1$", "sk_E1": "Reach model, employment, shift $+1$", "grav_E": "Power-law gravity, employment",
+         "str3_E": "Relaxed stretched exp., employment", "sep_E": "Separable twin, employment", "sk_E": "Reach model, employment",
+         "sk_frozen": "Reach model (frozen fit)", "tp_frozen": "Tempered power law (frozen fit)",
          "tr_frozen": "Two-regime power law (frozen fit)"}
 
 
@@ -75,14 +75,14 @@ def s1() -> str:
 def s5() -> str:
     t = pd.read_csv(RT / "abs_nll.csv", dtype={"city": str}).sort_values(["set", "name"])
     cols = [("nll_uniform_choice", "Uniform"), ("nll_gravity_pop", "Grav. P"), ("nll_gravity_poi", "Grav. N"),
-            ("nll_scaled", "Scaled"), ("nll_tempered", "Tempered"), ("nll_two_regime", "Two-reg."), ("nll_flexible", "Flexible"),
-            ("gap_nats", "Gap"), ("pseudo_r2_scaled", "$R^2_{\\mathrm{McF}}$")]
+            ("nll_reach", "Reach"), ("nll_tempered", "Tempered"), ("nll_two_regime", "Two-reg."), ("nll_flexible", "Flexible"),
+            ("gap_nats", "Gap"), ("pseudo_r2_reach", "$R^2_{\\mathrm{McF}}$")]
     cols = [c for c in cols if c[0] in t]
     rows = [[tex_escape(r["name"].split(",")[0]), SET[r["set"]]] + [num(r[k], 3) for k, _ in cols] for _, r in t.iterrows()]
     cap = ("Absolute fit per city: NLL in nats per visit on the test period and reserved block. Uniform: uniform choice over "
            "the block's destinations. Grav. P and Grav. N: power-law gravity with residential population (the share-0 "
            "reference) and with POI count. Flexible: the 22-parameter reference (share 1). Gap: Grav. P minus Flexible. "
-           "$R^2_{\\mathrm{McF}}$: 1 minus the Scaled kernel's NLL over the uniform-choice NLL. Group as in Table~S1.")
+           "$R^2_{\\mathrm{McF}}$: 1 minus the Reach model's NLL over the uniform-choice NLL. Group as in Table~S1.")
     return table("S5", cap, ["City", "G"] + [h for _, h in cols], rows, "lc" + "r" * len(cols), long=True, size="\\scriptsize")
 
 
@@ -100,7 +100,7 @@ def s6_percity() -> str:
     th = d.round(3)                                   # the example uses the printed (rounded) constants
     ex_d, ex_N, ex_a = 5.0, 71.0, 2.6
     eta = ex_a ** th["theta4"] - th["theta0"] * ex_d ** th["theta1"] / (ex_N + th["theta2"]) ** th["theta3"]
-    cap = ("Scaled-kernel constants per city (standard errors in parentheses) in "
+    cap = ("Reach-model constants per city (standard errors in parentheses) in "
            "$\\eta_{ij}=a_j^{\\theta_4}-\\theta_0 d^{\\theta_1}/(N_j+\\theta_2)^{\\theta_3}$, with $d$ in km, $a_j$ in km$^2$ and "
            "$N_j$ the count of places with at least one visit. The default row is the uniform parameter vector used for "
            f"transfer. Worked example with the default: a destination 5~km away with $N_j=71$ and $a_j=2.6$~km$^2$ has "
@@ -119,7 +119,7 @@ def s6() -> str:
     parts = []
     bands = pd.read_csv(FD / "bands.csv", dtype={"city": str})
     for ref, lab, med in (("band", "band medians (main figures)", bands.groupby(["model", "band"])[["ed", "eN"]].median().reset_index()),):
-        for m in ("Flexible", "Scaled kernel", "Tempered power law", "Two-regime power law"):
+        for m in ("Flexible", "Reach model", "Tempered power law", "Two-regime power law"):
             g = med[med["model"] == m].set_index("band")
             parts.append([f"{m}, {lab}", "$e_N$"] + [num(g["eN"].get(b), 2) for b in range(6)])
     for v, lab in (("fixed", "common point"), ("emp", "employment, common point"), ("empN", "employment, net of $\\ln N$"),
@@ -129,7 +129,7 @@ def s6() -> str:
             continue
         g0 = pd.read_csv(p)
         g0 = g0[g0["ref"] == "fixed"]
-        for m in (("Flexible", "Scaled kernel", "Tempered power law", "Two-regime power law") if v == "fixed" else ("Flexible",)):
+        for m in (("Flexible", "Reach model", "Tempered power law", "Two-regime power law") if v == "fixed" else ("Flexible",)):
             g = g0[g0["model"] == m].set_index("band")
             parts.append([f"{m}, {lab}", "$e_N$" if v not in ("emp", "empN") else "$e_E$"] + [num(g["eN"].get(b), 2) for b in range(6)])
     rise = []
@@ -237,9 +237,9 @@ def s_r1(label: str, line: str, pairs: list, models: list, what: str) -> str:
     return out
 
 
-QUANT = {"theta_turn_c0514c1": "Two-regime: turning distance $r$", "transfer_loss_c0355r1": "Scaled kernel: transfer loss",
-         "ed_5_10km_c0262": "Tempered: $e_d$ at 5--10~km", "slope_eN_logd_c0355r1": "Scaled kernel: slope of $e_N$ on $\\ln d$",
-         "ed_5_10km_c0355r1": "Scaled kernel: $e_d$ at 5--10~km", "ed_10_20km": "Flexible: $e_d$ at 10--20~km",
+QUANT = {"theta_turn_c0514c1": "Two-regime: turning distance $r$", "transfer_loss_c0355r1": "Reach model: transfer loss",
+         "ed_5_10km_c0262": "Tempered: $e_d$ at 5--10~km", "slope_eN_logd_c0355r1": "Reach model: slope of $e_N$ on $\\ln d$",
+         "ed_5_10km_c0355r1": "Reach model: $e_d$ at 5--10~km", "ed_10_20km": "Flexible: $e_d$ at 10--20~km",
          "ed_1_2km": "Flexible: $e_d$ at 1--2~km", "ed_20km": "Flexible: $e_d$ beyond 20~km", "log_population": "log population",
          "road_density": "main-road density", "compactness": "residential compactness", "subcentre_job_share": "subcentre job share",
          "circuity": "road circuity", "pop_density_gini": "Gini of population density"}
@@ -286,13 +286,13 @@ def s18() -> str:
     short = lambda n: n.split(",")[0].split("-")[0]  # noqa: E731
     b["short"] = b["name"].map(short)
     order = ["Denver", "Philadelphia", "Phoenix", "Pittsburgh", "Sacramento", "San Diego"]
-    lab = {"scaled_kernel": "Scaled kernel", "strexp3_N": "Relaxed stretched exp., POI (strongest benchmark)",
+    lab = {"reach_model": "Reach model", "strexp3_N": "Relaxed stretched exp., POI (strongest benchmark)",
            "distance_only": "Distance only, $\\exp(-\\beta\\ln d)$", "uniform_dest": "Uniform destinations",
-           "scaled_kernel_pop": "Scaled kernel, origin totals $\\propto$ population"}
+           "reach_model_pop": "Reach model, origin totals $\\propto$ population"}
     rows = []
     for metric, nd in (("top2000", 0), ("cpc", 3)):
         rows.append([f"\\multicolumn{{7}}{{l}}{{\\textit{{{'Top-2,000 flows recovered' if metric == 'top2000' else 'CPC'}}}}}"])
-        for m in ("scaled_kernel", "strexp3_N", "distance_only", "uniform_dest", "scaled_kernel_pop"):
+        for m in ("reach_model", "strexp3_N", "distance_only", "uniform_dest", "reach_model_pop"):
             g = b[b["model"] == m].set_index("short")[metric]
             rows.append([lab[m]] + [num(float(g.get(c, np.nan)), nd) for c in order])
         if "model" in o.columns:
@@ -316,17 +316,17 @@ STEPS = [("grav_N", "grav_P", "POI count instead of population as mass"),
          ("str3_N", "grav_N", "Stretched-exponential instead of power-law distance"),
          ("str3a_N", "str3_N", "$+\ \ln a_j$ (the strongest benchmark plus area)"),
          ("int_N", "str3a_N", "$+\ \ln d$ and $\ln d\cdot\ln(N_j+1)$ (interaction logit)"),
-         ("sk", "str3_N", "Scaled kernel vs the strongest benchmark"),
-         ("sk", "sep_N", "Scaled kernel vs its separable twin (coupling)"),
-         ("sk", "int_N", "Scaled kernel vs the interaction logit"),
-         ("sk_plus1", "sk", "Scaled kernel $+\ \gamma\ln(N_j+1)$ vs Scaled kernel"),
-         ("sk_lna", "sk", "Scaled kernel with $\\theta_4\\ln a_j$ vs with $a_j^{\\theta_4}$"),
-         ("sk_frozen", "tp_frozen", "Scaled kernel vs Tempered power law"),
-         ("sk_frozen", "tr_frozen", "Scaled kernel vs Two-regime power law")]
+         ("sk", "str3_N", "Reach model vs the strongest benchmark"),
+         ("sk", "sep_N", "Reach model vs its separable twin (coupling)"),
+         ("sk", "int_N", "Reach model vs the interaction logit"),
+         ("sk_plus1", "sk", "Reach model $+\ \gamma\ln(N_j+1)$ vs Reach model"),
+         ("sk_lna", "sk", "Reach model with $\\theta_4\\ln a_j$ vs with $a_j^{\\theta_4}$"),
+         ("sk_frozen", "tp_frozen", "Reach model vs Tempered power law"),
+         ("sk_frozen", "tr_frozen", "Reach model vs Two-regime power law")]
 EMP_STEPS = [("grav_E", "grav_P", "Employment instead of population as mass"),
              ("grav_N", "grav_E", "POI count instead of employment as mass"),
-             ("sk_E", "str3_E", "Scaled kernel vs stretched exponential, employment mass"),
-             ("sk_E1", "sep_E1", "Scaled kernel vs separable twin, employment mass (shifts $+1$)")]
+             ("sk_E", "str3_E", "Reach model vs stretched exponential, employment mass"),
+             ("sk_E1", "sep_E1", "Reach model vs separable twin, employment mass (shifts $+1$)")]
 
 
 def _contrasts(line):
@@ -349,7 +349,7 @@ def s7() -> str:
     rows = [[lab] + [_cell(C[l], a, b) for l, _ in LINES3] for a, b, lab in STEPS]
     rows.append(["\\multicolumn{4}{l}{\\textit{Employment (LODES) as destination mass, all visits}}"])
     rows += [[lab, _cell(C["all"], a, b), "--", "--"] for a, b, lab in EMP_STEPS]
-    cap = ("What the Scaled kernel's accuracy consists of: an ablation ladder in the 32 target cities with local parameters. "
+    cap = ("What the Reach model's accuracy consists of: an ablation ladder in the 32 target cities with local parameters. "
            "Each cell gives the paired difference $\\Delta$NLL $=\\mathrm{NLL}_b-\\mathrm{NLL}_a$ in nats per visit for the row's "
            "comparison of model $a$ with model $b$ (positive: $a$ fits better; median over cities, city-bootstrap 95\\% interval "
            "from 5,000 resamples) and the number of cities in which $a$ fits better. A city in which a model's utility is "
@@ -374,7 +374,7 @@ def s4() -> str:
     for k, lab in (("nll_uniform_choice", "Uniform choice"), ("nll_gravity_pop", "Power-law gravity, population (share 0)"),
                    ("nll_gravity_poi", "Power-law gravity, POI count"), ("nll_strexp3_poi", "Relaxed stretched exponential, POI"),
                    ("nll_two_regime", "Two-regime power law"), ("nll_tempered", "Tempered power law"),
-                   ("nll_scaled", "Scaled kernel"), ("nll_flexible", "Flexible model (share 1)")):
+                   ("nll_reach", "Reach model"), ("nll_flexible", "Flexible model (share 1)")):
         v = t[k]
         rows.append([lab, num(v.median(), 4), f"{num(v.quantile(.25), 3)}--{num(v.quantile(.75), 3)}",
                      num((1 - v / u).median(), 3), num(((t['nll_gravity_pop'] - v) / gap).median(), 3)])
@@ -384,8 +384,8 @@ def s4() -> str:
            f"destinations); share as in the main text. The gravity-to-flexible gap has a median of {num(gap.median(), 3)} nats "
            f"(range {num(gap.min(), 3)}--{num(gap.max(), 3)}). It is smallest in Charleston ({num(ch['gap_nats'], 3)}), where the "
            f"flexible model is {num(ch['nll_flexible'] - ch['nll_gravity_poi'], 3)} nats worse than POI gravity on the reserved "
-           "block, which gives the shares above 2 in Fig.~2d. Re-anchored at POI gravity, the Scaled kernel's median share is "
-           f"{num(((t['nll_gravity_poi'] - t['nll_scaled']) / (t['nll_gravity_poi'] - t['nll_flexible'])).median(), 2)}. "
+           "block, which gives the shares above 2 in Fig.~2d. Re-anchored at POI gravity, the Reach model's median share is "
+           f"{num(((t['nll_gravity_poi'] - t['nll_reach']) / (t['nll_gravity_poi'] - t['nll_flexible'])).median(), 2)}. "
            "Per-city values are in Additional file~2.")
     return table("S4", cap, ["Model", "NLL", "IQR", "Pseudo-$R^2$", "Share"], rows, "lrrrr")
 
@@ -404,7 +404,7 @@ def s5() -> str:
                      num(r["median se"], 3)])
     th = sm["default (discovery median)"].round(3)
     eta = 2.6 ** th["theta4"] - th["theta0"] * 5.0 ** th["theta1"] / (71.0 + th["theta2"]) ** th["theta3"]
-    cap = ("Scaled-kernel constants, $\\eta_{ij}=a_j^{\\theta_4}-\\theta_0 d^{\\theta_1}/(N_j+\\theta_2)^{\\theta_3}$ with $d$ in km, "
+    cap = ("Reach-model constants, $\\eta_{ij}=a_j^{\\theta_4}-\\theta_0 d^{\\theta_1}/(N_j+\\theta_2)^{\\theta_3}$ with $d$ in km, "
            "$a_j$ in km$^2$ and $N_j$ the count of places with at least one visit. Default: the uniform parameter vector used "
            "for transfer (median over the 35 discovery cities). SE: median standard error of the city fits. $\\theta_0$, "
            "$\\theta_1$ and $\\theta_3$ are positive in all 67 cities, so the size elasticity rises with distance in every city; "
@@ -418,17 +418,17 @@ def additional_file_2(path: Path):
     """City-level results as a workbook (one sheet per table)."""
     c = cities()[["city", "name", "set", "role", "population", "n_units", "train_trips", "val_trips", "test_trips", "poi", "jobs",
                   "home_devices"]]
-    sheets = {"README": pd.DataFrame({"sheet": ["cities", "fit_by_city", "scaled_kernel_constants", "elasticities",
+    sheets = {"README": pd.DataFrame({"sheet": ["cities", "fit_by_city", "reach_model_constants", "elasticities",
                                                 "ablation_by_city", "ablation_contrasts"],
                                       "content": ["the 67 metropolitan areas: group, population, tracts, visits by period, POIs, jobs, devices",
                                                   "NLL (nats per visit) per city and model, test period x reserved block",
-                                                  "Scaled-kernel constants and standard errors per city (local fits)",
+                                                  "Reach-model constants and standard errors per city (local fits)",
                                                   "banded flexible model and library formulas: e_d and e_N per city and distance band, "
                                                   "at band-specific and common reference points, for four measurements",
                                                   "NLL and share per city, model, parameter level and input line of the ablation ladder",
                                                   "paired NLL differences (all contrasts, both parameter levels, 32 target and 67 cities)"]}),
               "cities": c, "fit_by_city": pd.read_csv(RT / "abs_nll.csv", dtype={"city": str}),
-              "scaled_kernel_constants": pd.read_csv(RT / "sk_params.csv", dtype={"city": str})}
+              "reach_model_constants": pd.read_csv(RT / "sk_params.csv", dtype={"city": str})}
     el = [pd.read_csv(FD / "bands.csv", dtype={"city": str}).assign(variant="POI count", ref="band")]
     for v, lab in (("fixed", "POI count"), ("emp", "employment"), ("empN", "employment, log N fixed"), ("nonwork", "POI count, non-work visits")):
         p = FD / "rev" / f"banded_{v}.parquet"

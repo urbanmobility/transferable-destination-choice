@@ -15,7 +15,7 @@ PAPER = Path(__file__).resolve().parents[2] / "paper"
 FD, SD = PAPER / "figdata", PAPER / "source_data"
 RV, OUT = FD / "rev", PAPER / "tables" / "rev"
 B, SEED = 5000, 20261113
-SIZE_OUTCOMES = {"ed_5_10km": "Flexible model: e_d at 5-10 km", "ed_5_10km_c0355r1": "Scaled kernel: e_d at 5-10 km",
+SIZE_OUTCOMES = {"ed_5_10km": "Flexible model: e_d at 5-10 km", "ed_5_10km_c0355r1": "Reach model: e_d at 5-10 km",
                  "ed_5_10km_c0262": "Tempered power law: e_d at 5-10 km",
                  "ed_5_10km_c0514c1": "Two-regime power law: e_d at 5-10 km",
                  "theta_turn_c0514c1": "Two-regime power law: turning distance r (km)",
@@ -169,17 +169,17 @@ def t_coverage(c: pd.DataFrame, params: pd.DataFrame) -> tuple:
     from scipy.stats import spearmanr
     v = pd.read_csv(RV / "rev_coverage.csv", dtype={"city": str}).set_index("city")
     sh = pd.read_csv(FD / "shares.csv", dtype={"city": str})
-    sh = sh[sh["model"] == "Scaled kernel"].set_index("city")["share"]
+    sh = sh[sh["model"] == "Reach model"].set_index("city")["share"]
     t = pd.DataFrame({"set": c["set"].reindex(v.index), "log_population": c["log_population"].reindex(v.index),
                       "poi_per_1k_residents": 1000 * v["poi"] / v["pop"], "poi_per_km2": v["poi"] / v["area"],
                       "jobs_per_poi": v["jobs"] / v["poi"], "zero_poi_tracts": v["zero_poi"],
                       "devices_per_1k_residents": 1000 * v["home_devices"] / v["pop"],
-                      "share_scaled_kernel": sh.reindex(v.index)})
+                      "share_reach_model": sh.reindex(v.index)})
     p = params.set_index("city")
     t["theta2"], t["theta3"] = p["theta2"].reindex(t.index), p["theta3"].reindex(t.index)
     rows = []
     for x in ("poi_per_1k_residents", "poi_per_km2", "devices_per_1k_residents"):
-        for y in ("share_scaled_kernel", "theta2", "theta3", "log_population"):
+        for y in ("share_reach_model", "theta2", "theta3", "log_population"):
             ok = t[x].notna() & t[y].notna()
             r, pv = spearmanr(t.loc[ok, x], t.loc[ok, y])
             rows.append({"coverage": x, "with": y, "spearman": float(r), "p": float(pv), "n": int(ok.sum())})
@@ -195,7 +195,7 @@ def t_abs(c: pd.DataFrame) -> pd.DataFrame:
     t = pd.DataFrame(rows).set_index("city")
     t = t[t.index.isin(c.index)]
     sh = pd.read_csv(FD / "shares.csv", dtype={"city": str}).pivot(index="city", columns="model", values="nll")
-    for m, k in (("Scaled kernel", "nll_scaled"), ("Tempered power law", "nll_tempered"), ("Two-regime power law", "nll_two_regime")):
+    for m, k in (("Reach model", "nll_reach"), ("Tempered power law", "nll_tempered"), ("Two-regime power law", "nll_two_regime")):
         t[k] = sh[m].reindex(t.index)
     t["gap_nats"] = t["nll_gravity_pop"] - t["nll_flexible"]
     rv = RV / "models_all_scored.parquet"
@@ -206,11 +206,11 @@ def t_abs(c: pd.DataFrame) -> pd.DataFrame:
             if m in s:
                 t[k] = s[m].reindex(t.index)
         if "nll_uniform_choice" in t:
-            for k in ("nll_gravity_pop", "nll_gravity_poi", "nll_scaled", "nll_flexible"):
+            for k in ("nll_gravity_pop", "nll_gravity_poi", "nll_reach", "nll_flexible"):
                 if k in t:
                     t[k.replace("nll_", "pseudo_r2_")] = 1 - t[k] / t["nll_uniform_choice"]
             if "nll_gravity_poi" in t:
-                t["share_from_poi_gravity_scaled"] = (t["nll_gravity_poi"] - t["nll_scaled"]) / (t["nll_gravity_poi"] - t["nll_flexible"])
+                t["share_from_poi_gravity_reach"] = (t["nll_gravity_poi"] - t["nll_reach"]) / (t["nll_gravity_poi"] - t["nll_flexible"])
     t["set"] = c["set"].reindex(t.index)
     t["name"] = c["name"].reindex(t.index)
     return t.reset_index(names="city")
@@ -305,7 +305,7 @@ def main():
     params, summ = t_sk_params(c)
     params.to_csv(OUT / "sk_params.csv", index=False)
     summ.to_csv(OUT / "sk_params_summary.csv", index=False)
-    L += ["## Scaled-kernel constants", ""] + _md(summ) + [""]
+    L += ["## Reach-model constants", ""] + _md(summ) + [""]
     cov, rho = t_coverage(c, params)
     cov.to_csv(OUT / "coverage.csv", index=False)
     rho.to_csv(OUT / "coverage_spearman.csv", index=False)

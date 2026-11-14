@@ -9,7 +9,7 @@ Code and city-level results for
 We model where residents go when they leave home as a conditional-logit choice among the census tracts of their
 metropolitan area, and search for a compact utility by symbolic regression on 192 million home-based visits to points
 of interest (POIs) in 67 US metropolitan areas (March–May 2024). The search, fitted to the raw visit counts, found the
-**Scaled kernel**
+**Reach model**
 
 $$\eta_{ij} = a_j^{\theta_4} - \frac{\theta_0\, d_{ij}^{\theta_1}}{(N_j+\theta_2)^{\theta_3}},\qquad P(j\mid i)=\frac{e^{\eta_{ij}}}{\sum_k e^{\eta_{ik}}},$$
 
@@ -21,11 +21,11 @@ flexible model in 32 cities whose visits played no part in estimating it.
 
 ## Use the formula
 
-`scaled_kernel/` is a small, dependency-light module (numpy only) with the default parameters of the paper:
+`reach_model/` is a small, dependency-light module (numpy only) with the default parameters of the paper:
 
 ```python
 import numpy as np
-from scaled_kernel import choice_probabilities, flows, DEFAULT
+from reach_model import choice_probabilities, flows, DEFAULT
 
 d = ...          # origins x destinations distance matrix, km
 n_poi = ...      # POI count of every destination tract
@@ -35,13 +35,13 @@ T = flows(origin_totals, d, n_poi, area)            # production-constrained flo
 ```
 
 `DEFAULT` is the uniform parameter vector of Additional file 1, Table S5. Run its tests with
-`pytest scaled_kernel`.
+`pytest reach_model`.
 
 ## Repository layout
 
 | Path | Content |
 |---|---|
-| `scaled_kernel/` | the formula, its elasticities and default parameters |
+| `reach_model/` | the formula, its elasticities and default parameters |
 | `multicity/` | the full multi-city pipeline: data build, symbolic-regression search and candidate library, scoring, registered hypotheses, freeze and confirmation, benchmarks and parameter transfer, exploratory and revision analyses (`multicity/tests/` for unit tests) |
 | `sr/` | data rows, PySR set-up and conditional-logit loss, refitting, reference models |
 | `model/` | the conditional-logit engine and the flexible reference models |
@@ -62,7 +62,7 @@ order in which the stages were run.
 
 `results/` contains only city-level aggregates, no device or tract-pair data:
 
-- `city_level/` — per city: characteristics, fit (NLL) of every model, Scaled-kernel constants with standard errors,
+- `city_level/` — per city: characteristics, fit (NLL) of every model, Reach-model constants with standard errors,
   elasticities by distance band, and the model ablations (also Additional file 2 of the paper);
 - `benchmarks/` — the 29 model versions under four parameter sources in the 32 target cities, the selected opponents
   and the registered contrasts;

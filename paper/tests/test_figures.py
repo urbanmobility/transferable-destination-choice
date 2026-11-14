@@ -102,7 +102,7 @@ def test_fig2_counts(built):
     _, src = built["fig2"]
     assert src["a_b"][src["a_b"]["model"] == "Flexible"]["city"].nunique() == 67
     assert src["d"].groupby("model")["city"].nunique().to_dict() == {
-        "Scaled kernel": 67, "Tempered power law": 67, "Two-regime power law": 67}
+        "Reach model": 67, "Tempered power law": 67, "Two-regime power law": 67}
 
 
 def test_fig3_counts_and_the_shape_hypotheses(built, tables):
@@ -151,7 +151,7 @@ def test_fig5_shows_both_versions_and_all_four_contrasts(built, tables):
     a = src["a"]
     assert len(a) == 13 and int(a["population"].notna().sum()) == 11 and int(a["poi"].notna().sum()) == 12
     assert set(a.loc[a["this_study"], "family"]) == {"strexp3", "S0"} and a["source"].str.len().gt(0).all()
-    o = src["a_ours"]                                               # our three formulas, the scaled kernel first and highest
+    o = src["a_ours"]                                               # our three formulas, the Reach model first and highest
     assert o["model"].tolist() == ["c0355r1", "c0262", "c0514c1"] and o["share"].is_monotonic_decreasing
     assert o["share"].min() > a["poi"].max()                        # each above every earlier model (medians; only the first is tested)
     assert (a.dropna(subset=["population", "poi"])["poi"] > a.dropna(subset=["population", "poi"])["population"]).all()
@@ -180,7 +180,7 @@ def test_fig5_names_what_the_reader_compares(built, tables):
     as in panel a and the fourth contrast says it is against uniform constants; panel d shows the four parameter sources."""
     fig, src = built["fig5"]
     texts = [t.get_text() for t in fig.findobj(plt.matplotlib.text.Text)]
-    assert {"gravity", "flexible model", "Model", "Source", "Constants", "Scaled kernel", "Tempered power law", "Two-regime power law",
+    assert {"gravity", "flexible model", "Model", "Source", "Constants", "Reach model", "Tempered power law", "Two-regime power law",
             "Stretched exp., relaxed *", "after Guo 2026", "Kwon 2023", "Simini 2012", "Tiered gravity", "* baseline, this study",
             "Destination mass", "population", "POI count", "observed trips", "local trips", "no local trips", "vs uniform"} <= set(texts)
     assert texts.count("ours") == 3 and not {"Own trip volume", "own trips", "free constants", "vs uniform constants"} & set(texts)
@@ -254,7 +254,7 @@ def test_fig2_shows_the_whole_model_and_all_three_formulas_in_b(built):
     ax_b = next(a for a in fig.axes if a.get_ylabel().startswith("Size elasticity"))
     heavy = [ln for ln in ax_b.lines if ln.get_linewidth() >= 1.2]
     assert len(heavy) == 3                                                        # the three formulas, not one
-    assert set(src["a_b"]["model"]) == {"Flexible", "Scaled kernel", "Tempered power law", "Two-regime power law"}
+    assert set(src["a_b"]["model"]) == {"Flexible", "Reach model", "Tempered power law", "Two-regime power law"}
 
 
 def test_fig6_shows_flows_as_classes_and_counts_what_it_says(built, tables):
@@ -276,7 +276,7 @@ def test_fig6_shows_flows_as_classes_and_counts_what_it_says(built, tables):
     assert sh.idxmax() == "c0355r1"
     txt = [t.get_text() for t in fig.findobj(plt.matplotlib.text.Text)]
     assert "Top 2,000 flows" in txt and f"{sh['c0355r1']:,} in observed top 2,000" in txt and not any("also observed" in s for s in txt)
-    assert {"Observed, Denver", "Scaled kernel, ours", "Gravity", "Radiation", "Stretched exponential", "as published", "with POI count",
+    assert {"Observed, Denver", "Reach model, ours", "Gravity", "Radiation", "Stretched exponential", "as published", "with POI count",
             "zero-shot predictions"} <= set(txt)                     # the figure says these are transfers, not fits
     assert txt.count("as published") == 4 and txt.count("with POI count") == 4      # the rows of a, b's legend, the halves of c, the groups of d
     assert not any("population" in s.lower() for s in txt)          # population is the published setting: no suffix
@@ -302,7 +302,7 @@ def test_fig6_every_line_has_a_legend_entry(built):
     assert len(ax_b.lines) == 7 and sum(len(lg.get_texts()) for lg in legends) == 7
     assert sorted(lg.get_title().get_text() for lg in legends) == ["", "as published", "with POI count"]
     ax_c = next(a for a in fig.axes if a.get_ylabel() == "Predicted / observed trips")
-    assert [t.get_text() for t in ax_c.get_legend().get_texts()] == ["Scaled kernel, ours", "Gravity", "Radiation", "Stretched exponential"]
+    assert [t.get_text() for t in ax_c.get_legend().get_texts()] == ["Reach model, ours", "Gravity", "Radiation", "Stretched exponential"]
     ax_d = next(a for a in fig.axes if a.get_xlabel() == "CPC")
     assert [t.get_text() for t in ax_d.get_yticklabels()] == ["Gravity", "Radiation", "Stretched exponential"] * 2
     assert ax_d.get_legend() is None
@@ -344,12 +344,12 @@ def test_the_six_city_table_says_what_the_ledger_says(tmp_path, monkeypatch):
                                                ("Sacramento", 100)]
     assert (ex["best_other"] == "strexp1_N").all()
     md = out[2].read_text()
-    assert "Philadelphia, K = 100" in md and "| Scaled kernel (ours) | 1,164 | 1,002 | 1,168 | 1,202 | 1,164 | 1,098 |" in md
+    assert "Philadelphia, K = 100" in md and "| Reach model (ours) | 1,164 | 1,002 | 1,168 | 1,202 | 1,164 | 1,098 |" in md
 
 
 
 def test_fig3_revision_labels(built):
-    """Revision 2026-11-13: the turning distance is r (not theta_1, which the Scaled kernel uses), drawn with a
+    """Revision 2026-11-13: the turning distance is r (not theta_1, which the Reach model uses), drawn with a
     log-log line; the variable-exponent row says that its elasticity is taken at 5 km."""
     fig, _ = built["fig3"]
     texts = {t.get_text() for t in fig.findobj(plt.matplotlib.text.Text)}

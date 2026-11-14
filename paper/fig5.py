@@ -1,12 +1,12 @@
 """Fig. 5 | Benchmark against earlier models and transfer without data.
 
 Claim: replacing population by the POI count as the destination mass is the largest single step; beyond it the
-scaled kernel still fits and transfers better than the strongest earlier model.
+Reach model still fits and transfers better than the strongest earlier model.
   a  median fit share of every earlier model family in the 32 target cities: population version -> POI version
-     (hero panel); our three formulas on top, the scaled kernel also as a vertical line; a small table on the left
+     (hero panel); our three formulas on top, the Reach model also as a vertical line; a small table on the left
      gives the name, the source and the number of free constants of every model
   b  the four pre-specified contrasts, city by city (the one that was not supported included); the fourth is the
-     scaled kernel against itself and is set apart
+     Reach model against itself and is set apart
   c  the fit and the zero-shot contrast on the pre-specified held-out block beside the same contrasts with every
      destination in the choice set (added afterwards, 2026-11-12 — the legend says so)
   d  the cost of transfer over the four parameter sources: local fit, uniform, size-predicted, size + form
@@ -30,7 +30,7 @@ NAMES = {"strexp3": "Stretched exp., relaxed", "S0": "Shifted gravity", "strexp1
          "pwo": "PWO", "rad": "Radiation", "kwon": "Tiered gravity"}
 CONTRASTS = [("C1", "Fit"), ("C2", "Zero-shot"), ("C4", "Zero-shot vs fit"), ("C3", "Size-predicted")]
 XMIN = -0.62
-SELF_LABEL = "vs uniform"                  # the fourth contrast: the scaled kernel, size-predicted against uniform constants
+SELF_LABEL = "vs uniform"                  # the fourth contrast: the Reach model, size-predicted against uniform constants
 OPP_LABEL = "vs Stretched exp. *"          # the strongest earlier model, named as in panel a (and in its colour)
 # Where each earlier model comes from, written beside its name. Both gravity models are the
 # production-constrained member of Wilson's family, free mass exponent, power or exponential deterrence (source check
@@ -128,7 +128,7 @@ def build(d: dict):
     best = fam.groupby("family")["share_med"].max().sort_values(ascending=False)
     order = [f for f in best.index if f != "kwon"] + ["kwon"]
     y = {f: len(order) - 1 - i for i, f in enumerate(order)}
-    top = len(order) + len(OTHER_OURS)                          # the row of the scaled kernel
+    top = len(order) + len(OTHER_OURS)                          # the row of the Reach model
     # the lines stop below their names, so no line runs through a label
     ax_a.plot([0, 0], [-1.0, top + 0.75], color=P["ref"], lw=0.5, ls=(0, (4, 3)), zorder=1)
     ax_a.plot([1, 1], [-1.0, top + 0.75], color=P["flexible"], lw=0.5, ls=(0, (4, 3)), zorder=1)
@@ -173,10 +173,10 @@ def build(d: dict):
     own = {"strexp3", "S0"}                                  # strengthened or built in this study, not from the literature
     # The two reference lines are named above the plot, in the row of the column headers. The names sit in a small
     # table: model, source, number of free constants. The star marks a comparison model built in this study (not taken
-    # from the literature) — the scaled kernel is our result, not a baseline, so it carries no star.
+    # from the literature) — the Reach model is our result, not a baseline, so it carries no star.
     ax_a.text(0, top + 0.95, "gravity", color=P["ref"], fontsize=6, ha="center", va="bottom")
     ax_a.text(1.045, top + 0.95, "flexible model", color=P["ref"], fontsize=6, ha="right", va="bottom")
-    src_ours = [{"model": "c0355r1", "label": "Scaled kernel", "share": ours, "n_free": k_ours}]
+    src_ours = [{"model": "c0355r1", "label": "Reach model", "share": ours, "n_free": k_ours}]
     from matplotlib.transforms import ScaledTranslation, blended_transform_factory
 
     def col(mm):                                  # x = mm left of the axes, y = data
@@ -188,7 +188,7 @@ def build(d: dict):
         ax_a.text(0, yy, source, transform=SRC, fontsize=5.5, va="center", ha="left", color=source_colour or P["grey"], clip_on=False)
         ax_a.text(0, yy, str(k), transform=NFREE, fontsize=6, va="center", ha="center", color=colour if weight == "bold" else P["grey"],
                   fontweight=weight, clip_on=False)
-    row(top, "Scaled kernel", "ours", k_ours, P["ours"], "bold", P["ours"])
+    row(top, "Reach model", "ours", k_ours, P["ours"], "bold", P["ours"])
     for i, (m, name, ck) in enumerate(OTHER_OURS, start=1):         # our other two formulas: reported, not part of the contrasts
         v = float(loc.loc[m, "share_med"])
         ax_a.scatter([v], [top - i], s=19, facecolor=P[ck], edgecolor="white", linewidth=0.3, zorder=6)
@@ -237,7 +237,7 @@ def build(d: dict):
         ax_b.text(lim[1] - 0.004, y0 + 0.24, f"{_num(r['median'], 3)} [{_num(r['ci_lo'], 3)}, {_num(r['ci_hi'], 3)}]", fontsize=5.5,
                   va="center", ha="right", color=P["ours"] if ok else P["grey"])
         versus = (OPP_LABEL, P["prior_poi"])
-        if cid == "C3":                           # the scaled kernel against itself, not against the stretched exp.
+        if cid == "C3":                           # the Reach model against itself, not against the stretched exp.
             versus = (SELF_LABEL, P["ours"])      # (otherwise it reads as the latter) — in our colour and set apart by a rule
             ax_b.plot([-0.47, 1.17], [y0 + 0.5, y0 + 0.5], transform=ax_b.get_yaxis_transform(), color=P["light"], lw=0.6, clip_on=False, zorder=0)
         ax_b.text(-0.012, y0 - 0.27, versus[0], transform=ax_b.get_yaxis_transform(), fontsize=5.5, color=versus[1], ha="right", va="center")
@@ -260,7 +260,7 @@ def build(d: dict):
     style.panel_label(ax_c, "c", dx=dx_r, dy=16)
 
     # ---- d: the cost of transfer
-    rows = [("c0355r1", "Scaled kernel, ours", P["ours"], "-", 1.5),
+    rows = [("c0355r1", "Reach model, ours", P["ours"], "-", 1.5),
             ("strexp3_N", NAMES["strexp3"] + " *", P["prior_poi"], "-", 1.1),
             ("grav_power_N", NAMES["grav_power"], P["prior_poi"], (0, (3, 1.5)), 1.0), ("kwon", NAMES["kwon"], P["grey"], "-", 1.0)]
     lv = s[s["level"].isin([k for k, _ in LEVELS])].set_index(["model", "level"])
@@ -330,7 +330,7 @@ def build(d: dict):
         sp.set_edgecolor(P["grey"])
     ax_e.indicate_inset_zoom(axz, edgecolor=P["grey"], linewidth=0.4, alpha=1.0)
     mx, my = float(q.loc[me, "share_med"].iloc[0]), float(q.loc[me, "cpc_med"].iloc[0])
-    axz.annotate("Scaled kernel", (mx, my), xytext=(0.70, 0.10), textcoords="axes fraction", fontsize=5.5, color=P["ours"], ha="center",
+    axz.annotate("Reach model", (mx, my), xytext=(0.70, 0.10), textcoords="axes fraction", fontsize=5.5, color=P["ours"], ha="center",
                  arrowprops={"arrowstyle": "-", "lw": 0.4, "color": P["ours"]})
     axz.text(0.04, 0.93, "our other\nformulas", transform=axz.transAxes, fontsize=5.5, color=P["ours_2"], va="top", linespacing=1.0)
     ax_e.text(XMIN + 0.04, 0.392, "off-scale", fontsize=5.5, color=P["grey"], va="center")

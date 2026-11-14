@@ -5,9 +5,9 @@ the corridor recovery comes from the destination model rather than from the obse
 confirmation cities (test period x all destinations) are scored with
   uniform_dest   T_i spread evenly over the destinations (no destination model at all);
   distance_only  T_i exp(-beta ln d) normalised, beta = the uniform (discovery-median) distance exponent of POI gravity;
-  scaled_kernel  the Scaled kernel with uniform constants (as Fig. 6);
+  reach_model  the Reach model with uniform constants (as Fig. 6);
   strexp3_N      the strongest benchmark with uniform constants;
-  scaled_kernel_pop  the Scaled kernel's P(j|i) times origin totals proportional to residential population, scaled
+  reach_model_pop  the Reach model's P(j|i) times origin totals proportional to residential population, scaled
                  to the city's observed total (no origin total is read; the total only fixes the scale of the CPC).
 Metrics: how many of the 2,000 largest observed flows are among the model's 2,000 largest, and the CPC.
 Post hoc, supplementary. Output: results/multicity/rev/flows_baselines.csv. Usage: rev_flows.py run
@@ -61,9 +61,9 @@ def city_rows(city: str, name: str) -> list:
         c = cands[m] if kind == "ours" else parse_equation(pm.EQ_MODELS[m].equation, None, "A", 9)
         with np.errstate(all="ignore"):
             e = eq_eta(c, ev, consts=np.asarray(K[(m, "uniform")][1], float))
-        mus["scaled_kernel" if m == "c0355r1" else m] = flows(e, y, off)
-    p = mus["scaled_kernel"] / np.repeat(np.add.reduceat(y, off[:-1]), np.diff(off))
-    mus["scaled_kernel_pop"] = population_totals(p, off, d["u"]["population"].to_numpy(float)[o], y.sum())
+        mus["reach_model" if m == "c0355r1" else m] = flows(e, y, off)
+    p = mus["reach_model"] / np.repeat(np.add.reduceat(y, off[:-1]), np.diff(off))
+    mus["reach_model_pop"] = population_totals(p, off, d["u"]["population"].to_numpy(float)[o], y.sum())
     rows = [{"city": city, "name": name, "model": m, "beta": beta if m == "distance_only" else np.nan,
              "top2000": overlap_k(y, mu), "cpc": cpc(y, mu)} for m, mu in mus.items()]
     print(city, rows, flush=True)

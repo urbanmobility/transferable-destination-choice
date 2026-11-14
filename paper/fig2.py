@@ -4,7 +4,7 @@ Claim: distance decay is not a pure power law, the role of destination size grow
 five-constant formula captures both while staying close to the flexible model.
   a  distance elasticity against distance: every city's flexible-model estimate (thin, coloured by city size) and
      the median curves of the three formulas (hero panel); the definition of e_d in the panel
-  b  size elasticity against distance, all three formulas: only the scaled kernel rises with distance, the other two
+  b  size elasticity against distance, all three formulas: only the Reach model rises with distance, the other two
      are flat by construction (their size term is ln(N_j + theta_2)); the definition of e_N in the panel
   c  the whole model: the destination choice probability and the three utilities (symbols are explained in the legend)
   d  fit share of the three formulas in the 67 cities (0 = gravity, 1 = flexible model); the axis starts at
@@ -22,9 +22,9 @@ from matplotlib.lines import Line2D
 
 import style
 
-FORMULAS = [("Scaled kernel", "ours", "-", 1.5), ("Tempered power law", "ours_2", (0, (4, 1.5)), 1.2),
+FORMULAS = [("Reach model", "ours", "-", 1.5), ("Tempered power law", "ours_2", (0, (4, 1.5)), 1.2),
             ("Two-regime power law", "ours_3", (0, (1, 1)), 1.4)]
-EQ = {"Scaled kernel": r"$\eta_{ij} = a_j^{\,\theta_4} - \theta_0\, d^{\,\theta_1} / (N_j + \theta_2)^{\theta_3}$",
+EQ = {"Reach model": r"$\eta_{ij} = a_j^{\,\theta_4} - \theta_0\, d^{\,\theta_1} / (N_j + \theta_2)^{\theta_3}$",
       "Tempered power law": r"$\eta_{ij} = -\ln d - \theta_0\, d^{\,\theta_1} + \ln(N_j + \theta_2) - e^{-s_j} - e^{-a_j}$",
       "Two-regime power law": r"$\eta_{ij} = \theta_0 \ln a_j - \ln d - \ln(d + r) + \ln(N_j + \theta_2)$"}
 PROB = r"$P(j\,|\,i) \;=\; \exp(\eta_{ij}) \;\,/\; \sum_{k}\, \exp(\eta_{ik})$"      # on one line, so that no subscript shrinks

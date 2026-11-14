@@ -81,7 +81,7 @@ def turning_inset(ax):
 
 EDGES = [0.5, 1, 2, 5, 10, 20, 60]            # the six distance bands of the flexible model, on the plotted range
 SHAPE_LAWS = ["H3-01", "H4-03", "H4-01", "H4-02", "H1-01", "P7-01"]      # the registered size hypotheses about the shape of the decay
-MODEL = ["Flexible model", "Scaled kernel", "Tempered power law", "Two-regime power law", "Variable exponent (5 km)",
+MODEL = ["Flexible model", "Reach model", "Tempered power law", "Two-regime power law", "Variable exponent (5 km)",
          "Two-regime power law"]
 
 

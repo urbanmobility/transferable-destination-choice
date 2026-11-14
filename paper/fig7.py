@@ -4,7 +4,7 @@ Claim: below about four million people one uniform set of constants is enough; l
 constants, and constants predicted from city size recover most of that loss.
   a  gain of size-predicted over uniform constants against population, 67 cities, test block (hero panel)
   b  transfer loss under uniform and under size-predicted constants, below and above four million
-  c  the two size-dependent constants of the scaled kernel against population
+  c  the two size-dependent constants of the Reach model against population
 No panel carries an "exploratory" tag or grey axes: the legend says that the whole
 figure is exploratory. Renumbered from Fig. 6 on 2026-11-12, when the OD-flow figure became Fig. 6. Self-review 2026-11-12: a — the blue line is named, the win counts carry the city-set markers of the legend instead
 of "source" and "target", the axis says what the gain is over; c — the constants and the fitted line are named.

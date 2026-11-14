@@ -65,7 +65,7 @@ def test_every_free_mask_matches_its_equation():
         assert len(free) == len(c.consts), name
 
 
-def test_separable_twin_has_the_scaled_kernels_inputs_and_size():
+def test_separable_twin_has_the_reach_models_inputs_and_size():
     sk, sep = rm.REV_EQ["sk"], rm.REV_EQ["sep_N"]
     assert sum(sk[1]) == sum(sep[1]) == 5
     for v in ("#1", "#6", "#7"):

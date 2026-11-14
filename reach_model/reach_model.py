@@ -1,4 +1,4 @@
-"""The Scaled kernel: a compact, transferable utility for intra-urban destination choice.
+"""The Reach model: a compact, transferable utility for intra-urban destination choice.
 
     eta_ij = a_j ** theta4 - theta0 * d_ij ** theta1 / (N_j + theta2) ** theta3
     P(j | i) = exp(eta_ij) / sum_k exp(eta_ik)

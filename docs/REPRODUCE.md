@@ -30,7 +30,7 @@ The stages, in the order they were run:
 10. **Figures and tables.** `paper_figdata.py export`; then `paper/make.py`, `paper/figS1.py`, `paper/rev_tables.py`,
     `paper/supp_tex.py`.
 
-Unit tests: `pytest multicity/tests`, `pytest sr/tests`, `pytest paper/tests`, `pytest scaled_kernel` (run each
+Unit tests: `pytest multicity/tests`, `pytest sr/tests`, `pytest paper/tests`, `pytest reach_model` (run each
 directory separately). Tests that need the full data root are skipped or fail without it.
 
 ## Stage labels used in the code

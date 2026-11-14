@@ -12,7 +12,7 @@ import data
 import style
 
 OUT = style.ROOT / "tables"
-MODELS = [("c0355r1", "Scaled kernel (ours)"), ("grav_power_P", "Gravity"), ("grav_power_N", "Gravity, POI count"),
+MODELS = [("c0355r1", "Reach model (ours)"), ("grav_power_P", "Gravity"), ("grav_power_N", "Gravity, POI count"),
           ("rad_P", "Radiation"), ("rad_N", "Radiation, POI count"), ("strexp1_P", "Stretched exponential"),
           ("strexp1_N", "Stretched exponential, POI count")]
 N_TOP = 2000
@@ -38,7 +38,7 @@ def od_cities() -> dict:
 
 
 def exceptions(by_k: pd.DataFrame) -> pd.DataFrame:
-    """The (city, K) cells in which another model recovers more of the largest flows than the scaled kernel."""
+    """The (city, K) cells in which another model recovers more of the largest flows than the Reach model."""
     p = by_k.pivot_table(index=["name", "K"], columns="model", values="share")
     best = p.drop(columns="c0355r1").idxmax(axis=1)
     worse = p["c0355r1"] < p.drop(columns="c0355r1").max(axis=1)
@@ -57,9 +57,9 @@ def markdown(t: pd.DataFrame, ex: pd.DataFrame) -> str:
     for _, label in MODELS:
         g = t[t["label"] == label].set_index("name")
         L.append(f"| {label} | " + " | ".join(f"{g.loc[c, 'cpc']:.3f}" for c in cities) + " |")
-    L += ["", "Cells in which another model recovers more of the K largest observed flows than the scaled kernel:", ""]
+    L += ["", "Cells in which another model recovers more of the K largest observed flows than the Reach model:", ""]
     lab = dict(MODELS)
-    L += [f"- {r.name}, K = {r.K:,}: {lab[r.best_other]} {r.other:.3f}, scaled kernel {r.ours:.3f}" for r in ex.itertuples()] or ["- none"]
+    L += [f"- {r.name}, K = {r.K:,}: {lab[r.best_other]} {r.other:.3f}, Reach model {r.ours:.3f}" for r in ex.itertuples()] or ["- none"]
     return "\n".join(L) + "\n"
 
 

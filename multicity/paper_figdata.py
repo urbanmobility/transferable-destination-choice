@@ -20,7 +20,7 @@ import config  # noqa: E402
 
 OUT = config.results_dir("M") / "paper" / "figdata"
 R = config.RESULTS
-SKELETONS = {"c0355r1": "Scaled kernel", "c0262": "Tempered power law", "c0514c1": "Two-regime power law"}
+SKELETONS = {"c0355r1": "Reach model", "c0262": "Tempered power law", "c0514c1": "Two-regime power law"}
 REFERENCE = {"c0079c1": "Log gravity"}
 ABBR = {"35620": "NYC", "31080": "LA", "16980": "CHI", "26420": "HOU", "12060": "ATL", "BAY9": "SF", "42660": "SEA",
         "14460": "BOS"}
@@ -160,7 +160,7 @@ def size_laws(disc_val: pd.DataFrame) -> pd.DataFrame:
     p7h = {h["id"]: h for h in json.loads(_p("laws/registered_p7.json").read_text())}
     x = disc_val["log_population"]
     spec = [("H3-01", "Flexible model", ols_slope(x, disc_val["ed_5_10km"]), "validation table"),
-            ("H4-03", "Scaled kernel", ols_slope(x, disc_val["ed_5_10km_c0355r1"]), "validation table"),
+            ("H4-03", "Reach model", ols_slope(x, disc_val["ed_5_10km_c0355r1"]), "validation table"),
             ("H4-01", "Tempered power law", ols_slope(x, disc_val["ed_5_10km_c0262"]), "validation table"),
             ("H4-02", "Two-regime power law", ols_slope(x, disc_val["ed_5_10km_c0514c1"]), "validation table"),
             ("H1-01", "Variable-exponent form", H101_DISC, "report v1")]

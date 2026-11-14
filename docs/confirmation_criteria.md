@@ -24,7 +24,7 @@ Fixed together with the formula library before the six confirmation cities and t
 
 | cid | role |
 |---|---|
-| c0355r1 | main (Scaled kernel) |
+| c0355r1 | main (Reach model) |
 | c0262 | second (Tempered power law) |
 | c0514c1 | optional (Two-regime power law; counted in the clean library) |
 | c0413c1r1 | comparison (variable-exponent control; fitted and reported, not counted in clean coverage) |

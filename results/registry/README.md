@@ -11,4 +11,4 @@ Files as written at registration and test time (original statements in Chinese; 
 | `registry_en.csv` | English statements and results of all 25 hypotheses (Additional file 1, Table S3) |
 
 Formula identifiers such as
-`c0355r1` (Scaled kernel), `c0262` (Tempered power law) and `c0514c1` (Two-regime power law) refer to `../freeze/pool.json`.
+`c0355r1` (Reach model), `c0262` (Tempered power law) and `c0514c1` (Two-regime power law) refer to `../freeze/pool.json`.
