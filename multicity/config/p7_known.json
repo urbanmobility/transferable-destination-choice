@@ -1,0 +1,131 @@
+{
+ "notes": "Plan 7 Task 1 (literature review of 2026-11-10 on urban form and OD models). outcome may be an fnmatch pattern over city_outcomes.OUTCOME_DEFS names; covariate names are laws.COVARIATES + log_population + form_p7.DEFS. exclude=true pairs are left out by explore_p7.select (known, moderate or strong evidence on trip length / distance decay); exclude=false pairs are only flagged in the registration memo. Entries with strength 'own' disclose relations the project itself saw before registration (flagged, not excluded).",
+ "known": [
+  {
+   "outcome": "ed_*",
+   "covariate": "tract_area",
+   "direction": "+",
+   "strength": "strong",
+   "exclude": true,
+   "source": "Lenormand et al. 2016 J Transp Geogr; Lenormand et al. 2012 PLoS ONE; Guo et al. 2026 Geogr Anal (decay parameter falls with spatial-unit area)",
+   "doi": "10.1016/j.jtrangeo.2015.12.008"
+  },
+  {
+   "outcome": "theta_turn_c0514c1",
+   "covariate": "tract_area",
+   "direction": "+",
+   "strength": "strong",
+   "exclude": true,
+   "source": "as above (unit-size dependence of distance decay)",
+   "doi": "10.1016/j.jtrangeo.2015.12.008"
+  },
+  {
+   "outcome": "ed_*",
+   "covariate": "log_population",
+   "direction": "mixed",
+   "strength": "moderate",
+   "exclude": true,
+   "source": "Kang et al. 2012 Physica A; Engelfriet & Koomen 2018 Transportation; Louf & Barthelemy 2013 PRL; contra Dong et al. 2022 arXiv (city size and trip / commute distance); our size law H1-01/H3-01/H4 is already confirmed",
+   "doi": "10.1007/s11116-017-9762-6"
+  },
+  {
+   "outcome": "ed_*",
+   "covariate": "compactness",
+   "direction": "-",
+   "strength": "moderate",
+   "exclude": true,
+   "source": "Bassolas et al. 2019 Nat Commun; Kang et al. 2012; Noulas et al. 2012 PLoS ONE; Cervero & Murakami 2010 (compact / dense cities: shorter trips)",
+   "doi": "10.1038/s41467-019-12809-y"
+  },
+  {
+   "outcome": "ed_*",
+   "covariate": "jobs_housing",
+   "direction": "+",
+   "strength": "moderate",
+   "exclude": true,
+   "source": "Sun et al. 2016 Int J Sust Transp (jobs-housing separation lengthens commutes, 164 cities)",
+   "doi": "10.1080/15568318.2015.1042175"
+  },
+  {
+   "outcome": "ed_*",
+   "covariate": "secondary_centres",
+   "direction": "mixed",
+   "strength": "mixed",
+   "exclude": false,
+   "source": "Engelfriet & Koomen 2018 (n.s.); Sun et al. 2016 (shorter); Yang et al. 2012 JAPA (depends on density)",
+   "doi": "10.1007/s11116-017-9762-6"
+  },
+  {
+   "outcome": "ed_*",
+   "covariate": "subcentre_job_share",
+   "direction": "mixed",
+   "strength": "mixed",
+   "exclude": false,
+   "source": "as above (polycentricity and commuting)",
+   "doi": "10.1007/s11116-017-9762-6"
+  },
+  {
+   "outcome": "ed_*",
+   "covariate": "transit_per_1k",
+   "direction": "mixed",
+   "strength": "weak",
+   "exclude": false,
+   "source": "Kung et al. 2014 PLoS ONE; Barbosa et al. 2021 Sci Rep; Engelfriet & Koomen 2018 (n.s.)",
+   "doi": "10.1371/journal.pone.0096180"
+  },
+  {
+   "outcome": "theta_turn_c0514c1",
+   "covariate": "log_population",
+   "direction": "-",
+   "strength": "own",
+   "exclude": false,
+   "source": "own descriptive observation on the discovery cities before registration (11-09/10): c0514c1 turning distance shrinks with city size, rho -0.84",
+   "doi": ""
+  },
+  {
+   "outcome": "slope_eN_logd_c0355r1",
+   "covariate": "subcentre_job_share",
+   "direction": "-",
+   "strength": "own",
+   "exclude": false,
+   "source": "own descriptive observation on the discovery cities before registration (11-09/10): polycentric cities, slower rise of e_N with distance, rho -0.74",
+   "doi": ""
+  },
+  {
+   "outcome": "slope_eN_logd_c0355r1",
+   "covariate": "secondary_centres",
+   "direction": "-",
+   "strength": "own",
+   "exclude": false,
+   "source": "own descriptive observation on the discovery cities before registration (11-09/10) (same construct as subcentre_job_share)",
+   "doi": ""
+  },
+  {
+   "outcome": "ed_5_10km_resid",
+   "covariate": "circuity",
+   "direction": "-",
+   "strength": "own",
+   "exclude": false,
+   "source": "own hypothesis suggested by the Philadelphia / Pittsburgh transfer diagnostic on the confirmation cities (confirmation report, 11-10)",
+   "doi": ""
+  },
+  {
+   "outcome": "ed_*",
+   "covariate": "circuity",
+   "direction": "-",
+   "strength": "own",
+   "exclude": false,
+   "source": "own hypothesis suggested by the Philadelphia / Pittsburgh transfer diagnostic on the confirmation cities (confirmation report, 11-10)",
+   "doi": ""
+  },
+  {
+   "outcome": "ed_5_10km_resid",
+   "covariate": "water_share",
+   "direction": "-",
+   "strength": "own",
+   "exclude": false,
+   "source": "own hypothesis suggested by the Philadelphia / Pittsburgh transfer diagnostic on the confirmation cities (confirmation report, 11-10) (New Orleans / Providence after the fact)",
+   "doi": ""
+  }
+ ]
+}

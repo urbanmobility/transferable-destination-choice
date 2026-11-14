@@ -1,0 +1,180 @@
+{
+ "note": "Exploration (design of 2026-11-10: form effects and city types): methods fixed before any quantity is computed; changes need explore_form.py fix --reason",
+ "seed": 20261110,
+ "block": "test_dest",
+ "groups": [
+  "discovery",
+  "lawtest",
+  "confirm"
+ ],
+ "outcomes": [
+  "kernel_near",
+  "opp_near",
+  "gain_grav_m2",
+  "share_grav_best_clean",
+  "share_s0_main",
+  "ed_0_1km",
+  "eN_0_1km",
+  "ed_1_2km",
+  "eN_1_2km",
+  "ed_2_5km",
+  "eN_2_5km",
+  "ed_5_10km",
+  "eN_5_10km",
+  "ed_10_20km",
+  "eN_10_20km",
+  "ed_20km",
+  "eN_20km",
+  "slope_eN_logd",
+  "ed_5_10km_c0355r1",
+  "slope_eN_logd_c0355r1",
+  "ed_5_10km_c0514c1",
+  "slope_eN_logd_c0514c1",
+  "ed_5_10km_c0262",
+  "slope_eN_logd_c0262",
+  "theta_turn_c0514c1",
+  "transfer_loss_c0355r1",
+  "transfer_frac_c0355r1",
+  "transfer_loss_c0262",
+  "transfer_frac_c0262",
+  "ed_5_10km_resid"
+ ],
+ "covariates": [
+  "pop_density_gini",
+  "cbd_job_share",
+  "subcentre_job_share",
+  "n_subcentres",
+  "orientation_entropy",
+  "water_share",
+  "log_population",
+  "log_jobs",
+  "transit_per_1k",
+  "no_car_share",
+  "road_density",
+  "poi_mix",
+  "jobs_housing",
+  "compactness",
+  "secondary_centres",
+  "circuity",
+  "tract_area"
+ ],
+ "size": "log_population",
+ "e1": {
+  "exclude_covariates": [
+   "log_population",
+   "log_jobs",
+   "tract_area"
+  ],
+  "confounders": [
+   "tract_area"
+  ],
+  "size_proxy_r": 0.8,
+  "exclude_registered": true,
+  "permutations": 2000,
+  "variants": [
+   "main",
+   "with_registered",
+   "with_confounders"
+  ]
+ },
+ "e2": {
+  "bootstrap": 2000,
+  "fdr_q": 0.1,
+  "fdr_p": "normal",
+  "fdr_p_note": "BH takes p = 2*Phi(-|estimate / bootstrap SE|); the bootstrap p cannot go below 1/bootstrap = 0.0005, above the rank-1 BH threshold fdr_q/m for a few hundred cells; intervals stay bootstrap percentile intervals",
+  "family_exclude": [
+   "log_population",
+   "log_jobs"
+  ],
+  "confounders": [
+   "tract_area"
+  ],
+  "confounders_note": "tract_area is the measurement unit, not city form: its cells stay in the full table (role confounder) but are not in BH, the shrinkage, the top-20 ranking or the count of cells beyond size",
+  "tract_area_control": true,
+  "axes": {
+   "exclude": [
+    "log_population",
+    "log_jobs",
+    "tract_area"
+   ],
+   "var_target": 0.7,
+   "max_axes": 5,
+   "tract_area_control": true,
+   "tract_area_control_note": "added 2026-11-11 after the first fixing (design decision of 2026-11-11): design 6.3's axis-level sensitivity, outcome ~ size + axes + e2.confounders, stage axes_ta -> e2_axis_effects_ta.csv; no other quantity depends on it"
+  }
+ },
+ "e3": {
+  "families": {
+   "K": [
+    "c0353",
+    "c0353c1",
+    "c0353c1r1",
+    "c0354",
+    "c0355",
+    "c0355r1"
+   ],
+   "O": [
+    "c0413",
+    "c0413c1",
+    "c0413c1r1",
+    "c0413c1r2",
+    "c0413c1r3",
+    "c0413c1r4",
+    "c0411",
+    "c0412",
+    "c0412c1",
+    "c0373",
+    "c0375"
+   ],
+   "I": [
+    "c0181",
+    "c0209"
+   ],
+   "L": [
+    "c0079c1",
+    "c0084c1",
+    "c0194c1",
+    "c0514c1"
+   ],
+   "P": [
+    "c0262"
+   ],
+   "X": [
+    "c0014",
+    "c0523"
+   ]
+  },
+  "floor": "global_min",
+  "behaviour_bands": [
+   "0_1km",
+   "1_2km",
+   "2_5km",
+   "5_10km",
+   "10_20km"
+  ],
+  "behaviour_missing": "drop",
+  "k": [
+   2,
+   3,
+   4,
+   5,
+   6
+  ],
+  "linkage": "ward",
+  "stability": {
+   "frac": 0.8,
+   "B": 200,
+   "min_ari": 0.6
+  },
+  "prediction_strength": {
+   "train": "discovery",
+   "test": "lawtest",
+   "min": 0.8
+  }
+ },
+ "e4": {
+  "bootstrap": 2000,
+  "kw_fdr_q": 0.1,
+  "logit_C": 1.0
+ }
+}

@@ -1,0 +1,28 @@
+cff-version: 1.2.0
+message: "If you use this code or these results, please cite the paper."
+title: "Transferable destination choice: code and city-level results"
+license: MIT
+repository-code: "https://github.com/urbanmobility/transferable-destination-choice"
+authors:
+  - {family-names: Yang, given-names: Jinming}
+  - {family-names: Huang, given-names: Zongyuan}
+  - {family-names: Huang, given-names: Shaoyu}
+  - {family-names: Sun, given-names: Peiyan}
+  - {family-names: Xu, given-names: Shengyuan}
+  - {family-names: Jin, given-names: Yaohui}
+  - {family-names: González, given-names: Marta C.}
+  - {family-names: Xu, given-names: Yanyan}
+preferred-citation:
+  type: article
+  title: "A transferable formula captures distance-dependent destination attraction across US metropolitan areas"
+  authors:
+    - {family-names: Yang, given-names: Jinming}
+    - {family-names: Huang, given-names: Zongyuan}
+    - {family-names: Huang, given-names: Shaoyu}
+    - {family-names: Sun, given-names: Peiyan}
+    - {family-names: Xu, given-names: Shengyuan}
+    - {family-names: Jin, given-names: Yaohui}
+    - {family-names: González, given-names: Marta C.}
+    - {family-names: Xu, given-names: Yanyan}
+  year: 2026
+  notes: "Submitted to EPJ Data Science."

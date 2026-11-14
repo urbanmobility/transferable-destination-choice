@@ -1,0 +1,44 @@
+[
+ {
+  "statement": "骨架 c0262 的5–10 km 段的距离弹性 e_d随都市区人口的对数增大而减小（发现城证据：OLS 斜率 -0.161，Spearman ρ -0.89，n = 35）。",
+  "skeleton": "c0262",
+  "parameter": "ed_5_10km",
+  "covariate": "log_population",
+  "direction": "-",
+  "test": "slope_ci",
+  "criterion": "以 ed_5_10km（banded 参考点上 dη/dln d，第 3 段 5–10 km，训练期出行 ≥ 1000）为响应、log_population 为唯一预测变量做 OLS；检验城的城市 bootstrap（B = 5000）95% CI 不含 0 且斜率< 0；Holm 按累计登记的全部假设（H1、H2、H3 与本轮）校正，α = 0.05。",
+  "id": "H4-01",
+  "cycle": 4,
+  "sha": "2ea7ec6f3e3a",
+  "source": "executor (design decision 2026-11-10)",
+  "registered_at": "2026-11-10T06:59:58"
+ },
+ {
+  "statement": "骨架 c0514c1 的5–10 km 段的距离弹性 e_d随都市区人口的对数增大而减小（发现城证据：OLS 斜率 -0.137，Spearman ρ -0.85，n = 35）。",
+  "skeleton": "c0514c1",
+  "parameter": "ed_5_10km",
+  "covariate": "log_population",
+  "direction": "-",
+  "test": "slope_ci",
+  "criterion": "以 ed_5_10km（banded 参考点上 dη/dln d，第 3 段 5–10 km，训练期出行 ≥ 1000）为响应、log_population 为唯一预测变量做 OLS；检验城的城市 bootstrap（B = 5000）95% CI 不含 0 且斜率< 0；Holm 按累计登记的全部假设（H1、H2、H3 与本轮）校正，α = 0.05。",
+  "id": "H4-02",
+  "cycle": 4,
+  "sha": "0dc790925111",
+  "source": "executor (design decision 2026-11-10)",
+  "registered_at": "2026-11-10T06:59:58"
+ },
+ {
+  "statement": "骨架 c0355r1 的5–10 km 段的距离弹性 e_d随都市区人口的对数增大而减小（发现城证据：OLS 斜率 -0.125，Spearman ρ -0.80，n = 34）。",
+  "skeleton": "c0355r1",
+  "parameter": "ed_5_10km",
+  "covariate": "log_population",
+  "direction": "-",
+  "test": "slope_ci",
+  "criterion": "以 ed_5_10km（banded 参考点上 dη/dln d，第 3 段 5–10 km，训练期出行 ≥ 1000）为响应、log_population 为唯一预测变量做 OLS；检验城的城市 bootstrap（B = 5000）95% CI 不含 0 且斜率< 0；Holm 按累计登记的全部假设（H1、H2、H3 与本轮）校正，α = 0.05。",
+  "id": "H4-03",
+  "cycle": 4,
+  "sha": "5994ef29e5ed",
+  "source": "executor (design decision 2026-11-10)",
+  "registered_at": "2026-11-10T06:59:58"
+ }
+]

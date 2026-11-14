@@ -1,0 +1,44 @@
+[
+ {
+  "id": "H3-01",
+  "parameter": "ed_5_10km",
+  "covariate": "log_population",
+  "direction": "-",
+  "test": "slope_ci",
+  "stat": -0.16630590407866624,
+  "p": 0.0,
+  "pass_raw": true,
+  "n": 26,
+  "ci_lo": -0.23794759128089804,
+  "ci_hi": -0.11329803266904244,
+  "B": 5000,
+  "m": 12,
+  "holm": true,
+  "pass": true,
+  "prev_still_pass": {
+   "H1-01": true,
+   "H2-03": true
+  }
+ },
+ {
+  "id": "H3-02",
+  "parameter": "slope_eN_logd",
+  "covariate": "none",
+  "direction": "+",
+  "test": "median_sign_ci",
+  "stat": 0.14267203111693777,
+  "p": 0.0,
+  "pass_raw": true,
+  "n": 26,
+  "ci_lo": 0.11230874024330031,
+  "ci_hi": 0.15491113889449754,
+  "B": 5000,
+  "m": 12,
+  "holm": true,
+  "pass": true,
+  "prev_still_pass": {
+   "H1-01": true,
+   "H2-03": true
+  }
+ }
+]

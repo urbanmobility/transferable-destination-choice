@@ -1,0 +1,105 @@
+{
+ "entries": [
+  {
+   "cid": "c0355r1",
+   "role": "main",
+   "equation": "f = -4.755*#1^0.2994/(#6 + 1)^0.1131 + #7^0.1299; p1 = []; p2 = []",
+   "template": null,
+   "variant": "A",
+   "complexity": 14
+  },
+  {
+   "cid": "c0262",
+   "role": "second",
+   "equation": "f = -#2 - 0.813215871564649*exp(0.389639486065518*#2) + log(#6 + 12.534867) - exp(-#7) - exp(-#12)",
+   "template": null,
+   "variant": "A",
+   "complexity": 23
+  },
+  {
+   "cid": "c0514c1",
+   "role": "optional",
+   "equation": "f = -log(#1) + 0.5*log(#7) - log(#1 + 2.0) + log(#6 + 1.0); p1 = []; p2 = []",
+   "template": null,
+   "variant": "A",
+   "complexity": 15
+  },
+  {
+   "cid": "c0413c1r1",
+   "role": "comparison",
+   "equation": "f = -0.111*#2*log(#18*#6 + #26 + 1) + 0.114*log(#7) + log(#6 + 1); p1 = []; p2 = []",
+   "template": null,
+   "variant": "A",
+   "complexity": 24
+  },
+  {
+   "cid": "c0079c1",
+   "role": "reference",
+   "equation": "f = 0.21927763889173*log(#7) - 2.18971349335413*log(#1 + 1.1156829912138) + 0.78072236110827*log(#6 + 1); p1 = []; p2 = []",
+   "template": null,
+   "variant": "A",
+   "complexity": 13
+  }
+ ],
+ "protocol": {
+  "path": "scripts/multicity/config/plan6_protocol.md",
+  "sha": "bbe19a617b5c625e25e24687864f783c28ca9aa0d46536c99bce464c1ea8b99e"
+ },
+ "cities_csv_sha": "70f6a41cffd2ebff563cf0908ed4bf17bdc727e59326a91be5b2a548120a0790",
+ "scoring_sha": "ecc1f6256cbfa6bb844208ced9aa9729807d9a997f43871ab346268c7d16a7ad",
+ "pinned": {
+  "protocol": {
+   "path": "scripts/multicity/config/plan6_protocol.md",
+   "sha": "bbe19a617b5c625e25e24687864f783c28ca9aa0d46536c99bce464c1ea8b99e"
+  },
+  "scoring": {
+   "path": "scripts/multicity/scoring.py",
+   "sha": "ecc1f6256cbfa6bb844208ced9aa9729807d9a997f43871ab346268c7d16a7ad"
+  },
+  "cities_csv": {
+   "path": "scripts/multicity/config/cities.csv",
+   "sha": "70f6a41cffd2ebff563cf0908ed4bf17bdc727e59326a91be5b2a548120a0790"
+  },
+  "eval_set": {
+   "path": "results/multicity/prefreeze_mv/discovery/cities_val.parquet",
+   "sha": "98dc148c5e5f57538f515e3ff723d6ea22aad4cff9aee613ef1cfb1192af1976"
+  },
+  "pool": {
+   "path": "results/multicity/prefreeze_mv/loop/pool.json",
+   "sha": "d28062dbe2b7a44e166e24fc87b4e2602e9de807e3a8f9b870481aa2bf38f4c1"
+  },
+  "gates": {
+   "path": "results/multicity/prefreeze_mv/gates.json",
+   "sha": "bfceb1b7b0333c2044c60a62853c6a788c3a2f9e634e8d78789a824a6e7c26fb"
+  },
+  "library_cfg": {
+   "path": "scripts/multicity/config/frozen_library.json",
+   "sha": "f6685069989e1faeee3fc3fcbd80a91a5416779c60a154d23c624186d16046c8"
+  },
+  "laws_registered": {
+   "path": "results/multicity/laws/registered.json",
+   "sha": "4c1591ce623643db994ad5204495a9d31a17bc9cd781c1a32b13c175ef59dfdd"
+  },
+  "laws_results": {
+   "path": "results/multicity/laws/results.json",
+   "sha": "af928967109c9939227b660398d467c546d122c23433be313ea1a9bf344b1168"
+  },
+  "laws_registered_extra": {
+   "path": "results/multicity/laws/registered_extra.json",
+   "sha": "9b29d5b4fbeaf658a3814b0fbd83892e3f18ae12ab9cb61009874f8fe107ab34"
+  },
+  "laws_results_extra": {
+   "path": "results/multicity/laws/results_extra.json",
+   "sha": "0359c57eb2ee4a3b1fd85d6cc73683756b464d6fb97620dc603ad9fa121851f7"
+  },
+  "laws_registered_v3": {
+   "path": "results/multicity/laws/registered_v3.json",
+   "sha": "7112964845ca7b15c164a824d2b28983745bdcd10e76a87ad9dca6bd999b03c9"
+  },
+  "laws_results_v3": {
+   "path": "results/multicity/laws/results_v3.json",
+   "sha": "ce69205016b46758d5c52ba92532036c47a90899389aae8aa3bde0d47e0d1642"
+  }
+ },
+ "frozen_at": "2026-11-10T07:56:33"
+}

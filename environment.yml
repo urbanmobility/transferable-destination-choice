@@ -1,0 +1,22 @@
+name: odsr
+channels: [conda-forge]
+dependencies:
+  - python=3.11
+  - numpy
+  - pandas
+  - scipy
+  - sympy
+  - scikit-learn
+  - pyarrow
+  - duckdb
+  - geopandas
+  - shapely
+  - matplotlib
+  - pillow
+  - requests
+  - openpyxl
+  - pytest
+  - osmium-tool
+  - pip
+  - pip:
+      - pysr==2.7.2

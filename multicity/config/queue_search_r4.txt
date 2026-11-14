@@ -1,0 +1,32 @@
+# Multi-city search queue, round 4 (11-04; owner's choice after the challenger diagnostic of results/multicity/diag/).
+# Single-city runs only, one structural class per run (seed_agent.FAMILY_SEEDS): seed 40 = opportunity (S_ij, no
+# distance), 41 = gravity_opportunity (distance and S_ij), 42 = kernel_other (distance only non-logarithmically).
+# Each run's config/guesses/<tag>.json holds only its class's seeds (LLM class lenses + diagnostic challengers, screened
+# and diversity-filtered within the class), no hand gravity seeds; search space, operators, loss, 40 iterations and
+# 100 origins as round 3. All 24 in parallel (MAXP 24) with SR_THREADS=5, single cap SR_TIMEOUT_SINGLE=10800 s;
+# logs queue_r4.log / snap_hof_r4.log. The single-city selections pool rounds 2-4. Frozen once the ledger records
+# this file's sha.
+tract A single:35620 40 40 100
+tract A single:35620 41 40 100
+tract A single:35620 42 40 100
+tract A single:31080 40 40 100
+tract A single:31080 41 40 100
+tract A single:31080 42 40 100
+tract A single:16980 40 40 100
+tract A single:16980 41 40 100
+tract A single:16980 42 40 100
+tract A single:BAY9 40 40 100
+tract A single:BAY9 41 40 100
+tract A single:BAY9 42 40 100
+tract A single:26420 40 40 100
+tract A single:26420 41 40 100
+tract A single:26420 42 40 100
+tract A single:14460 40 40 100
+tract A single:14460 41 40 100
+tract A single:14460 42 40 100
+tract A single:12060 40 40 100
+tract A single:12060 41 40 100
+tract A single:12060 42 40 100
+tract A single:42660 40 40 100
+tract A single:42660 41 40 100
+tract A single:42660 42 40 100

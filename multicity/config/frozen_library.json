@@ -1,0 +1,10 @@
+{
+ "ruling": "design decision 2026-11-10: kernel family c0355r1 main, c0262 second, c0514c1 optional (clean library), c0413c1r1 comparison (option a: reported, not counted in clean coverage, unit issue disclosed), c0079c1 reference",
+ "entries": [
+  {"cid": "c0355r1", "role": "main"},
+  {"cid": "c0262", "role": "second"},
+  {"cid": "c0514c1", "role": "optional"},
+  {"cid": "c0413c1r1", "role": "comparison"},
+  {"cid": "c0079c1", "role": "reference"}
+ ]
+}

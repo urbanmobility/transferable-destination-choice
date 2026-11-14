@@ -1,0 +1,262 @@
+[
+ {
+  "id": "P7-01",
+  "statement": "「都市区人口的对数」越高的城市，「c0514c1 的转折距离 θ1（km）：e_d = −1 − d/(d + θ1)」越小",
+  "outcome": "theta_turn_c0514c1",
+  "covariate": "log_population",
+  "control": null,
+  "direction": "-",
+  "test": "slope_ci",
+  "block": "test_dest",
+  "primary": "lawtest_2024",
+  "replication": "M19_new",
+  "criterion": "留出城上按城市 bootstrap（B = 5000）得到的斜率 95% 区间不含 0，且方向与登记一致（控制量见 control）；在计划 7 一族假设内做 Holm 校正（与旧的 15 条分开计数）；斜率大小只报告不判定；主检验（2024 年规律检验城）通过 = 支持，主检验与独立复制（2019 年新达标城，非通勤）都通过 = 确认",
+  "evidence": {
+   "n": 35,
+   "stat": -3.1147778147491723,
+   "ci": [
+    -4.428259250116593,
+    -2.1249065718844884
+   ],
+   "rank_r": 0.6920665834954443,
+   "p": 0.0005,
+   "plain_slope": -3.1147778147491723
+  },
+  "known_flag": [
+   "own descriptive observation on the discovery cities before registration: c0514c1 turning distance shrinks with city size, rho -0.84"
+  ]
+ },
+ {
+  "id": "P7-02",
+  "statement": "「都市区人口的对数」越高的城市，「c0355r1 用其余发现城常数中位数直接套用，比本城重拟合多出的测试块 NLL（nats/visit）」越大",
+  "outcome": "transfer_loss_c0355r1",
+  "covariate": "log_population",
+  "control": null,
+  "direction": "+",
+  "test": "slope_ci",
+  "block": "test_dest",
+  "primary": "lawtest_2024",
+  "replication": "M19_new",
+  "criterion": "留出城上按城市 bootstrap（B = 5000）得到的斜率 95% 区间不含 0，且方向与登记一致（控制量见 control）；在计划 7 一族假设内做 Holm 校正（与旧的 15 条分开计数）；斜率大小只报告不判定；主检验（2024 年规律检验城）通过 = 支持，主检验与独立复制（2019 年新达标城，非通勤）都通过 = 确认",
+  "evidence": {
+   "n": 35,
+   "stat": 0.011474501171538773,
+   "ci": [
+    0.006669296784717511,
+    0.015642180740609413
+   ],
+   "rank_r": 0.6796821547265005,
+   "p": 0.0005,
+   "plain_slope": 0.011474501171538773
+  },
+  "known_flag": []
+ },
+ {
+  "id": "P7-03",
+  "statement": "「主干道长度（km，roads_builtup / osm road_km）/ 建成小区（居住设备 ≥ 30）面积（km²）」越高的城市，「c0262 在 5–10 km 段参考点上的距离弹性 e_d」越小（控制都市区人口对数）",
+  "outcome": "ed_5_10km_c0262",
+  "covariate": "road_density",
+  "control": "log_population",
+  "direction": "-",
+  "test": "partial_slope_ci",
+  "block": "test_dest",
+  "primary": "lawtest_2024",
+  "replication": "M19_new",
+  "criterion": "留出城上按城市 bootstrap（B = 5000）得到的斜率 95% 区间不含 0，且方向与登记一致（控制量见 control）；在计划 7 一族假设内做 Holm 校正（与旧的 15 条分开计数）；斜率大小只报告不判定；主检验（2024 年规律检验城）通过 = 支持，主检验与独立复制（2019 年新达标城，非通勤）都通过 = 确认",
+  "evidence": {
+   "n": 35,
+   "stat": -0.13559995706109962,
+   "ci": [
+    -0.1995827685965375,
+    -0.07911696595545424
+   ],
+   "rank_r": 0.660250972290482,
+   "p": 0.0005,
+   "plain_slope": -0.26627226481467103
+  },
+  "known_flag": []
+ },
+ {
+  "id": "P7-04",
+  "statement": "「距 CBD 10 km 以内的人口比例；CBD = form_report 里 cbd_units 的就业加权质心（EPSG:5070）」越高的城市，「c0355r1 的 e_N 对 ln d_ref 的斜率」越小（控制都市区人口对数）",
+  "outcome": "slope_eN_logd_c0355r1",
+  "covariate": "compactness",
+  "control": "log_population",
+  "direction": "-",
+  "test": "partial_slope_ci",
+  "block": "test_dest",
+  "primary": "lawtest_2024",
+  "replication": "M19_new",
+  "criterion": "留出城上按城市 bootstrap（B = 5000）得到的斜率 95% 区间不含 0，且方向与登记一致（控制量见 control）；在计划 7 一族假设内做 Holm 校正（与旧的 15 条分开计数）；斜率大小只报告不判定；主检验（2024 年规律检验城）通过 = 支持，主检验与独立复制（2019 年新达标城，非通勤）都通过 = 确认",
+  "evidence": {
+   "n": 35,
+   "stat": -0.4158390809192832,
+   "ci": [
+    -0.5931899922255724,
+    -0.2792822220718947
+   ],
+   "rank_r": 0.6262668338280732,
+   "p": 0.0005,
+   "plain_slope": -0.013719304860900469
+  },
+  "known_flag": []
+ },
+ {
+  "id": "P7-05",
+  "statement": "「所有就业次中心的就业份额（多中心程度）」越高的城市，「c0355r1 的 e_N 对 ln d_ref 的斜率」越小（控制都市区人口对数）",
+  "outcome": "slope_eN_logd_c0355r1",
+  "covariate": "subcentre_job_share",
+  "control": "log_population",
+  "direction": "-",
+  "test": "partial_slope_ci",
+  "block": "test_dest",
+  "primary": "lawtest_2024",
+  "replication": "M19_new",
+  "criterion": "留出城上按城市 bootstrap（B = 5000）得到的斜率 95% 区间不含 0，且方向与登记一致（控制量见 control）；在计划 7 一族假设内做 Holm 校正（与旧的 15 条分开计数）；斜率大小只报告不判定；主检验（2024 年规律检验城）通过 = 支持，主检验与独立复制（2019 年新达标城，非通勤）都通过 = 确认",
+  "evidence": {
+   "n": 35,
+   "stat": -0.3531345966615291,
+   "ci": [
+    -0.509970033786557,
+    -0.20690593043449826
+   ],
+   "rank_r": 0.625296440293374,
+   "p": 0.0005,
+   "plain_slope": -0.33549429883489107
+  },
+  "known_flag": [
+   "own descriptive observation on the discovery cities before registration: polycentric cities, slower rise of e_N with distance, rho -0.74"
+  ]
+ },
+ {
+  "id": "P7-06",
+  "statement": "「主干道长度（km，roads_builtup / osm road_km）/ 建成小区（居住设备 ≥ 30）面积（km²）」越高的城市，「灵活模型 10–20 km 段的距离弹性 e_d」越小（控制都市区人口对数）",
+  "outcome": "ed_10_20km",
+  "covariate": "road_density",
+  "control": "log_population",
+  "direction": "-",
+  "test": "partial_slope_ci",
+  "block": "test_dest",
+  "primary": "lawtest_2024",
+  "replication": "M19_new",
+  "criterion": "留出城上按城市 bootstrap（B = 5000）得到的斜率 95% 区间不含 0，且方向与登记一致（控制量见 control）；在计划 7 一族假设内做 Holm 校正（与旧的 15 条分开计数）；斜率大小只报告不判定；主检验（2024 年规律检验城）通过 = 支持，主检验与独立复制（2019 年新达标城，非通勤）都通过 = 确认",
+  "evidence": {
+   "n": 35,
+   "stat": -0.2822825748498291,
+   "ci": [
+    -0.45345849011291345,
+    -0.13516700487435854
+   ],
+   "rank_r": 0.6017122376366776,
+   "p": 0.0005,
+   "plain_slope": -0.36005746653926324
+  },
+  "known_flag": []
+ },
+ {
+  "id": "P7-07",
+  "statement": "「主干道路网绕行系数：建成小区质心中随机抽 500 对（seed 20261110，直线距离 2–20 km），吸附到 roads_builtup 主干道图的最近节点，最短路长度 / 两节点直线距离的中位数；有效对 < 100 时为缺失。只有主干道，属于近似」越高的城市，「c0355r1 在 5–10 km 段参考点上的距离弹性 e_d」越大（控制都市区人口对数）",
+  "outcome": "ed_5_10km_c0355r1",
+  "covariate": "circuity",
+  "control": "log_population",
+  "direction": "+",
+  "test": "partial_slope_ci",
+  "block": "test_dest",
+  "primary": "lawtest_2024",
+  "replication": "M19_new",
+  "criterion": "留出城上按城市 bootstrap（B = 5000）得到的斜率 95% 区间不含 0，且方向与登记一致（控制量见 control）；在计划 7 一族假设内做 Holm 校正（与旧的 15 条分开计数）；斜率大小只报告不判定；主检验（2024 年规律检验城）通过 = 支持，主检验与独立复制（2019 年新达标城，非通勤）都通过 = 确认",
+  "evidence": {
+   "n": 35,
+   "stat": 1.515782607217805,
+   "ci": [
+    0.7495679168682402,
+    2.1295875359674366
+   ],
+   "rank_r": 0.5409810627141415,
+   "p": 0.001,
+   "plain_slope": 2.314705625339515
+  },
+  "known_flag": [
+   "own hypothesis suggested by the Philadelphia / Pittsburgh transfer diagnostic on the confirmation cities (报告_确认 §11, 11-10)"
+  ]
+ },
+ {
+  "id": "P7-08",
+  "statement": "「主干道路网绕行系数：建成小区质心中随机抽 500 对（seed 20261110，直线距离 2–20 km），吸附到 roads_builtup 主干道图的最近节点，最短路长度 / 两节点直线距离的中位数；有效对 < 100 时为缺失。只有主干道，属于近似」越高的城市，「灵活模型 1–2 km 段的距离弹性 e_d」越大（控制都市区人口对数）",
+  "outcome": "ed_1_2km",
+  "covariate": "circuity",
+  "control": "log_population",
+  "direction": "+",
+  "test": "partial_slope_ci",
+  "block": "test_dest",
+  "primary": "lawtest_2024",
+  "replication": "M19_new",
+  "criterion": "留出城上按城市 bootstrap（B = 5000）得到的斜率 95% 区间不含 0，且方向与登记一致（控制量见 control）；在计划 7 一族假设内做 Holm 校正（与旧的 15 条分开计数）；斜率大小只报告不判定；主检验（2024 年规律检验城）通过 = 支持，主检验与独立复制（2019 年新达标城，非通勤）都通过 = 确认",
+  "evidence": {
+   "n": 35,
+   "stat": 2.5870817833163255,
+   "ci": [
+    1.146410932393889,
+    3.9176773977494426
+   ],
+   "rank_r": 0.5393857369688048,
+   "p": 0.001,
+   "plain_slope": 3.2793282070161167
+  },
+  "known_flag": [
+   "own hypothesis suggested by the Philadelphia / Pittsburgh transfer diagnostic on the confirmation cities (报告_确认 §11, 11-10)"
+  ]
+ },
+ {
+  "id": "P7-09",
+  "statement": "「所有就业次中心的就业份额（多中心程度）」越高的城市，「灵活模型 ≥ 20 km 段的距离弹性 e_d」越大（控制都市区人口对数）",
+  "outcome": "ed_20km",
+  "covariate": "subcentre_job_share",
+  "control": "log_population",
+  "direction": "+",
+  "test": "partial_slope_ci",
+  "block": "test_dest",
+  "primary": "lawtest_2024",
+  "replication": "M19_new",
+  "criterion": "留出城上按城市 bootstrap（B = 5000）得到的斜率 95% 区间不含 0，且方向与登记一致（控制量见 control）；在计划 7 一族假设内做 Holm 校正（与旧的 15 条分开计数）；斜率大小只报告不判定；主检验（2024 年规律检验城）通过 = 支持，主检验与独立复制（2019 年新达标城，非通勤）都通过 = 确认",
+  "evidence": {
+   "n": 35,
+   "stat": 1.9790770788554903,
+   "ci": [
+    1.065468929571726,
+    3.417565658308755
+   ],
+   "rank_r": 0.5343078426871326,
+   "p": 0.0005,
+   "plain_slope": 0.7438737444672003
+  },
+  "known_flag": [
+   "as above (polycentricity and commuting)"
+  ]
+ },
+ {
+  "id": "P7-10",
+  "statement": "「人口密度的人口加权基尼系数（低 = 分布均匀）」越高的城市，「灵活模型 10–20 km 段的距离弹性 e_d」越小（控制都市区人口对数）",
+  "outcome": "ed_10_20km",
+  "covariate": "pop_density_gini",
+  "control": "log_population",
+  "direction": "-",
+  "test": "partial_slope_ci",
+  "block": "test_dest",
+  "primary": "lawtest_2024",
+  "replication": "M19_new",
+  "criterion": "留出城上按城市 bootstrap（B = 5000）得到的斜率 95% 区间不含 0，且方向与登记一致（控制量见 control）；在计划 7 一族假设内做 Holm 校正（与旧的 15 条分开计数）；斜率大小只报告不判定；主检验（2024 年规律检验城）通过 = 支持，主检验与独立复制（2019 年新达标城，非通勤）都通过 = 确认",
+  "evidence": {
+   "n": 35,
+   "stat": -1.3126634242112682,
+   "ci": [
+    -2.0834693152673616,
+    -0.4659112558113706
+   ],
+   "rank_r": 0.5275754013732799,
+   "p": 0.002,
+   "plain_slope": -1.6538736869033752
+  },
+  "known_flag": []
+ }
+]

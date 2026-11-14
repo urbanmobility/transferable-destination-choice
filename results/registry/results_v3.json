@@ -1,0 +1,74 @@
+[
+ {
+  "id": "H4-01",
+  "skeleton": "c0262",
+  "parameter": "ed_5_10km",
+  "covariate": "log_population",
+  "direction": "-",
+  "test": "slope_ci",
+  "stat": -0.14786179853952594,
+  "p": 0.0,
+  "pass_raw": true,
+  "n": 26,
+  "ci_lo": -0.21379155350655604,
+  "ci_hi": -0.09699346853778676,
+  "B": 5000,
+  "m": 15,
+  "holm": true,
+  "pass": true,
+  "prev_still_pass": {
+   "H1-01": true,
+   "H2-03": true,
+   "H3-01": true,
+   "H3-02": true
+  }
+ },
+ {
+  "id": "H4-02",
+  "skeleton": "c0514c1",
+  "parameter": "ed_5_10km",
+  "covariate": "log_population",
+  "direction": "-",
+  "test": "slope_ci",
+  "stat": -0.11569054921311478,
+  "p": 0.0,
+  "pass_raw": true,
+  "n": 26,
+  "ci_lo": -0.1885919712636089,
+  "ci_hi": -0.055806046294108326,
+  "B": 5000,
+  "m": 15,
+  "holm": true,
+  "pass": true,
+  "prev_still_pass": {
+   "H1-01": true,
+   "H2-03": true,
+   "H3-01": true,
+   "H3-02": true
+  }
+ },
+ {
+  "id": "H4-03",
+  "skeleton": "c0355r1",
+  "parameter": "ed_5_10km",
+  "covariate": "log_population",
+  "direction": "-",
+  "test": "slope_ci",
+  "stat": -0.1038698677796276,
+  "p": 0.0016,
+  "pass_raw": true,
+  "n": 26,
+  "ci_lo": -0.1885658693042404,
+  "ci_hi": -0.03964797629399611,
+  "B": 5000,
+  "m": 15,
+  "holm": true,
+  "pass": true,
+  "prev_still_pass": {
+   "H1-01": true,
+   "H2-03": true,
+   "H3-01": true,
+   "H3-02": true
+  }
+ }
+]

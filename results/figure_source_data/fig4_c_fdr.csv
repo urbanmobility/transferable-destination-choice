@@ -1,0 +1,15 @@
+covariate,ed_0_1km,ed_1_2km,ed_2_5km,ed_5_10km,ed_10_20km,ed_20km,eN_0_1km,eN_1_2km,eN_2_5km,eN_5_10km,eN_10_20km,eN_20km
+compactness,False,True,True,False,False,False,False,False,False,False,False,False
+n_subcentres,False,False,False,False,False,False,False,True,False,False,False,False
+subcentre_job_share,False,True,False,False,True,True,False,True,False,False,False,False
+pop_density_gini,True,False,False,False,True,True,False,False,False,False,False,False
+water_share,False,False,False,False,False,False,False,False,True,False,False,False
+poi_mix,False,False,True,False,False,True,False,False,False,False,False,False
+road_density,False,False,False,False,True,False,False,False,False,False,False,False
+secondary_centres,False,False,False,False,True,True,False,False,False,False,False,False
+jobs_housing,False,False,False,True,True,True,False,False,False,False,False,False
+transit_per_1k,False,False,False,False,False,False,False,False,False,False,False,False
+no_car_share,False,False,False,False,False,False,False,False,False,False,False,False
+cbd_job_share,False,True,False,False,False,False,False,False,False,False,False,False
+orientation_entropy,False,False,False,False,False,False,False,False,False,False,False,False
+circuity,False,True,True,False,False,False,False,False,False,False,False,False

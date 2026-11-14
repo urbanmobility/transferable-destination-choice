@@ -1,0 +1,38 @@
+{
+ "opponents": {
+  "fit": {
+   "model": "strexp3_N",
+   "share_med": 0.9315714943453458
+  },
+  "zero_shot": {
+   "model": "strexp3_N",
+   "share_med": 0.9170893108884269
+  },
+  "fit_original": {
+   "model": "kwon",
+   "share_med": 0.7919918645402508
+  },
+  "zero_shot_original": {
+   "model": "grav_power_P",
+   "share_med": -0.020600188775124182
+  }
+ },
+ "rule": {
+  "statistic": "median share over the 35 source cities, validation block, leave-one-city-out",
+  "fit": "highest at level local among all earlier-model versions (Kwon included)",
+  "zero_shot": "highest at level uniform among the versions that do not need the city's own trips (Kwon excluded)",
+  "fit_original": "as fit, among the as-published versions only (population mass, and Kwon)",
+  "zero_shot_original": "as zero_shot, among the as-published versions only",
+  "ties": "fewer free parameters, then the name"
+ },
+ "config_sha": "0de3a5f75762bfec0a12142458e4b17697d093e20b33476bcdd6ffab6a1f1721",
+ "code_sha": {
+  "prior_models.py": "f30404a0edec",
+  "param_transfer.py": "48bf1de5b951",
+  "p9_stats.py": "231c5d84e0f6",
+  "p9.py": "c90339eeb535"
+ },
+ "fits_source_sha": "9c927b91f899",
+ "prerun_sha": "3e054d31ab8a",
+ "time": "2026-11-11T13:09:37Z"
+}

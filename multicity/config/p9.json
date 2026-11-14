@@ -1,0 +1,227 @@
+{
+ "what": "Plan 9 (design of 2026-11-11: earlier models and transfer; approved 2026-11-11 with 32 target cities): methods fixed before the source pre-run; the opponents are chosen by `opponent_rule` from the source pre-run and written once to results/multicity/p9/opponents.json before any target-city result.",
+ "seed": 20261111,
+ "n_orig": 300,
+ "starts": 5,
+ "fit_seed": 0,
+ "bootstrap": 5000,
+ "alpha": 0.05,
+ "min_donors": 10,
+ "source_groups": [
+  "discovery"
+ ],
+ "target_groups": [
+  "lawtest",
+  "confirm"
+ ],
+ "blocks": {
+  "source": "val",
+  "target": "test_dest"
+ },
+ "ours": {
+  "primary": "c0355r1",
+  "reported": [
+   "c0355r1",
+   "c0262",
+   "c0514c1",
+   "c0413c1r1",
+   "c0079c1"
+  ]
+ },
+ "prior": [
+  "grav_power_P",
+  "grav_power_N",
+  "grav_exp_P",
+  "grav_exp_N",
+  "S0_N",
+  "strexp1_P",
+  "strexp1_N",
+  "strexp3_P",
+  "strexp3_N",
+  "cab_pow_P",
+  "cab_pow_N",
+  "cab_exp_P",
+  "cab_exp_N",
+  "rad_P",
+  "rad_N",
+  "ext_rad_P",
+  "ext_rad_N",
+  "io_P",
+  "io_N",
+  "pwo_P",
+  "pwo_N",
+  "ops_P",
+  "ops_N",
+  "kwon"
+ ],
+ "levels": [
+  "local",
+  "uniform",
+  "size",
+  "form"
+ ],
+ "size_covariate": "log_population",
+ "form_covariates": [
+  "pop_density_gini",
+  "cbd_job_share",
+  "subcentre_job_share",
+  "n_subcentres",
+  "orientation_entropy",
+  "water_share",
+  "transit_per_1k",
+  "no_car_share",
+  "road_density",
+  "poi_mix",
+  "jobs_housing",
+  "compactness",
+  "secondary_centres",
+  "circuity"
+ ],
+ "ridge_alphas": {
+  "log10_lo": -1,
+  "log10_hi": 3,
+  "n": 13
+ },
+ "clip_quantiles": [
+  0.05,
+  0.95
+ ],
+ "opponent_rule": {
+  "statistic": "median share over the 35 source cities, validation block, leave-one-city-out",
+  "fit": "highest at level local among all earlier-model versions (Kwon included)",
+  "zero_shot": "highest at level uniform among the versions that do not need the city's own trips (Kwon excluded)",
+  "fit_original": "as fit, among the as-published versions only (population mass, and Kwon)",
+  "zero_shot_original": "as zero_shot, among the as-published versions only",
+  "ties": "fewer free parameters, then the name"
+ },
+ "contrasts": {
+  "primary": {
+   "C1": [
+    [
+     "primary",
+     "local"
+    ],
+    [
+     "fit",
+     "local"
+    ]
+   ],
+   "C2": [
+    [
+     "primary",
+     "uniform"
+    ],
+    [
+     "zero_shot",
+     "uniform"
+    ]
+   ],
+   "C3": [
+    [
+     "primary",
+     "size"
+    ],
+    [
+     "primary",
+     "uniform"
+    ]
+   ],
+   "C4": [
+    [
+     "primary",
+     "uniform"
+    ],
+    [
+     "fit",
+     "local"
+    ]
+   ]
+  },
+  "descriptive": {
+   "D1": [
+    [
+     "primary",
+     "local"
+    ],
+    [
+     "fit_original",
+     "local"
+    ]
+   ],
+   "D2": [
+    [
+     "primary",
+     "uniform"
+    ],
+    [
+     "zero_shot_original",
+     "uniform"
+    ]
+   ],
+   "D4": [
+    [
+     "primary",
+     "uniform"
+    ],
+    [
+     "fit_original",
+     "local"
+    ]
+   ]
+  },
+  "judgement": "paired share difference by target city; \"better\" = the city-bootstrap 95% interval of the median difference lies above 0 and the contrast passes Holm over C1-C4; \"worse\" symmetric; otherwise \"no distinguishable difference\". Descriptive contrasts get no verdict."
+ },
+ "failures": "no finite NLL = failure: share -inf in the quantiles, a loss in a paired comparison, a tie when both sides fail",
+ "regression": {
+  "against": "results/multicity/p9_spike/transfer_scored.parquet (the 2026-11-11 spike, same cities and block as the source pre-run)",
+  "tolerance": 0.005,
+  "median_share": [
+   [
+    "c0355r1",
+    "local",
+    0.965
+   ],
+   [
+    "c0355r1",
+    "uniform",
+    0.947
+   ],
+   [
+    "c0355r1",
+    "size",
+    0.946
+   ],
+   [
+    "grav_power_N",
+    "local",
+    0.851
+   ],
+   [
+    "strexp3_N",
+    "local",
+    0.932
+   ],
+   [
+    "strexp3_N",
+    "uniform",
+    0.917
+   ],
+   [
+    "S0_N",
+    "local",
+    0.904
+   ],
+   [
+    "kwon",
+    "local",
+    0.792
+   ]
+  ]
+ },
+ "notes": [
+  "Guo et al. 2026 (strexp1): d in km; the paper gives no unit, and the relaxed form strexp3 has a free scale.",
+  "Kwon et al. 2023: maximum likelihood here instead of the paper's per-pair OLS; groups and masses use the city's own training-period volumes, so its uniform/size/form rows carry only the exponents and intercepts over.",
+  "POI-count versions: both ends and the intervening opportunities for rad, ext_rad, io, pwo, ops; the destination only for the gravity, stretched-exponential and Cabanas-Tirapu forms.",
+  "form level: constants clipped to the donors' 5%-95% order statistics (not interpolated) before the ridge."
+ ]
+}

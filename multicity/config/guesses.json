@@ -1,0 +1,20 @@
+{
+ "note": "Seed expressions for every search run (plan 2 Task 2, round 2 of the queue, 11-04). The first queue (no seeds) ran 12 h on 4 pooled runs and no front member ever used P_j / E_j / N_j, although logd + log(1 + N_j) alone fits the same rows better (5.260 vs 5.342); a 4-variable search finds mass terms in 6 iterations. Written with variable names (sr_data.VARS); converted to PySR's positional #k with the run's active variables. Forms: gravity with jobs or POI mass, both, and the round-1 skeleton A family.",
+ "single": [
+  "log(N_j + 1.0) - 1.7 * logd",
+  "log(E_j + 1.0) - 1.7 * logd",
+  "log(E_j + 1.0) + log(N_j + 1.0) - 1.7 * logd",
+  "log(0.0145 * E_j + N_j - 2.0 * s_office + 16.6) - 2.5 * log(d + 2.7)"
+ ],
+ "city": [
+  {"f": "log(N_j + 1.0)", "g": "logd", "h": "d", "p1": -1.7, "p2": 0.0},
+  {"f": "log(E_j + 1.0)", "g": "logd", "h": "d", "p1": -1.7, "p2": 0.0},
+  {"f": "log(E_j + 1.0) + log(N_j + 1.0)", "g": "logd", "h": "d", "p1": -1.7, "p2": 0.0},
+  {"f": "log(0.0145 * E_j + N_j - 2.0 * s_office + 16.6)", "g": "nexp(E_j)", "h": "log(d + 2.7)", "p1": -2.2, "p2": -2.5}
+ ],
+ "single_B": ["log(N_j + 1.0)", "log(E_j + 1.0) + log(N_j + 1.0)"],
+ "city_B": [
+  {"f": "log(N_j + 1.0)", "g": "N_j", "h": "E_j", "p1": 0.0, "p2": 0.0},
+  {"f": "log(E_j + 1.0) + log(N_j + 1.0)", "g": "N_j", "h": "E_j", "p1": 0.0, "p2": 0.0}
+ ]
+}

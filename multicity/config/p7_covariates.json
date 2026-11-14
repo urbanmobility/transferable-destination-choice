@@ -1,0 +1,11 @@
+{
+ "transit_per_1k": "公交站点数（OSM：bus_stop、railway station/halt/tram_stop/subway_entrance、public_transport=station）/ 人口 × 1000，全城合计",
+ "no_car_share": "无车家庭比例（ACS 2015–2019）按小区人口加权的平均",
+ "road_density": "主干道长度（km，roads_builtup / osm road_km）/ 建成小区（居住设备 ≥ 30）面积（km²）",
+ "poi_mix": "全城 POI 在 7 个有数据的类别上的份额的香农熵（自然对数；等量时为 ln 7）",
+ "jobs_housing": "职住相异指数 ½ Σ_i |J_i/J − P_i/P|（LODES 就业 J、ACS 人口 P，全部小区）",
+ "compactness": "距 CBD 10 km 以内的人口比例；CBD = form_report 里 cbd_units 的就业加权质心（EPSG:5070）",
+ "secondary_centres": "次中心就业份额 − CBD 就业份额（form_metrics.csv 的 subcentre_job_share − cbd_job_share）",
+ "circuity": "主干道路网绕行系数：建成小区质心中随机抽 500 对（seed 20261110，直线距离 2–20 km），吸附到 roads_builtup 主干道图的最近节点，最短路长度 / 两节点直线距离的中位数；有效对 < 100 时为缺失。只有主干道，属于近似",
+ "tract_area": "普查小区面积（km²）按人口加权的平均；文献中空间单元大小是衰减参数的已知驱动因素（Lenormand 2012/2016），作为规模律的混杂因素"
+}

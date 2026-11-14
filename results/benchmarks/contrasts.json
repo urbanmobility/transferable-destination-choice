@@ -1,0 +1,186 @@
+{
+ "contrasts": {
+  "C1": {
+   "n": 32,
+   "median": 0.030429402507255676,
+   "ci_lo": 0.011129693174738997,
+   "ci_hi": 0.06792866370418577,
+   "p": 0.0003999200159968006,
+   "wins": 26,
+   "losses": 6,
+   "ties": 0,
+   "B": 5000,
+   "a": [
+    "c0355r1",
+    "local"
+   ],
+   "b": [
+    "strexp3_N",
+    "local"
+   ],
+   "ci_excludes_zero": true,
+   "holm": true,
+   "verdict": "better"
+  },
+  "C2": {
+   "n": 32,
+   "median": 0.03335459711489719,
+   "ci_lo": 0.009805292470856153,
+   "ci_hi": 0.05739034108231433,
+   "p": 0.0003999200159968006,
+   "wins": 26,
+   "losses": 6,
+   "ties": 0,
+   "B": 5000,
+   "a": [
+    "c0355r1",
+    "uniform"
+   ],
+   "b": [
+    "strexp3_N",
+    "uniform"
+   ],
+   "ci_excludes_zero": true,
+   "holm": true,
+   "verdict": "better"
+  },
+  "C3": {
+   "n": 32,
+   "median": 0.0012101115473197033,
+   "ci_lo": -0.0022793760566756083,
+   "ci_hi": 0.006048156674820115,
+   "p": 0.5510897820435913,
+   "wins": 18,
+   "losses": 14,
+   "ties": 0,
+   "B": 5000,
+   "a": [
+    "c0355r1",
+    "size"
+   ],
+   "b": [
+    "c0355r1",
+    "uniform"
+   ],
+   "ci_excludes_zero": false,
+   "holm": false,
+   "verdict": "no distinguishable difference"
+  },
+  "C4": {
+   "n": 32,
+   "median": 0.014555768944677028,
+   "ci_lo": 0.004850524594558814,
+   "ci_hi": 0.04964263551947312,
+   "p": 0.01199760047990402,
+   "wins": 23,
+   "losses": 9,
+   "ties": 0,
+   "B": 5000,
+   "a": [
+    "c0355r1",
+    "uniform"
+   ],
+   "b": [
+    "strexp3_N",
+    "local"
+   ],
+   "ci_excludes_zero": true,
+   "holm": true,
+   "verdict": "better"
+  },
+  "D1": {
+   "n": 32,
+   "median": 0.21640624100237943,
+   "ci_lo": 0.15328960693069615,
+   "ci_hi": 0.2836641609452015,
+   "p": 0.0003999200159968006,
+   "wins": 30,
+   "losses": 2,
+   "ties": 0,
+   "B": 5000,
+   "a": [
+    "c0355r1",
+    "local"
+   ],
+   "b": [
+    "kwon",
+    "local"
+   ],
+   "ci_excludes_zero": true,
+   "holm": null,
+   "verdict": null
+  },
+  "D2": {
+   "n": 32,
+   "median": 0.9291643143031474,
+   "ci_lo": 0.8909755130700725,
+   "ci_hi": 0.9713377586068033,
+   "p": 0.0003999200159968006,
+   "wins": 32,
+   "losses": 0,
+   "ties": 0,
+   "B": 5000,
+   "a": [
+    "c0355r1",
+    "uniform"
+   ],
+   "b": [
+    "grav_power_P",
+    "uniform"
+   ],
+   "ci_excludes_zero": true,
+   "holm": null,
+   "verdict": null
+  },
+  "D4": {
+   "n": 32,
+   "median": 0.21171011680583957,
+   "ci_lo": 0.1592000256911832,
+   "ci_hi": 0.23971912790995203,
+   "p": 0.0003999200159968006,
+   "wins": 31,
+   "losses": 1,
+   "ties": 0,
+   "B": 5000,
+   "a": [
+    "c0355r1",
+    "uniform"
+   ],
+   "b": [
+    "kwon",
+    "local"
+   ],
+   "ci_excludes_zero": true,
+   "holm": null,
+   "verdict": null
+  }
+ },
+ "opponents": {
+  "fit": {
+   "model": "strexp3_N",
+   "share_med": 0.9315714943453458
+  },
+  "zero_shot": {
+   "model": "strexp3_N",
+   "share_med": 0.9170893108884269
+  },
+  "fit_original": {
+   "model": "kwon",
+   "share_med": 0.7919918645402508
+  },
+  "zero_shot_original": {
+   "model": "grav_power_P",
+   "share_med": -0.020600188775124182
+  }
+ },
+ "n_cities": 32,
+ "config_sha": "0de3a5f75762bfec0a12142458e4b17697d093e20b33476bcdd6ffab6a1f1721",
+ "code_sha": {
+  "prior_models.py": "f30404a0edec",
+  "param_transfer.py": "48bf1de5b951",
+  "p9_stats.py": "231c5d84e0f6",
+  "p9.py": "c90339eeb535"
+ },
+ "target_sha": "ee52b50824e4",
+ "time": "2026-11-11T13:28:41Z"
+}

@@ -1,0 +1,20 @@
+[
+ {"id": "R1", "parent": "c0413c1",
+  "sympy": "-0.111*x2*log(x18*x6 + x26 + 1) + 0.114*log(x7) + log(x6 + 1)",
+  "rationale": "c0413c1 without the leisure share s_j (the term matters in 3 of 35 discovery cities)"},
+ {"id": "R2", "parent": "c0413c1",
+  "sympy": "-0.111*x2*log(x26 + 2000*x6 + 1) + 0.114*log(x7) + log(x6 + 1)",
+  "rationale": "dimensionally consistent opportunity mass: intervening population plus a weighted POI count (the weight converts POIs to person-equivalents); no s_j"},
+ {"id": "R3", "parent": "c0413c1",
+  "sympy": "-0.065*x2*log(x26 + 1) - 0.065*x2*log(x6 + 1) - 0.065*x2*log(x18 + 1) + 0.114*log(x7) + log(x6 + 1)",
+  "rationale": "log-separable distance exponent beta_ij = a log(1+S_ij) + b log(1+N_j) + c log(1+rho_i), no addition across dimensions; no s_j"},
+ {"id": "R4", "parent": "c0413c1",
+  "sympy": "-0.111*x2*log(x26 + x18*x7 + 1) + 0.114*log(x7) + log(x6 + 1)",
+  "rationale": "dimensionally consistent opportunity mass in persons: intervening population plus origin density times destination area (reference only: the current unit-mixing check flags density*area + count); no s_j"},
+ {"id": "R5", "parent": "c0353c1",
+  "sympy": "(1.561 - 8.576*x1^0.1944)/(x6 + 1)^0.09774 + x7^0.1287",
+  "rationale": "c0353c1 with (N_j + 1) in the denominator so that cities with zero-POI destinations are fittable"},
+ {"id": "R6", "parent": "c0355",
+  "sympy": "-4.755*x1^0.2994/(x6 + 1)^0.1131 + x7^0.1299",
+  "rationale": "c0355 with (N_j + 1) in the denominator so that cities with zero-POI destinations are fittable"}
+]

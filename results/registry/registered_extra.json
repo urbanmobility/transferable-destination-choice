@@ -1,0 +1,30 @@
+[
+ {
+  "statement": "灵活分段模型（M2 设计加各距离段的规模项）在 5–10 km 段的距离弹性 e_d 随都市区人口对数增大而更负，即大城市的中远距离衰减更陡。",
+  "skeleton": "flex_banded",
+  "parameter": "ed_5_10km",
+  "covariate": "log_population",
+  "direction": "-",
+  "test": "slope_ci",
+  "criterion": "以 ed_5_10km（prefreeze.flex_quantities：第 3 段 5–10 km、训练期出行 ≥ 1000 时的 e_d）为响应、log_population 为唯一预测变量做 OLS；检验城的城市 bootstrap（B = 5000）95% CI 不含 0 且斜率 < 0；Holm 按累计登记的全部假设（H1-01 至 H2-05 与本轮）校正，α = 0.05。",
+  "id": "H3-01",
+  "cycle": 3,
+  "sha": "fda7e776a258",
+  "source": "executor (design decision 2026-11-09)",
+  "registered_at": "2026-11-09T16:46:10"
+ },
+ {
+  "statement": "灵活分段模型中，目的地规模弹性 e_N 随距离上升：各城 e_N 对 ln d 的 OLS 斜率的城市中位数大于 0。",
+  "skeleton": "flex_banded",
+  "parameter": "slope_eN_logd",
+  "covariate": "none",
+  "direction": "+",
+  "test": "median_sign_ci",
+  "criterion": "slope_eN_logd（prefreeze.flex_quantities：训练期出行 ≥ 1000、至少 3 段时 e_N 对 ln d_ref 的 OLS 斜率）在检验城上的城市中位数，城市 bootstrap（B = 5000）95% CI 下限 > 0；Holm 同上，α = 0.05。",
+  "id": "H3-02",
+  "cycle": 3,
+  "sha": "f9ad6c9f0358",
+  "source": "executor (design decision 2026-11-09)",
+  "registered_at": "2026-11-09T16:46:10"
+ }
+]

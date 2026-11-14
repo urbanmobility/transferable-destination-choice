@@ -1,0 +1,18 @@
+# Multi-city search queue (plan 2 Task 2; design §5.3). One run per line: SCALE VARIANT TEMPLATE SEED NITER N_ORIG
+# Environment (set by run_queue.sh): ODSR_LINE=M, SR_REGIONS = the search cities of config/cities.csv (role == search,
+# file order), SR_DROP_VARS=s_health, SR_NEG_RATE=0.1, SR_TURBO=1, SR_THREADS=16; wall clock SR_TIMEOUT=43200 for the
+# pooled city8 runs and 28800 for the single-city runs; 4 runs in parallel; fronts snapshotted every 20 min.
+# Pooled variant A x 3 seeds (50 origins per city), pooled variant B x 1 seed (diagnostic only), single-city variant A
+# x 8 search cities (100 origins). Frozen once the ledger records this file's sha.
+tract A city8 0 40 50
+tract A city8 1 40 50
+tract A city8 2 40 50
+tract B city8 0 40 50
+tract A single:35620 0 40 100
+tract A single:16980 0 40 100
+tract A single:26420 0 40 100
+tract A single:31080 0 40 100
+tract A single:12060 0 40 100
+tract A single:BAY9 0 40 100
+tract A single:14460 0 40 100
+tract A single:42660 0 40 100

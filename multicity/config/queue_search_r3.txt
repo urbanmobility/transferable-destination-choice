@@ -1,0 +1,18 @@
+# Multi-city search queue, round 3 (11-04; plan 2 addendum "call point 0"). The same 12 runs with new seeds; every run
+# gets its own seed file config/guesses/<tag>.json written by seed_agent.py: the hand seeds of config/guesses.json plus
+# a different, family-rotated subset of the LLM-proposed, code-screened skeletons (run_queue.sh uses the per-run file
+# when it exists). All 12 in parallel x 10 threads (MAXP 12); caps 43200 s (pooled city8) / 28800 s (single); other
+# environment as rounds 1-2. Rounds 1 and 2 (stopped early) keep their fronts and snapshots, pooled by the selection.
+# Frozen once the ledger records this file's sha.
+tract A city8 20 40 50
+tract A city8 21 40 50
+tract A city8 22 40 50
+tract B city8 20 40 50
+tract A single:35620 20 40 100
+tract A single:16980 20 40 100
+tract A single:26420 20 40 100
+tract A single:31080 20 40 100
+tract A single:12060 20 40 100
+tract A single:BAY9 20 40 100
+tract A single:14460 20 40 100
+tract A single:42660 20 40 100

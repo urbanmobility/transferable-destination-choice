@@ -1,0 +1,19 @@
+# Multi-city search queue, round 2 (11-04; plan 2 Task 2 ruling). The round-1 queue (queue_search.txt) ran its 4 pooled
+# runs for 12 h without seeds: no front member ever used P_j / E_j / N_j although logd + log(1 + N_j) fits the same rows
+# better; its 8 single-city runs never started. Round 2 = the same 12 runs with new seeds, every run seeded with
+# config/guesses.json (SR_GUESSES), all 12 in parallel x 10 threads (MAXP 12). Environment as round 1: ODSR_LINE=M,
+# SR_REGIONS = the search cities of config/cities.csv, SR_DROP_VARS=s_health, SR_NEG_RATE=0.1, SR_TURBO=1; wall clock
+# SR_TIMEOUT=43200 for the pooled city8 runs and 28800 for the single-city runs. The round-1 pooled fronts are also
+# pooled by the selection. Frozen once the ledger records this file's sha.
+tract A city8 10 40 50
+tract A city8 11 40 50
+tract A city8 12 40 50
+tract B city8 10 40 50
+tract A single:35620 10 40 100
+tract A single:16980 10 40 100
+tract A single:26420 10 40 100
+tract A single:31080 10 40 100
+tract A single:12060 10 40 100
+tract A single:BAY9 10 40 100
+tract A single:14460 10 40 100
+tract A single:42660 10 40 100

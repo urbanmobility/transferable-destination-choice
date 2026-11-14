@@ -1,0 +1,592 @@
+{
+ "variants": {
+  "V1": {
+   "merge_margin": 0.03,
+   "linkage": "chain",
+   "near_margin": 0.05,
+   "n_reps": 535,
+   "gate": [
+    {
+     "cid": "c0079c1",
+     "n_near": 7,
+     "n_flags": 0,
+     "complexity": 13,
+     "merged_from": [
+      "c0353c1r1",
+      "c0354c1",
+      "c0355r1"
+     ]
+    },
+    {
+     "cid": "c0355",
+     "n_near": 4,
+     "n_flags": 0,
+     "complexity": 15,
+     "merged_from": []
+    },
+    {
+     "cid": "c0514c1",
+     "n_near": 4,
+     "n_flags": 0,
+     "complexity": 15,
+     "merged_from": []
+    },
+    {
+     "cid": "c0353c1",
+     "n_near": 5,
+     "n_flags": 0,
+     "complexity": 16,
+     "merged_from": []
+    },
+    {
+     "cid": "c0194c1",
+     "n_near": 4,
+     "n_flags": 0,
+     "complexity": 20,
+     "merged_from": []
+    },
+    {
+     "cid": "c0354",
+     "n_near": 5,
+     "n_flags": 0,
+     "complexity": 21,
+     "merged_from": []
+    },
+    {
+     "cid": "c0262",
+     "n_near": 5,
+     "n_flags": 0,
+     "complexity": 23,
+     "merged_from": []
+    },
+    {
+     "cid": "c0353",
+     "n_near": 5,
+     "n_flags": 0,
+     "complexity": 23,
+     "merged_from": []
+    },
+    {
+     "cid": "c0413c1r3",
+     "n_near": 6,
+     "n_flags": 0,
+     "complexity": 39,
+     "merged_from": []
+    },
+    {
+     "cid": "c0181",
+     "n_near": 4,
+     "n_flags": 1,
+     "complexity": 16,
+     "merged_from": []
+    },
+    {
+     "cid": "c0412c1",
+     "n_near": 7,
+     "n_flags": 1,
+     "complexity": 19,
+     "merged_from": []
+    },
+    {
+     "cid": "c0209",
+     "n_near": 4,
+     "n_flags": 1,
+     "complexity": 19,
+     "merged_from": []
+    },
+    {
+     "cid": "c0375",
+     "n_near": 4,
+     "n_flags": 1,
+     "complexity": 20,
+     "merged_from": []
+    },
+    {
+     "cid": "c0373",
+     "n_near": 4,
+     "n_flags": 1,
+     "complexity": 22,
+     "merged_from": []
+    },
+    {
+     "cid": "c0413c1r1",
+     "n_near": 8,
+     "n_flags": 1,
+     "complexity": 24,
+     "merged_from": [
+      "c0413c1r2",
+      "c0413c1r4"
+     ]
+    },
+    {
+     "cid": "c0413",
+     "n_near": 4,
+     "n_flags": 1,
+     "complexity": 24,
+     "merged_from": []
+    },
+    {
+     "cid": "c0412",
+     "n_near": 7,
+     "n_flags": 1,
+     "complexity": 25,
+     "merged_from": []
+    },
+    {
+     "cid": "c0411",
+     "n_near": 7,
+     "n_flags": 1,
+     "complexity": 27,
+     "merged_from": []
+    },
+    {
+     "cid": "c0413c1",
+     "n_near": 7,
+     "n_flags": 1,
+     "complexity": 27,
+     "merged_from": []
+    },
+    {
+     "cid": "c0523",
+     "n_near": 4,
+     "n_flags": 1,
+     "complexity": 30,
+     "merged_from": []
+    },
+    {
+     "cid": "c0084c1",
+     "n_near": 4,
+     "n_flags": 2,
+     "complexity": 22,
+     "merged_from": [
+      "c0122",
+      "c0124",
+      "c0126"
+     ]
+    },
+    {
+     "cid": "c0014",
+     "n_near": 6,
+     "n_flags": 3,
+     "complexity": 28,
+     "merged_from": []
+    }
+   ],
+   "rep_of": {
+    "c0079c1": "c0079c1",
+    "c0353c1": "c0353c1",
+    "c0353c1r1": "c0079c1",
+    "c0355": "c0355",
+    "c0355r1": "c0079c1",
+    "c0354": "c0354",
+    "c0413c1": "c0413c1",
+    "c0413c1r2": "c0413c1r1",
+    "c0413c1r3": "c0413c1r3",
+    "c0262": "c0262"
+   }
+  },
+  "V2": {
+   "merge_margin": 0.05,
+   "linkage": "leader",
+   "near_margin": 0.05,
+   "n_reps": 514,
+   "gate": [
+    {
+     "cid": "c0079c1",
+     "n_near": 7,
+     "n_flags": 0,
+     "complexity": 13,
+     "merged_from": [
+      "c0350",
+      "c0353c1r1",
+      "c0354c1",
+      "c0355r1"
+     ]
+    },
+    {
+     "cid": "c0355",
+     "n_near": 4,
+     "n_flags": 0,
+     "complexity": 15,
+     "merged_from": []
+    },
+    {
+     "cid": "c0514c1",
+     "n_near": 4,
+     "n_flags": 0,
+     "complexity": 15,
+     "merged_from": [
+      "c0349"
+     ]
+    },
+    {
+     "cid": "c0353c1",
+     "n_near": 5,
+     "n_flags": 0,
+     "complexity": 16,
+     "merged_from": []
+    },
+    {
+     "cid": "c0194c1",
+     "n_near": 4,
+     "n_flags": 0,
+     "complexity": 20,
+     "merged_from": []
+    },
+    {
+     "cid": "c0354",
+     "n_near": 5,
+     "n_flags": 0,
+     "complexity": 21,
+     "merged_from": []
+    },
+    {
+     "cid": "c0262",
+     "n_near": 5,
+     "n_flags": 0,
+     "complexity": 23,
+     "merged_from": []
+    },
+    {
+     "cid": "c0353",
+     "n_near": 5,
+     "n_flags": 0,
+     "complexity": 23,
+     "merged_from": []
+    },
+    {
+     "cid": "c0413c1r3",
+     "n_near": 6,
+     "n_flags": 0,
+     "complexity": 39,
+     "merged_from": []
+    },
+    {
+     "cid": "c0181",
+     "n_near": 4,
+     "n_flags": 1,
+     "complexity": 16,
+     "merged_from": []
+    },
+    {
+     "cid": "c0412c1",
+     "n_near": 7,
+     "n_flags": 1,
+     "complexity": 19,
+     "merged_from": []
+    },
+    {
+     "cid": "c0209",
+     "n_near": 4,
+     "n_flags": 1,
+     "complexity": 19,
+     "merged_from": []
+    },
+    {
+     "cid": "c0375",
+     "n_near": 4,
+     "n_flags": 1,
+     "complexity": 20,
+     "merged_from": [
+      "c0373"
+     ]
+    },
+    {
+     "cid": "c0413c1r1",
+     "n_near": 8,
+     "n_flags": 1,
+     "complexity": 24,
+     "merged_from": [
+      "c0413c1",
+      "c0413c1r2",
+      "c0413c1r4"
+     ]
+    },
+    {
+     "cid": "c0413",
+     "n_near": 4,
+     "n_flags": 1,
+     "complexity": 24,
+     "merged_from": []
+    },
+    {
+     "cid": "c0412",
+     "n_near": 7,
+     "n_flags": 1,
+     "complexity": 25,
+     "merged_from": []
+    },
+    {
+     "cid": "c0411",
+     "n_near": 7,
+     "n_flags": 1,
+     "complexity": 27,
+     "merged_from": []
+    },
+    {
+     "cid": "c0523",
+     "n_near": 4,
+     "n_flags": 1,
+     "complexity": 30,
+     "merged_from": []
+    },
+    {
+     "cid": "c0084c1",
+     "n_near": 4,
+     "n_flags": 2,
+     "complexity": 22,
+     "merged_from": [
+      "c0122",
+      "c0124",
+      "c0124c1",
+      "c0126"
+     ]
+    },
+    {
+     "cid": "c0014",
+     "n_near": 6,
+     "n_flags": 3,
+     "complexity": 28,
+     "merged_from": []
+    }
+   ],
+   "rep_of": {
+    "c0079c1": "c0079c1",
+    "c0353c1": "c0353c1",
+    "c0353c1r1": "c0079c1",
+    "c0355": "c0355",
+    "c0355r1": "c0079c1",
+    "c0354": "c0354",
+    "c0413c1": "c0413c1r1",
+    "c0413c1r2": "c0413c1r1",
+    "c0413c1r3": "c0413c1r3",
+    "c0262": "c0262"
+   }
+  },
+  "V3": {
+   "merge_margin": 0.03,
+   "linkage": "leader",
+   "near_margin": 0.05,
+   "n_reps": 556,
+   "gate": [
+    {
+     "cid": "c0079c1",
+     "n_near": 7,
+     "n_flags": 0,
+     "complexity": 13,
+     "merged_from": [
+      "c0354c1"
+     ]
+    },
+    {
+     "cid": "c0355r1",
+     "n_near": 7,
+     "n_flags": 0,
+     "complexity": 14,
+     "merged_from": [
+      "c0353c1r1"
+     ]
+    },
+    {
+     "cid": "c0355",
+     "n_near": 4,
+     "n_flags": 0,
+     "complexity": 15,
+     "merged_from": []
+    },
+    {
+     "cid": "c0514c1",
+     "n_near": 4,
+     "n_flags": 0,
+     "complexity": 15,
+     "merged_from": []
+    },
+    {
+     "cid": "c0353c1",
+     "n_near": 5,
+     "n_flags": 0,
+     "complexity": 16,
+     "merged_from": []
+    },
+    {
+     "cid": "c0194c1",
+     "n_near": 4,
+     "n_flags": 0,
+     "complexity": 20,
+     "merged_from": []
+    },
+    {
+     "cid": "c0354",
+     "n_near": 5,
+     "n_flags": 0,
+     "complexity": 21,
+     "merged_from": []
+    },
+    {
+     "cid": "c0262",
+     "n_near": 5,
+     "n_flags": 0,
+     "complexity": 23,
+     "merged_from": []
+    },
+    {
+     "cid": "c0353",
+     "n_near": 5,
+     "n_flags": 0,
+     "complexity": 23,
+     "merged_from": []
+    },
+    {
+     "cid": "c0413c1r3",
+     "n_near": 6,
+     "n_flags": 0,
+     "complexity": 39,
+     "merged_from": []
+    },
+    {
+     "cid": "c0181",
+     "n_near": 4,
+     "n_flags": 1,
+     "complexity": 16,
+     "merged_from": []
+    },
+    {
+     "cid": "c0412c1",
+     "n_near": 7,
+     "n_flags": 1,
+     "complexity": 19,
+     "merged_from": []
+    },
+    {
+     "cid": "c0209",
+     "n_near": 4,
+     "n_flags": 1,
+     "complexity": 19,
+     "merged_from": []
+    },
+    {
+     "cid": "c0375",
+     "n_near": 4,
+     "n_flags": 1,
+     "complexity": 20,
+     "merged_from": []
+    },
+    {
+     "cid": "c0373",
+     "n_near": 4,
+     "n_flags": 1,
+     "complexity": 22,
+     "merged_from": []
+    },
+    {
+     "cid": "c0413c1r1",
+     "n_near": 8,
+     "n_flags": 1,
+     "complexity": 24,
+     "merged_from": [
+      "c0413c1r2"
+     ]
+    },
+    {
+     "cid": "c0413c1r4",
+     "n_near": 7,
+     "n_flags": 1,
+     "complexity": 24,
+     "merged_from": []
+    },
+    {
+     "cid": "c0413",
+     "n_near": 4,
+     "n_flags": 1,
+     "complexity": 24,
+     "merged_from": []
+    },
+    {
+     "cid": "c0412",
+     "n_near": 7,
+     "n_flags": 1,
+     "complexity": 25,
+     "merged_from": []
+    },
+    {
+     "cid": "c0411",
+     "n_near": 7,
+     "n_flags": 1,
+     "complexity": 27,
+     "merged_from": []
+    },
+    {
+     "cid": "c0413c1",
+     "n_near": 7,
+     "n_flags": 1,
+     "complexity": 27,
+     "merged_from": []
+    },
+    {
+     "cid": "c0523",
+     "n_near": 4,
+     "n_flags": 1,
+     "complexity": 30,
+     "merged_from": []
+    },
+    {
+     "cid": "c0084c1",
+     "n_near": 4,
+     "n_flags": 2,
+     "complexity": 22,
+     "merged_from": [
+      "c0122",
+      "c0124",
+      "c0126"
+     ]
+    },
+    {
+     "cid": "c0014",
+     "n_near": 6,
+     "n_flags": 3,
+     "complexity": 28,
+     "merged_from": []
+    }
+   ],
+   "rep_of": {
+    "c0079c1": "c0079c1",
+    "c0353c1": "c0353c1",
+    "c0353c1r1": "c0355r1",
+    "c0355": "c0355",
+    "c0355r1": "c0355r1",
+    "c0354": "c0354",
+    "c0413c1": "c0413c1",
+    "c0413c1r2": "c0413c1r1",
+    "c0413c1r3": "c0413c1r3",
+    "c0262": "c0262"
+   }
+  }
+ },
+ "reference": {
+  "chain_0.05": {
+   "c0079c1": "c0079c1",
+   "c0353c1": "c0353c1",
+   "c0353c1r1": "c0079c1",
+   "c0355": "c0355",
+   "c0355r1": "c0079c1",
+   "c0354": "c0354",
+   "c0413c1": "c0079c1",
+   "c0413c1r2": "c0079c1",
+   "c0413c1r3": "c0413c1r3",
+   "c0262": "c0262"
+  }
+ },
+ "checks": {
+  "loss_sample": 2997,
+  "loss_close_pairs": {
+   "0.03": 4451,
+   "0.05": 8947
+  },
+  "rank_close_true": 5236,
+  "etas_candidates": 406,
+  "reproduces": {
+   "plan5_0.03": true,
+   "m005_0.05": true
+  }
+ }
+}

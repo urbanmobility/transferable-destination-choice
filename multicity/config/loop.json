@@ -1,0 +1,13 @@
+{
+ "inner_rounds_max": 3,
+ "outer_cycles_max": 2,
+ "llm_calls_max": 600,
+ "review_quota": 60,
+ "hyps_per_cycle": 5,
+ "stable_rounds": 2,
+ "schedule": {
+  "outer_after": "2026-11-07T20:00:00Z",
+  "freeze_request_after": "2026-11-08T20:00:00Z"
+ },
+ "search": {"maxp": 24, "threads": 5, "timeout_s": 10800, "night_only_utc": [3, 15]}
+}

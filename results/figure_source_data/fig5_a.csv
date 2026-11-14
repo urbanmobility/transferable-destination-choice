@@ -1,0 +1,14 @@
+family,label,population,poi,observed_trips,n_free,source,this_study
+strexp3,"Stretched exp., relaxed",0.1035583072532004,0.911971507852492,,3,after Guo 2026,True
+S0,Shifted gravity,,0.9019729862473952,,3,this study,True
+strexp1,Stretched exponential,-0.0327577417606566,0.8885842651161263,,1,Guo 2026,False
+ops,OPS,-0.102728821254138,0.8263463024120368,,0,Liu & Yan 2019,False
+grav_power,Power gravity,-3.486125528913221e-09,0.8182552237440823,,2,Wilson 1971,False
+cab_pow,Cabanas-Tirapu I,0.0274769195179548,0.8112683967449243,,5,2025,False
+cab_exp,Cabanas-Tirapu II,0.0288675316030854,0.8103734983834845,,6,2025,False
+ext_rad,Extended radiation,-0.1718652266302628,0.7461382772105369,,1,Yang 2014,False
+grav_exp,Exponential gravity,-0.1621514651461061,0.6703641019252493,,2,Wilson 1971,False
+io,Intervening opportunities,-0.5998907772921853,0.3913661175410879,,1,Schneider 1959,False
+pwo,PWO,-1.0750055233282216,-0.1952448819858265,,0,Yan 2014,False
+rad,Radiation,-2.9673439531104187,-2.51118220884445,,0,Simini 2012,False
+kwon,Tiered gravity,,,0.7351175730905359,110,Kwon 2023,False
