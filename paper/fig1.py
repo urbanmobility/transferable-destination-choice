@@ -4,7 +4,8 @@ Claim: 67 metropolitan areas are split into non-overlapping groups, and a period
 held out as well, so every test runs on data that took no part in finding what is tested.
   a  the 67 metros: circle area proportional to population; three city groups — Discovery (35), Held-out (26),
      Confirmation (6); the 8 discovery cities used for the formula search carry a dot (a subset, not a fourth group)
-  b  one metro, centre: the choice set (tracts shaded by POI-count quintile) and the main destinations of one home
+  b  one metro, centre: the choice set (tracts shaded by POI-count quintile), the main destinations j of one home i
+     and the choice probability P(j|i) the arcs stand for
   c  the holdout scheme as one object: the destination blocks on the map and a periods x blocks grid that says which
      cell is used to fit, to select and to report
   d  the workflow, drawn; every stage names what its picture shows:
@@ -12,8 +13,8 @@ held out as well, so every test runs on data that took no part in finding what i
                      ranked automatically), the LLM agent proposes and rewrites;
      Hypotheses      a pattern across the discovery cities -> the LLM agent proposes -> a list of hypotheses;
      Held-out test   the same relation on the held-out cities against the discovery fit; supported or not;
-     Freeze          3 formulas;
-     Confirmation    opened after the freeze: 6 unseen cities + the test period & block in all 67 cities;
+     Fixed           3 formulas;
+     Confirmation    evaluated after the formulas are fixed: 6 unseen cities + the test period & block in all 67 cities;
      Benchmark       fit share of our formula above four earlier models.
      The small plots are real results: 5-10 km decay against city size (flexible model) on the discovery and on the
      held-out cities, and the median fit shares of plan 9.
@@ -44,6 +45,7 @@ SEARCH_FILL, VAL_FILL = "#DDDDDA", "#8F8F8A"
 WINDOW_B_KM, WINDOW_C_KM = 18.75, 40.0
 EXCLUDE = {"02", "15", "72", "78", "60", "66", "69"}
 WB = {"facecolor": "white", "edgecolor": "none", "alpha": 0.88, "pad": 1.0}
+PROB = r"$P(j\,|\,i) \;=\; \exp(\eta_{ij}) \;\,/\; \sum_{k}\, \exp(\eta_{ik})$"      # as in Fig. 2c
 BENCH = ("strexp1", "grav_power", "ext_rad", "io")                          # the families of the small benchmark plot
 
 
@@ -250,25 +252,25 @@ def workflow(ax, fig, d) -> list:
     ax.text(tx0 + 7.6, ycity, f"{n['lawtest']} cities", **row)
     src += [{"stage": "Held-out test", "item": c, "x": x, "y": y} for c, x, y in zip(held["city"], held["log_population"], held["ed"])]
 
-    # the outer loop, from the test back to the search; the forward steps
-    ax.add_patch(FancyArrowPatch((tx0 + 5.0, cy + 10.4), (cx + 9.0, cy + 9.4), connectionstyle="arc3,rad=0.10", arrowstyle="-|>",
+    # the outcome of the held-out test goes back to the agent that proposes hypotheses (not to the search); the forward steps
+    ax.add_patch(FancyArrowPatch((tx0 + 5.0, cy + 10.4), (ax_ + 1.2, cy + 10.0), connectionstyle="arc3,rad=0.30", arrowstyle="-|>",
                                  mutation_scale=5, lw=0.7, color=P["ref"], zorder=2, shrinkA=0, shrinkB=0))
-    ax.text(49.0, cy + 14.2, "outer loop", fontsize=5.5, color=P["grey"], ha="center", va="center", fontstyle="italic")
+    ax.text((tx0 + 5.0 + ax_ + 1.2) / 2, cy + 15.0, "pass / fail", fontsize=5.5, color=P["grey"], ha="center", va="center", fontstyle="italic")
     _step(ax, 48.0, 52.5, cy)
     _step(ax, 90.6, 94.4, cy)
 
-    # ---- 4 freeze: what is frozen
+    # ---- 4 fixed: the three formulas
     fx = 129.5
     ax.plot([fx, fx], [ycity + 2.6, cy - 6.6], color=P["heldout"], lw=0.6, ls=(0, (3, 2)), zorder=2)
     ax.plot([fx, fx], [cy + 3.6, ytit - 2.4], color=P["heldout"], lw=0.6, ls=(0, (3, 2)), zorder=2)
     lock_glyph(ax, fx, cy)
-    ax.text(fx, ytit, "Freeze", **head)
+    ax.text(fx, ytit, "Fixed", **head)
     ax.text(fx, cy - 4.6, "3 formulas", **key)
 
-    # ---- 5 confirmation: the two things opened after the freeze, each named
+    # ---- 5 confirmation: the two things evaluated after fixing, each named
     kx = 146.0
     ax.text(kx, ytit, "Confirmation", **head)
-    ax.text(kx, cy + 8.2, "opened after freeze", fontsize=5, color=P["grey"], ha="center", va="center", fontstyle="italic")
+    ax.text(kx, cy + 8.2, "evaluated after fixing", fontsize=5, color=P["grey"], ha="center", va="center", fontstyle="italic")
     ux = kx - 7.4                                                             # the unseen cities, as on the map
     for i in range(int(n["confirm"])):
         ax.scatter([ux - 1.6 + (i % 2) * 3.2], [cy + 3.3 - (i // 2) * 3.0], s=13, facecolor=P["confirmation"], edgecolor="white",
@@ -380,8 +382,9 @@ def build(d: dict, geo=None):
         if far is None or (c.x - home.x) ** 2 + (c.y - home.y) ** 2 > (far.x - home.x) ** 2 + (far.y - home.y) ** 2:
             far = c
     ax_b.scatter([home.x], [home.y], marker="*", s=46, facecolor="white", edgecolor=P["heldout"], linewidth=0.6, zorder=5)
-    ax_b.annotate("home", (home.x, home.y), xytext=(-5, -8), textcoords="offset points", fontsize=6, ha="right", bbox=WB, zorder=6)
-    ax_b.annotate("destination", (far.x, far.y), xytext=(6, 5), textcoords="offset points", fontsize=6, ha="left", bbox=WB, zorder=6)
+    ax_b.annotate(r"home $i$", (home.x, home.y), xytext=(-5, -8), textcoords="offset points", fontsize=6, ha="right", bbox=WB, zorder=6)
+    ax_b.annotate(r"destination $j$", (far.x, far.y), xytext=(6, 5), textcoords="offset points", fontsize=6, ha="left", bbox=WB, zorder=6)
+    ax_b.text(0.975, 0.06, PROB, transform=ax_b.transAxes, fontsize=6, ha="right", va="bottom", bbox=WB, zorder=8)   # the choice model the arcs stand for
     ax_b.add_patch(Rectangle((0.015, 0.03), 0.30, 0.24, transform=ax_b.transAxes, facecolor="white", edgecolor="none", alpha=0.88, zorder=6))
     cax = ax_b.inset_axes([0.035, 0.095, 0.26, 0.045], zorder=7)
     for i, col in enumerate(POI_RAMP):

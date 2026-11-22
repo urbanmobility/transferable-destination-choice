@@ -90,9 +90,9 @@ def test_fig1_names_three_city_groups_and_a_search_subset(built):
     texts = {t.get_text() for t in fig.findobj(plt.matplotlib.text.Text)}
     assert {"Discovery  35", "formula-search subset  8", "Held-out  26", "Confirmation  6"} <= texts
     assert not any("Discovery," in t for t in texts)                       # no second "Discovery" group
-    assert {"inner\nloop", "outer loop", "LLM agent", "symbolic regression", "generates formulas", "scoring",
-            "ranked automatically", "proposes", "hypotheses", "Freeze", "3 formulas"} <= texts
-    assert {"discovery fit", "supported", "not", "opened after freeze", "6 unseen", "test period & block", "in all 67 cities",
+    assert {"inner\nloop", "pass / fail", "LLM agent", "symbolic regression", "generates formulas", "scoring",
+            "ranked automatically", "proposes", "hypotheses", "Fixed", "3 formulas"} <= texts
+    assert {"discovery fit", "supported", "not", "evaluated after fixing", "6 unseen", "test period & block", "in all 67 cities",
             "ours", "fit share", "24 benchmark versions"} <= texts
     assert {"35 cities", "26 cities", "8 cities", "32 cities"} <= texts
     assert not {"code", "fixed rules", "pre-registered", "67 cities", "6 cities"} & texts   # wording judged unclear in review
@@ -106,12 +106,13 @@ def test_fig2_counts(built):
 
 
 def test_fig3_counts_and_the_shape_hypotheses(built, tables):
-    """Panel c: the six registered size hypotheses about the shape of the decay, each with its quantity and model. The
-    transfer-loss hypothesis (P7-02, not supported) is not here — it must stay in Fig. 4a (2026-11-12)."""
+    """Panel c: the five registered size hypotheses about the shape of the decay, each with its quantity and model (the
+    variable-exponent control, H1-01, was taken out on 2026-11-18). The transfer-loss hypothesis (P7-02, not supported)
+    is not here — it must stay in Fig. 4a (2026-11-12)."""
     fig, src = built["fig3"]
     assert len(src["a"]) == 67 and len(src["b"]) == 67
     c = src["c"]
-    assert c["id"].tolist() == ["H3-01", "H4-03", "H4-01", "H4-02", "H1-01", "P7-01"] and c["passed"].all()
+    assert c["id"].tolist() == ["H3-01", "H4-03", "H4-01", "H4-02", "P7-01"] and c["passed"].all()
     assert c["model"].tolist()[-1] == "Two-regime power law"
     p7 = src4 = built["fig4"][1]["a"]
     row = p7[p7["id"] == "P7-02"]
@@ -129,6 +130,9 @@ def test_fig4_counts(built, tables):
     _, src = built["fig4"]
     assert len(src["a"]) == 10 and int(src["a"]["supported"].sum()) == 1
     assert len(src["b"]) == 69 and src["b"]["agree"].mean() == pytest.approx(tables["e1_summary"]["agree"])
+    bt = src["b_tested"]                                            # the ten rows of panel a, drawn on panel b (2026-11-20)
+    assert bt["id"].tolist() == src["a"]["id"].tolist() and bt["row"].tolist() == list(range(1, 11))
+    assert bt["group"].tolist() == src["a"]["group"].tolist() and not set(zip(bt["outcome"], bt["covariate"])) & set(zip(src["b"]["outcome"], src["b"]["covariate"]))
     assert src["c"].shape == (14, 13) and int(src["c_fdr"].drop(columns="covariate").to_numpy().sum()) > 0
     assert len(src["d"]) == 67 and "e" not in src                   # the city-types panel is not drawn (2026-11-12)
 
@@ -141,7 +145,7 @@ def test_fig4_shows_the_criterion_row_by_row(built):
     assert ((a["p_holm"] <= 0.05) == a["holm"].astype(bool)).all() and (a["p_holm"] >= a["p"]).all()
     assert a["p_holm"].round(3).tolist()[:3] == [0.002, 1.0, 0.094]
     txt = {t.get_text() for t in fig.findobj(plt.matplotlib.text.Text)}
-    assert {"<0.01", "held-out 95% interval", "discovery 95% interval", "not supported", "69 further relations",
+    assert {"<0.01", "held-out 95% interval", "discovery 95% interval", "not supported", "69 further relations", "rows 1–2 of $\\mathbf{a}$", "rows 3–10 of $\\mathbf{a}$",
             "Slope, discovery cities", "Slope, held-out cities", "Standardised\nslope", "significant,\nFDR 10%"} <= txt
     assert not {"Effect (s.d.)", "FDR 0.10", "Cities typed by", "Number of types"} & txt
 
@@ -181,8 +185,8 @@ def test_fig5_names_what_the_reader_compares(built, tables):
     fig, src = built["fig5"]
     texts = [t.get_text() for t in fig.findobj(plt.matplotlib.text.Text)]
     assert {"gravity", "flexible model", "Model", "Source", "Constants", "Reach model", "Tempered power law", "Two-regime power law",
-            "Stretched exp., relaxed *", "after Guo 2026", "Kwon 2023", "Simini 2012", "Tiered gravity", "* baseline, this study",
-            "Destination mass", "population", "POI count", "observed trips", "local trips", "no local trips", "vs uniform"} <= set(texts)
+            "Stretched exp., relaxed *", "after Guo 2026", "Kwon 2023", "Simini 2012", "Tiered gravity", "* strengthened benchmark",
+            "Destination mass", "population", "POI count", "observed trips", "fitted locally", "transferred", "vs uniform"} <= set(texts)
     assert texts.count("ours") == 3 and not {"Own trip volume", "own trips", "free constants", "vs uniform constants"} & set(texts)
     assert texts.count("vs Stretched exp. *") == 5 and "vs best prior" not in texts and "constants" not in texts
     assert texts.count("flexible model") == 2 and "flexible" not in texts      # the upper reference has one name (a and e)
@@ -205,7 +209,8 @@ def test_fig7_counts(built):
 def test_fig4_labels_say_what_the_measures_are():
     import fig4
     assert fig4.COV["jobs_housing"] == "Jobs–housing separation"          # the index is 1 for full separation
-    assert fig4.COV["secondary_centres"] == "Subcentre − CBD jobs"        # a difference of job shares, not a count
+    assert fig4.COV["secondary_centres"] == "Secondary-centre job share"  # a share of jobs, not a count of centres
+    assert fig4.COV["subcentre_job_share"] == "Centre job share"              # all employment centres, the CBD included; short enough for panel a
 
 
 def test_fig1_labels_the_eight_largest_metros(built, tables):
@@ -276,21 +281,21 @@ def test_fig6_shows_flows_as_classes_and_counts_what_it_says(built, tables):
     assert sh.idxmax() == "c0355r1"
     txt = [t.get_text() for t in fig.findobj(plt.matplotlib.text.Text)]
     assert "Top 2,000 flows" in txt and f"{sh['c0355r1']:,} in observed top 2,000" in txt and not any("also observed" in s for s in txt)
-    assert {"Observed, Denver", "Reach model, ours", "Gravity", "Radiation", "Stretched exponential", "as published", "with POI count",
+    assert {"Observed, Denver", "Reach model, ours", "Gravity", "Radiation", "Stretched exponential", "with population", "with POI count",
             "zero-shot predictions"} <= set(txt)                     # the figure says these are transfers, not fits
-    assert txt.count("as published") == 4 and txt.count("with POI count") == 4      # the rows of a, b's legend, the halves of c, the groups of d
-    assert not any("population" in s.lower() for s in txt)          # population is the published setting: no suffix
+    assert txt.count("with population") == 4 and txt.count("with POI count") == 4      # the rows of a, b's legend, the halves of c, the groups of d
+    assert not any("published" in s.lower() for s in txt)           # Guo et al. used working population: not "as published"
 
 
 def test_fig6_curves_and_cpc_cover_the_same_seven_models(built):
     _, src = built["fig6"]
     models = src["d"]["model"].tolist()
-    assert models == ["c0355r1", "grav_power_P", "grav_power_N", "rad_P", "rad_N", "strexp1_P", "strexp1_N"]
+    assert models == ["c0355r1", "grav_power_P", "grav_power_N", "rad_P", "rad_N", "strexp1_P", "strexp3_N"]   # POI row: the relaxed form
     assert set(src["b"]["source"]) == {f"{m}|uniform" for m in models} and sorted(src["b"]["K"].unique()) == [100, 200, 500, 1000, 2000, 5000]
     c = src["c"]
     assert c["observed"].sum() == pytest.approx(1.0) and all(c[f"{m}|uniform"].sum() == pytest.approx(1.0) for m in models)
     assert src["d"].set_index("model")["cpc"].idxmax() == "c0355r1"
-    assert src["d"]["version"].tolist() == ["ours"] + ["as published", "with POI count"] * 3
+    assert src["d"]["version"].tolist() == ["ours"] + ["with population", "with POI count"] * 3
 
 
 def test_fig6_every_line_has_a_legend_entry(built):
@@ -300,11 +305,12 @@ def test_fig6_every_line_has_a_legend_entry(built):
     ax_b = next(a for a in fig.axes if a.get_ylabel() == "Share also predicted")
     legends = [c for c in ax_b.get_children() if isinstance(c, plt.matplotlib.legend.Legend)]
     assert len(ax_b.lines) == 7 and sum(len(lg.get_texts()) for lg in legends) == 7
-    assert sorted(lg.get_title().get_text() for lg in legends) == ["", "as published", "with POI count"]
+    assert sorted(lg.get_title().get_text() for lg in legends) == ["", "with POI count", "with population"]
     ax_c = next(a for a in fig.axes if a.get_ylabel() == "Predicted / observed trips")
     assert [t.get_text() for t in ax_c.get_legend().get_texts()] == ["Reach model, ours", "Gravity", "Radiation", "Stretched exponential"]
     ax_d = next(a for a in fig.axes if a.get_xlabel() == "CPC")
-    assert [t.get_text() for t in ax_d.get_yticklabels()] == ["Gravity", "Radiation", "Stretched exponential"] * 2
+    assert [t.get_text() for t in ax_d.get_yticklabels()] == ["Gravity", "Radiation", "Stretched exponential",
+                                                               "Gravity", "Radiation", "Stretched exp., relaxed"]
     assert ax_d.get_legend() is None
 
 
@@ -350,8 +356,21 @@ def test_the_six_city_table_says_what_the_ledger_says(tmp_path, monkeypatch):
 
 def test_fig3_revision_labels(built):
     """Revision 2026-11-13: the turning distance is r (not theta_1, which the Reach model uses), drawn with a
-    log-log line; the variable-exponent row says that its elasticity is taken at 5 km."""
+    log-log line; the variable-exponent control is no longer drawn (2026-11-18)."""
     fig, _ = built["fig3"]
     texts = {t.get_text() for t in fig.findobj(plt.matplotlib.text.Text)}
-    assert "log-log slope" in texts and "Variable exponent (5 km)" in texts
+    assert "log-log slope" in texts and not any("Variable exponent" in s for s in texts)
     assert not any(r"\theta_1" in s for s in texts)
+
+
+def test_figS1_draws_the_reach_model_median_in_panel_a():
+    """Revision 2026-11-14: a renamed model label once left panel a's median line empty; every named line has data."""
+    figS1 = importlib.import_module("figS1")
+    fig, src = figS1.build()
+    try:
+        lines = {ln.get_label(): ln for ax in fig.axes for ln in ax.get_lines()}
+        assert "Reach model, median" in lines
+        assert len(lines["Reach model, median"].get_xdata()) >= 5
+        assert (src["fixed"]["model"] == "Reach model").sum() > 0
+    finally:
+        plt.close(fig)

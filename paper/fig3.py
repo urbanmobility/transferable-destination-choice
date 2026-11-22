@@ -5,7 +5,7 @@ that took no part in finding it.
   a  flexible-model distance elasticity at 5-10 km against population (hero panel); line fitted on discovery cities
   b  turning distance of the two-regime power law against population; an inset sketches what turns (the decay
      goes from slope -1 to slope -2 around theta_1)
-  c  the six registered size hypotheses about the shape of the decay (one law in five formulations, and the turning
+  c  the five registered size hypotheses about the shape of the decay (one law in four formulations, and the turning
      distance): held-out slope as a fraction of the discovery slope. Every row names its quantity and its model. The
      registered hypothesis on transfer loss (not supported) is in Fig. 4a, not here.
   d  decay profiles of small, medium and large cities, as steps over the six distance bands
@@ -70,7 +70,7 @@ def turning_inset(ax):
     ins.set_xticks([])
     ins.set_yticks([])
     ins.set_xlabel("log distance", fontsize=5.5, color=P["grey"], labelpad=1.5)
-    ins.set_ylabel("log odds", fontsize=5.5, color=P["grey"], labelpad=1.5)
+    ins.set_ylabel("utility", fontsize=5.5, color=P["grey"], labelpad=1.5)
     ins.set_xlim(np.log(0.25), np.log(100))
     ins.set_ylim(yk.min() - 0.3, yk.max() + 0.6)
     for sp in ins.spines.values():
@@ -80,9 +80,11 @@ def turning_inset(ax):
 
 
 EDGES = [0.5, 1, 2, 5, 10, 20, 60]            # the six distance bands of the flexible model, on the plotted range
-SHAPE_LAWS = ["H3-01", "H4-03", "H4-01", "H4-02", "H1-01", "P7-01"]      # the registered size hypotheses about the shape of the decay
-MODEL = ["Flexible model", "Reach model", "Tempered power law", "Two-regime power law", "Variable exponent (5 km)",
-         "Two-regime power law"]
+# the registered size hypotheses about the shape of the decay; the variable-exponent control (H1-01) is not drawn
+# (taken out of the figure on 2026-11-18) — it stays in Additional file 1, Table S3
+SHAPE_LAWS = ["H3-01", "H4-03", "H4-01", "H4-02", "P7-01"]
+MODEL = ["Flexible model", "Reach model", "Tempered power law", "Two-regime power law", "Two-regime power law"]
+N_ED = 4                                      # the first rows are formulations of one law (e_d at 5-10 km)
 
 
 def build(d: dict):
@@ -118,7 +120,7 @@ def build(d: dict):
     ax_b.text(0.97, 0.89, txt, transform=ax_b.transAxes, ha="right", va="top", fontsize=6, linespacing=1.25)
     style.panel_label(ax_b, "b", dx=24)
 
-    # ---- c: replication forest of the six shape hypotheses. The third registered size hypothesis (transfer loss grows
+    # ---- c: replication forest of the five shape hypotheses. The third registered size hypothesis (transfer loss grows
     # with size, P7-02, not supported) is not about the shape of the decay and would read ambiguously here;
     # it is shown in Fig. 4a, row 2, and the legend of this figure must say so.
     L = d["size_laws"].set_index("id").loc[SHAPE_LAWS].reset_index()
@@ -128,7 +130,7 @@ def build(d: dict):
     L["ratio"], L["r_lo"], L["r_hi"] = zip(*r)
     L["model"] = MODEL
     y = np.arange(len(L))[::-1].astype(float)
-    y[5:] -= 0.5                                                    # a gap below the five formulations of one law
+    y[N_ED:] -= 0.5                                                 # a gap below the formulations of one law
     w_mm = fig.get_size_inches()[0] / style.MM
     pos = ax_c.get_position()
     ax_c.set_position([pos.x0 + 43 / w_mm, pos.y0, pos.width - (43 + 16) / w_mm, pos.height])   # two label columns, one verdict column
@@ -146,13 +148,13 @@ def build(d: dict):
     hd = {"fontsize": 6, "color": G, "va": "bottom", "ha": "left", "clip_on": False}
     for yi, m in zip(y, MODEL):
         ax_c.text(0, yi, m, transform=col(-27), **kw)
-    ax_c.text(0, (y[0] + y[4]) / 2, r"$e_d$ at" + "\n5–10 km", transform=col(-42), linespacing=1.05, **kw)
-    ax_c.plot([0, 0], [y[4] - 0.3, y[0] + 0.3], transform=col(-28.6), color=G, lw=0.5, clip_on=False)
-    ax_c.text(0, y[5], "Turning\n" + r"distance $r$", transform=col(-42), linespacing=1.05, **kw)
+    ax_c.text(0, (y[0] + y[N_ED - 1]) / 2, r"$e_d$ at" + "\n5–10 km", transform=col(-42), linespacing=1.05, **kw)
+    ax_c.plot([0, 0], [y[N_ED - 1] - 0.3, y[0] + 0.3], transform=col(-28.6), color=G, lw=0.5, clip_on=False)
+    ax_c.text(0, y[N_ED], "Turning\n" + r"distance $r$", transform=col(-42), linespacing=1.05, **kw)
     ax_c.text(0, top, "Population\nslope of", transform=col(-42), linespacing=1.05, **hd)       # the x axis of panels a and b, by name
     ax_c.text(0, top, "estimated with", transform=col(-27), **hd)
     ax_c.text(1, top, "Held-out test", transform=col(1.5), **hd)
-    ax_c.plot([1, 1], [y.min() - 0.3, y.max() + 0.3], transform=col(1.5), color=G, lw=0.5, clip_on=False)   # one verdict for all six
+    ax_c.plot([1, 1], [y.min() - 0.3, y.max() + 0.3], transform=col(1.5), color=G, lw=0.5, clip_on=False)   # one verdict for all rows
     ax_c.text(1, (y.min() + y.max()) / 2, "supported", transform=col(3.0), fontsize=6, va="center", ha="left",
               color=style.PALETTE["heldout"], clip_on=False)
     ax_c.text(1.0, top, "same slope", ha="center", va="bottom", fontsize=6, color=style.PALETTE["ref"])

@@ -21,8 +21,8 @@ MODEL = {"null_unif": "Uniform choice", "grav_P": "Power-law gravity, population
          "sk_plus": "Reach model $+\\ \\gamma\\ln(N_j+c)$", "sk_plus1": "Reach model $+\\ \\gamma\\ln(N_j+1)$, shift $+1$",
          "sep_E1": "Separable twin, employment, shift $+1$", "sk_E1": "Reach model, employment, shift $+1$", "grav_E": "Power-law gravity, employment",
          "str3_E": "Relaxed stretched exp., employment", "sep_E": "Separable twin, employment", "sk_E": "Reach model, employment",
-         "sk_frozen": "Reach model (frozen fit)", "tp_frozen": "Tempered power law (frozen fit)",
-         "tr_frozen": "Two-regime power law (frozen fit)"}
+         "sk_frozen": "Reach model (main-analysis fit)", "tp_frozen": "Tempered power law (main-analysis fit)",
+         "tr_frozen": "Two-regime power law (main-analysis fit)"}
 
 
 def num(v, nd=3):
@@ -45,7 +45,7 @@ def table(label: str, caption: str, head: list, rows: list, align: str, long: bo
         return (f"{{\\renewcommand{{\\thetable}}{{{label}}}{size}\\setlength{{\\tabcolsep}}{{3pt}}\n\\begin{{longtable}}{{{align}}}\n"
                 f"\\caption{{{caption}}}\\label{{tab:{label}}}\\\\\n\\toprule\n{h}\n\\midrule\n\\endfirsthead\n"
                 f"\\toprule\n{h}\n\\midrule\n\\endhead\n\\bottomrule\n\\endfoot\n{body}\n\\end{{longtable}}}}\n")
-    return (f"\\begin{{table}}[p]\n\\renewcommand{{\\thetable}}{{{label}}}\n\\centering\n{size}\n"
+    return (f"\\begin{{table}}[H]\n\\renewcommand{{\\thetable}}{{{label}}}\n\\centering\n{size}\n"
             f"\\caption{{{caption}}}\n\\label{{tab:{label}}}\n" + ("\\resizebox{\\textwidth}{!}{" if fit else "{") +
             f"\\begin{{tabular}}{{{align}}}\n\\toprule\n{h}\n\\midrule\n"
             f"{body}\n\\bottomrule\n\\end{{tabular}}}}\n\\end{{table}}\n")
@@ -115,6 +115,17 @@ def s6_percity() -> str:
 BANDS = ["0--1", "1--2", "2--5", "5--10", "10--20", "$>$20"]
 
 
+def _theta2_bound_change() -> str:
+    """Largest change of the held-out-block share when theta_2 >= 1 is imposed in the cities with a negative shift."""
+    t = json.loads((FD / "rev" / "theta2_full.json").read_text())
+    assert len(t) == 5 and all(np.isfinite(r["bounded"]["all_nll"]) for r in t)
+    neg = [r["main"]["consts"][2] for r in t if r["main"]["consts"][2] < 0]
+    assert len(neg) == 4 and round(min(neg), 2) == -1.53 and round(max(neg), 2) == -0.05, neg
+    d = max(abs(r["bounded"]["block_share"] - r["main"]["block_share"]) for r in t)
+    assert d < 0.005, d
+    return "0.005"
+
+
 def s6() -> str:
     parts = []
     bands = pd.read_csv(FD / "bands.csv", dtype={"city": str})
@@ -122,8 +133,11 @@ def s6() -> str:
         for m in ("Flexible", "Reach model", "Tempered power law", "Two-regime power law"):
             g = med[med["model"] == m].set_index("band")
             parts.append([f"{m}, {lab}", "$e_N$"] + [num(g["eN"].get(b), 2) for b in range(6)])
-    for v, lab in (("fixed", "common point"), ("emp", "employment, common point"), ("empN", "employment, net of $\\ln N$"),
-                   ("nonwork", "non-work visits, common point")):
+    for v, lab in (("fixed", "common point"), ("poiarea", "POI count and area only, common point"),
+                   ("emp", "employment, common point"), ("empN", "employment, net of $\\ln N$"),
+                   ("nonwork", "non-work visits, common point"), ("weekend", "weekend visits, common point"),
+                   ("strata_inner", "inner third of origins, common point"), ("strata_middle", "middle third of origins, common point"),
+                   ("strata_outer", "outer third of origins, common point")):
         p = RT / f"banded_{v}_medians.csv"
         if not p.exists():
             continue
@@ -133,8 +147,11 @@ def s6() -> str:
             g = g0[g0["model"] == m].set_index("band")
             parts.append([f"{m}, {lab}", "$e_N$" if v not in ("emp", "empN") else "$e_E$"] + [num(g["eN"].get(b), 2) for b in range(6)])
     rise = []
-    for v, lab in (("fixed", "POI count, common point"), ("emp", "employment"), ("empN", "employment, net of $\\ln N$"),
-                   ("nonwork", "POI count, non-work visits")):
+    for v, lab in (("fixed", "POI count, common point"), ("poiarea", "POI count and area only"), ("emp", "employment"),
+                   ("empN", "employment, net of $\\ln N$"),
+                   ("nonwork", "POI count, non-work visits"), ("weekend", "POI count, weekend visits"),
+                   ("strata_inner", "inner third of origins"), ("strata_middle", "middle third of origins"),
+                   ("strata_outer", "outer third of origins")):
         p = RT / f"banded_{v}_rise.csv"
         if p.exists():
             r = pd.read_csv(p)
@@ -145,7 +162,10 @@ def s6() -> str:
            "point. Common point: $d$ at the band's geometric midpoint (0.5, 1.41, 3.16, 7.07, 14.1, 28.3~km) and destination "
            "attributes at their medians over all destination tracts of the 67 cities ($N_j=71$, $a_j=2.6$~km$^2$, $E_j=934$ "
            "jobs). Employment rows: the banded flexible model with $\\ln(1+E_j)$ as the banded mass (log employment removed "
-           "from the covariates; net of $\\ln N$: log POI count added as a covariate). Flexible-model elasticities are "
+           "from the covariates; net of $\\ln N$: log POI count added as a covariate). POI count and area only: the flexible model refitted with "
+           "log area as its only other destination attribute, the information that the Reach model uses. Weekend visits: the model refitted on the visits of "
+           "Saturdays and Sundays (local date). Thirds of origins: the model refitted on the inner, middle and outer third of "
+           "each city's origins by distance to the CBD. Flexible-model elasticities are "
            "$\\gamma_b M/(M+1)$ at the reference mass $M$. Cities in which the elasticity rises with $\\ln d$ (OLS slope "
            "$>0$): " + "; ".join(rise) + ".")
     return table("S6", cap, ["Model and reference point", ""] + BANDS, parts, "llrrrrrr")
@@ -227,7 +247,7 @@ def s_r1(label: str, line: str, pairs: list, models: list, what: str) -> str:
            "reserved block; local: fitted in the city; uniform: discovery-city medians (the city itself left out). A city in "
            "which a model's utility is undefined on the reserved block (a fitted shift below $-N_j$ of an unseen tract) counts "
            "as a loss for that model and a tie when both fail; the number of such cities is given in the source data. All "
-           "models fitted with the same protocol (300 sampled origins, five starts) unless marked as frozen fits; "
+           "models fitted with the same protocol (300 sampled origins, five starts) unless marked as main-analysis fits; "
            "``shift $+1$'' marks variants whose shift is held at $+1$.")
     out = table(label + "a", cap, HEAD_C, rc, "p{3.4cm}p{3.0cm}lrrrr", size="\\scriptsize", fit=True)
     if rm:
@@ -241,7 +261,7 @@ QUANT = {"theta_turn_c0514c1": "Two-regime: turning distance $r$", "transfer_los
          "ed_5_10km_c0262": "Tempered: $e_d$ at 5--10~km", "slope_eN_logd_c0355r1": "Reach model: slope of $e_N$ on $\\ln d$",
          "ed_5_10km_c0355r1": "Reach model: $e_d$ at 5--10~km", "ed_10_20km": "Flexible: $e_d$ at 10--20~km",
          "ed_1_2km": "Flexible: $e_d$ at 1--2~km", "ed_20km": "Flexible: $e_d$ beyond 20~km", "log_population": "log population",
-         "road_density": "main-road density", "compactness": "residential compactness", "subcentre_job_share": "subcentre job share",
+         "road_density": "main-road density", "compactness": "residential compactness", "subcentre_job_share": "employment-centre job share",
          "circuity": "road circuity", "pop_density_gini": "Gini of population density"}
 
 
@@ -264,19 +284,94 @@ def s12() -> str:
                  rows, "lp{5.2cm}rrrrrr", size="\\scriptsize")
 
 
+def s8_label(o: str) -> str:
+    """Outcome labels of Table S8 in mathematical notation."""
+    return (tex_escape(o).replace("e\\_d at 5-10 km", "$e_d$ at 5--10~km").replace("turning distance r (km)", "turning distance $r$ (km)")
+            .replace("ln r (log-log slope)", "$\\ln r$ (log--log slope)"))
+
+
+def _size_checks() -> list:
+    """Three checks of the held-out slope of the flexible model's 5-10 km distance elasticity on log population:
+    elasticities at the common reference point, log device penetration as a covariate, and each city left out in turn."""
+    c = cities()
+    c = c[c["set"].astype(str).str.lower().str.startswith("h") | c["set"].astype(str).str.lower().str.contains("held|law")]
+    assert len(c) == 26, len(c)
+    c = c.assign(lp=np.log(c["population"].astype(float)), pen=np.log(c["home_devices"].astype(float) / c["population"].astype(float)))
+    band = pd.read_csv(FD / "bands.csv", dtype={"city": str})
+    fixed = pd.read_parquet(FD / "rev" / "banded_fixed.parquet")
+    fixed = fixed[fixed["ref"] == "fixed"] if "ref" in fixed.columns else fixed
+    pick = lambda e: e[(e["model"] == "Flexible") & (e["band"] == 3)].assign(city=lambda d: d["city"].astype(str))[["city", "ed"]]  # noqa: E731
+    fb, ff = c.merge(pick(band), on="city"), c.merge(pick(fixed), on="city")
+    assert len(fb) == 26 and len(ff) == 26
+
+    def slope(X, y):
+        return float(np.linalg.lstsq(np.column_stack([np.ones(len(y))] + list(X)), y, rcond=None)[0][1])
+
+    def cell(X, y, tag):
+        rng = np.random.default_rng([20261122, tag])
+        n = len(y)
+        bs = []
+        for _ in range(5000):
+            i = rng.integers(0, n, n)
+            bs.append(slope([v[i] for v in X], y[i]))
+        lo, hi = np.percentile(bs, [2.5, 97.5])
+        return f"{num(slope(X, y))} [{num(float(lo))}, {num(float(hi))}]"
+
+    yb, yf = fb["ed"].to_numpy(float), ff["ed"].to_numpy(float)
+    loo = [slope([np.delete(fb["lp"].to_numpy(), k)], np.delete(yb, k)) for k in range(len(yb))]
+    q = "Flexible model: $e_d$ at 5--10~km, "
+    rows = [[q + "common reference point", "Held-out (26)", cell([ff["lp"].to_numpy()], yf, 1), "--"],
+            [q + "one city left out in turn", "Held-out (25)", f"{num(min(loo))} to {num(max(loo))}", "--"]]
+    st = pd.read_parquet(FD / "rev" / "banded_strata.parquet")       # thirds of origins by distance to the CBD
+    for k, name in enumerate(("inner", "middle", "outer")):
+        g = c.merge(st[(st["stratum"] == name) & (st["model"] == "Flexible") & (st["band"] == 3) & (st["ref"] == "band")]
+                    .assign(city=lambda d: d["city"].astype(str))[["city", "ed"]], on="city")
+        assert len(g) == 26, (name, len(g))
+        rows.append([q + f"{name} third of origins", "Held-out (26)", cell([g["lp"].to_numpy()], g["ed"].to_numpy(float), 30 + k), "--"])
+    pen = " device penetration controlled"
+    for k, m in enumerate(("Flexible", "Reach model", "Tempered power law", "Two-regime power law")):
+        g = c.merge(band[(band["model"] == m) & (band["band"] == 3)].assign(city=lambda d: d["city"].astype(str))[["city", "ed"]], on="city")
+        assert len(g) == 26, (m, len(g))
+        name = "Flexible model" if m == "Flexible" else m
+        rows.append([f"{name}: $e_d$ at 5--10~km," + pen, "Held-out (26)",
+                     cell([g["lp"].to_numpy(), g["pen"].to_numpy()], g["ed"].to_numpy(float), 10 + k), "--"])
+    tr = pd.read_csv(FD / "turning.csv", dtype={"city": str})
+    g = c.merge(tr[["city", "theta_turn"]], on="city")
+    assert len(g) == 26, len(g)
+    rows.append(["Two-regime power law: turning distance $r$ (km)," + pen, "Held-out (26)",
+                 cell([g["lp"].to_numpy(), g["pen"].to_numpy()], g["theta_turn"].to_numpy(float), 20), "--"])
+    return rows
+
+
 def s13() -> str:
     t = pd.read_csv(RT / "size_robust.csv")
     rows = []
     for (o, c), g in t.groupby(["outcome", "cities"], sort=False):
         g = g.set_index("control")
         a, b = g.loc["none"], g.loc["log mean tract area"]
-        rows.append([tex_escape(o), c, f"{num(a['slope'])} [{num(a['ci_lo'])}, {num(a['ci_hi'])}]",
+        rows.append([s8_label(o), c, f"{num(a['slope'])} [{num(a['ci_lo'])}, {num(a['ci_hi'])}]",
                      f"{num(b['slope'])} [{num(b['ci_lo'])}, {num(b['ci_hi'])}]"])
+    rows += _size_checks()
+    tr = pd.read_csv(FD / "turning.csv")                  # the prefactor of the log-log fit: r at one million inhabitants
+    r1 = {}
+    for k, g in (("discovery", tr[tr["set"] == "discovery"]), ("heldout", tr[tr["set"] == "heldout"]), ("all", tr)):
+        slope, icpt = np.polyfit(g["log_population"] - np.log(1e6), np.log(g["theta_turn"]), 1)
+        ref = t[(t["outcome"].str.startswith("Two-regime power law: ln r")) & (t["control"] == "none") & (t["n"] == len(g))]["slope"]
+        assert len(ref) == 1 and abs(slope - float(ref.iloc[0])) < 1e-9, (k, slope)      # same fit as the ln r rows above
+        r1[k] = float(np.exp(icpt))
     cap = ("City-size slopes with and without log mean tract area as a covariate: OLS slope on log population with "
            "city-bootstrap 95\\% intervals (5,000 resamples). Elasticities are evaluated at each city's band-specific "
-           "reference point; the turning distance $r$ in km and, in the last rows, $\\ln r$ (log--log slope). Correlation "
-           "between log population and log mean tract area: $-0.63$ (67 cities). Intervals come from a fresh bootstrap and can "
-           "differ in the third decimal from those of the registered tests (Table~S3).")
+           "reference point; the turning distance $r$ in km and, in the last rows, $\\ln r$ (log--log slope). "
+           "The $\\ln r$ slope without the covariate is the exponent $-\\kappa$ of $r=r_1(P/10^{6})^{-\\kappa}$, with "
+           f"$r_1={r1['discovery']:.1f}$~km in the discovery cities, ${r1['heldout']:.1f}$~km in the held-out cities and "
+           f"${r1['all']:.1f}$~km across all 67. Correlation "
+           "between log population and log mean tract area: $-0.63$ (67 cities). Intervals use an independent set of bootstrap resamples and "
+           "may differ slightly from those in Table~S3 and in the main text. Discovery slopes here are estimated on the test period, whereas the ratios in "
+           "Fig.~3c use the discovery slopes of the validation period, on which the hypotheses were based ($-0.125$ for the Reach model). "
+           "Last ten rows, all for the held-out cities: the slope with elasticities evaluated at the common reference point of "
+           "Table~S6; the range of the 26 slopes obtained by leaving out one city at a time; the slopes with the flexible model "
+           "refitted on the inner, middle and outer third of each city's origins by distance to the CBD; and the slopes with the logarithm of "
+           "the number of resident devices per inhabitant as a covariate.")
     return table("S8", cap, ["Quantity", "Cities", "Slope", "Slope, tract area controlled"], rows, "p{5.2cm}lrr", size="\\scriptsize")
 
 
@@ -292,17 +387,16 @@ def s18() -> str:
     rows = []
     for metric, nd in (("top2000", 0), ("cpc", 3)):
         rows.append([f"\\multicolumn{{7}}{{l}}{{\\textit{{{'Top-2,000 flows recovered' if metric == 'top2000' else 'CPC'}}}}}"])
-        for m in ("reach_model", "strexp3_N", "distance_only", "uniform_dest", "reach_model_pop"):
+        for m in ("reach_model", "strexp3_N"):
             g = b[b["model"] == m].set_index("short")[metric]
             rows.append([lab[m]] + [num(float(g.get(c, np.nan)), nd) for c in order])
         if "model" in o.columns:
             pass
     rows = [r if len(r) > 1 else [r[0]] for r in rows]
     body_rows = [r for r in rows]
-    cap = ("Flow reconstruction in the six confirmation cities with uniform parameters (no local visits), test period, all "
-           "destinations. Flows are origin totals times $P(j\\mid i)$; except in the last row of each block, origin totals are "
-           "the observed test-period totals. Uniform destinations and distance only show what the observed origin totals "
-           "and distance alone recover. The other earlier models are compared in the source data of Fig.~6.")
+    cap = ("Flow reconstruction in the six confirmation cities with uniform parameters (no local visits used to calibrate destination choice), test period, all "
+           "destinations. Flows are the observed test-period origin totals times $P(j\\mid i)$. "
+           "The other earlier models are compared in the source data of Fig.~6.")
     head = ["Model"] + order
     lines = []
     for r in body_rows:
@@ -311,22 +405,14 @@ def s18() -> str:
     return txt.replace(" & \\\\", " \\\\")
 
 
-LINES3 = [("all", "All visits"), ("poitrain", "POI count from March--April"), ("nonwork", "Non-work visits")]
-STEPS = [("grav_N", "grav_P", "POI count instead of population as mass"),
-         ("str3_N", "grav_N", "Stretched-exponential instead of power-law distance"),
-         ("str3a_N", "str3_N", "$+\ \ln a_j$ (the strongest benchmark plus area)"),
-         ("int_N", "str3a_N", "$+\ \ln d$ and $\ln d\cdot\ln(N_j+1)$ (interaction logit)"),
-         ("sk", "str3_N", "Reach model vs the strongest benchmark"),
-         ("sk", "sep_N", "Reach model vs its separable twin (coupling)"),
-         ("sk", "int_N", "Reach model vs the interaction logit"),
-         ("sk_plus1", "sk", "Reach model $+\ \gamma\ln(N_j+1)$ vs Reach model"),
-         ("sk_lna", "sk", "Reach model with $\\theta_4\\ln a_j$ vs with $a_j^{\\theta_4}$"),
-         ("sk_frozen", "tp_frozen", "Reach model vs Tempered power law"),
-         ("sk_frozen", "tr_frozen", "Reach model vs Two-regime power law")]
-EMP_STEPS = [("grav_E", "grav_P", "Employment instead of population as mass"),
-             ("grav_N", "grav_E", "POI count instead of employment as mass"),
-             ("sk_E", "str3_E", "Reach model vs stretched exponential, employment mass"),
-             ("sk_E1", "sep_E1", "Reach model vs separable twin, employment mass (shifts $+1$)")]
+MASS_STEPS = [("grav_N", "grav_P", "POI count instead of residential population"),
+              ("grav_E", "grav_P", "LODES employment instead of residential population"),
+              ("grav_N", "grav_E", "POI count instead of LODES employment")]
+COUPLING_STEPS = [("str3a_N", "str3_N", "Relaxed stretched exponential plus $\\theta\\ln a_j$ vs relaxed stretched exponential"),
+                  ("sk", "sep_N", "Reach model vs its separable twin, POI count as mass"),
+                  ("sk_E1", "sep_E1", "Reach model vs its separable twin, LODES employment as mass")]
+FORMULA_STEPS = [("sk_frozen", "tp_frozen", "Reach model vs Tempered power law"),
+                 ("sk_frozen", "tr_frozen", "Reach model vs Two-regime power law")]
 
 
 def _contrasts(line):
@@ -344,26 +430,79 @@ def _cell(c, a, b, lv="local", name="target"):
     return f"{num(r['dNLL median'], 4)} [{num(r['ci_lo'], 4)}, {num(r['ci_hi'], 4)}] {r['a better']}"
 
 
+OUTSIDE = [("c0413c1r1", "Reach model vs variable-exponent control"),
+           ("c0079c1", "Reach model vs shifted log-gravity control")]
+
+
+def _paired_cell(a: str, la: str, b: str, lb: str, tag: int, B: int = 5000) -> str:
+    """Paired NLL difference (model b minus model a, positive: a fits better) over the 32 target cities from the scored
+    table of the revision models; city bootstrap of the median with a seed fixed per comparison."""
+    t = scored("all")
+    t = t[t["set"] == "target"]
+    x = t[(t["model"] == a) & (t["level"] == la)].set_index("city")["nll"].astype(float)
+    y = t[(t["model"] == b) & (t["level"] == lb)].set_index("city")["nll"].astype(float)
+    d = (y - x).to_numpy()
+    assert len(d) == 32 and np.isfinite(d).all(), (a, la, b, lb, len(d))
+    rng = np.random.default_rng([20261122, tag])
+    bs = np.array([np.median(d[rng.integers(0, len(d), len(d))]) for _ in range(B)])
+    lo, hi = np.percentile(bs, [2.5, 97.5])
+    return f"{num(float(np.median(d)), 4)} [{num(float(lo), 4)}, {num(float(hi), 4)}] {int((d > 0).sum())}/{len(d)}"
+
+
+def _outside_cell(b: str, B: int = 5000) -> str:
+    """Paired NLL difference (control minus Reach model) over the 32 target cities, local parameters, test period and
+    reserved block; city bootstrap of the median with a seed fixed per comparison."""
+    t = pd.read_csv(FD / "p9_target.csv", dtype={"city": str})
+    t = t[t["level"] == "local"]
+    x = t[t["model"] == "c0355r1"].set_index("city")["nll"].astype(float)
+    y = t[t["model"] == b].set_index("city")["nll"].astype(float)
+    d = (y - x).dropna().to_numpy()
+    assert len(d) == 32, (b, len(d))
+    rng = np.random.default_rng([20261122, int(b[1:5])])
+    bs = np.array([np.median(d[rng.integers(0, len(d), len(d))]) for _ in range(B)])
+    lo, hi = np.percentile(bs, [2.5, 97.5])
+    return f"{num(float(np.median(d)), 4)} [{num(float(lo), 4)}, {num(float(hi), 4)}] {int((d > 0).sum())}/{len(d)}"
+
+
 def s7() -> str:
-    C = {l: _contrasts(l) for l, _ in LINES3}
-    rows = [[lab] + [_cell(C[l], a, b) for l, _ in LINES3] for a, b, lab in STEPS]
-    rows.append(["\\multicolumn{4}{l}{\\textit{Employment (LODES) as destination mass, all visits}}"])
-    rows += [[lab, _cell(C["all"], a, b), "--", "--"] for a, b, lab in EMP_STEPS]
-    cap = ("What the Reach model's accuracy consists of: an ablation ladder in the 32 target cities with local parameters. "
-           "Each cell gives the paired difference $\\Delta$NLL $=\\mathrm{NLL}_b-\\mathrm{NLL}_a$ in nats per visit for the row's "
-           "comparison of model $a$ with model $b$ (positive: $a$ fits better; median over cities, city-bootstrap 95\\% interval "
-           "from 5,000 resamples) and the number of cities in which $a$ fits better. A city in which a model's utility is "
-           "undefined on the reserved block counts as a loss for that model. All models fitted with the same protocol; rows "
-           "with the Tempered and Two-regime power laws use the frozen fits. Columns: visits of all purposes; the POI count "
-           "rebuilt from the places observed in March and April only; visits to the inferred workplace removed. Results with "
-           "uniform parameters, over all 67 cities, and per city are in Additional file~2.")
-    out = table("S7a", cap, ["Comparison ($a$ vs $b$)"] + [h for _, h in LINES3], rows, "p{5.6cm}ccc", size="\\scriptsize", fit=True)
-    out = out.replace("\\multicolumn{4}{l}{\\textit{Employment (LODES) as destination mass, all visits}} \\\\", "\\midrule\n\\multicolumn{4}{l}{\\textit{Employment (LODES) as destination mass, all visits}} \\\\")
-    models = ["grav_P", "grav_E", "grav_N", "str3_N", "str3a_N", "int_N", "sep_N", "sk", "sk_plus1", "sk_lna", "sep_E1", "sk_E1"]
-    rm, n_common = _median_rows("all", models)
-    cap2 = (f"Median share of the gravity-to-flexible gap and NLL (nats per visit) of the models in Table~S7a, all visits, "
-            f"over the {n_common} target cities in which every model listed has a finite NLL at both parameter levels.")
-    return out + table("S7b", cap2, HEAD_M, rm, "lrrrr", size="\\scriptsize")
+    """Destination mass in power-law gravity, the comparison of the three formulas, three rows on what the coupling
+    contributes, the two expressions kept outside the library and the employment-mass transfer."""
+    c = _contrasts("all")
+    t = scored("all")
+    t = t[(t["set"] == "target") & (t["level"] == "local") & t["model"].isin(["grav_P", "grav_E", "grav_N"])]
+    assert t.groupby("model")["city"].nunique().eq(32).all() and np.isfinite(t["nll"].astype(float)).all()
+    sh = t.groupby("model")["share"].median()
+    rows = [["\\multicolumn{2}{l}{\\textit{Destination mass in power-law gravity}}"]]
+    rows += [[lab, _cell(c, x, y)] for x, y, lab in MASS_STEPS]
+    rows += [["\\midrule\n\\multicolumn{2}{l}{\\textit{The three formulas}}"]]
+    rows += [[lab, _cell(c, x, y)] for x, y, lab in FORMULA_STEPS]
+    rows += [["\\midrule\n\\multicolumn{2}{l}{\\textit{What the coupling contributes}}"]]
+    rows += [[lab, _cell(c, x, y)] for x, y, lab in COUPLING_STEPS]
+    rows += [["\\midrule\n\\multicolumn{2}{l}{\\textit{Expressions kept outside the library (Note~S3)}}"]]
+    rows += [[lab, _outside_cell(b)] for b, lab in OUTSIDE]
+    te = scored("all")
+    te = te[(te["set"] == "target") & (te["level"] == "uniform") & (te["model"] == "sk_E")]
+    assert te["city"].nunique() == 32 and np.isfinite(te["nll"].astype(float)).all()
+    rows += [["\\midrule\n\\multicolumn{2}{l}{\\textit{Reach model vs relaxed stretched exponential, both with LODES employment as mass}}"]]
+    rows += [["Both with local parameters", _paired_cell("sk_E1", "local", "str3_E", "local", 31)],
+             ["Both with uniform parameters", _cell(c, "sk_E", "str3_E", lv="uniform")],
+             ["Reach model with uniform, relaxed stretched exponential with local parameters",
+              _paired_cell("sk_E", "uniform", "str3_E", "local", 32)]]
+    assert all("--" not in r[-1] for r in rows if len(r) == 2)
+    cap = ("Destination mass and comparison of the three formulas in the 32 target cities, with local parameters. Each cell "
+           "gives the paired difference $\\Delta$NLL $=\\mathrm{NLL}_b-\\mathrm{NLL}_a$ in nats per visit for the row's comparison "
+           "of model $a$ with model $b$ (positive: $a$ fits better; median over cities, city-bootstrap 95\\% interval from 5,000 "
+           "resamples) and the number of cities in which $a$ fits better. Mass rows: power-law gravity fitted with residential "
+           "population, LODES workplace employment or POI count as destination mass; its median shares are "
+           f"{num(abs(float(sh['grav_P'])), 2)}, {num(float(sh['grav_E']), 2)} and {num(float(sh['grav_N']), 2)}. "
+           "Formula rows use the city fits of the main analysis, and the two expressions kept outside the library are compared with the Reach model in the same way. The separable twin, "
+           "$\\eta_{ij}=a_j^{\\theta_4}+c\\ln(N_j+\\theta_2)-b\\,d^{\\alpha}$, has the inputs and the number of parameters of the Reach "
+           "model but no coupling of distance and size; with employment as mass, both it and the Reach model have the shift fixed at 1. "
+           "Last three rows: both models with LODES employment in place of POI count. Uniform parameters are the medians of the fits "
+           "in the 35 discovery cities, and with them the Reach model's median share is "
+           f"{num(float(te['share'].astype(float).median()), 2)}. With local parameters the Reach model's shift is fixed at 1, "
+           "because a free shift leaves the utility undefined in two cities.")
+    return table("S7", cap, ["Comparison ($a$ vs $b$)", "$\\Delta$NLL, median [95\\% CI], cities"], rows, "p{7.2cm}c")
 
 
 def s4() -> str:
@@ -386,7 +525,9 @@ def s4() -> str:
            f"flexible model is {num(ch['nll_flexible'] - ch['nll_gravity_poi'], 3)} nats worse than POI gravity on the reserved "
            "block, which gives the shares above 2 in Fig.~2d. Re-anchored at POI gravity, the Reach model's median share is "
            f"{num(((t['nll_gravity_poi'] - t['nll_reach']) / (t['nll_gravity_poi'] - t['nll_flexible'])).median(), 2)}. "
-           "Per-city values are in Additional file~2.")
+           f"The Reach model's NLL lies a median of {num((t['nll_reach'] - t['nll_flexible']).median(), 3)} nats above the flexible "
+           "model's when the difference is taken city by city; "
+           "the medians in the table are taken separately for each model. Per-city values are in Additional file~2.")
     return table("S4", cap, ["Model", "NLL", "IQR", "Pseudo-$R^2$", "Share"], rows, "lrrrr")
 
 
@@ -395,23 +536,98 @@ def s5() -> str:
     t = pd.read_csv(RT / "sk_params.csv")
     lab = {"theta0": "$\\theta_0$ (amplitude)", "theta1": "$\\theta_1$ (distance exponent)", "theta2": "$\\theta_2$ (POI shift)",
            "theta3": "$\\theta_3$ (coupling exponent)", "theta4": "$\\theta_4$ (area exponent)",
-           "theta3_over_theta1": "$\\theta_3/\\theta_1$ (growth of the distance scale with $N_j$)"}
+           "theta3_over_theta1": "$\\theta_3/\\theta_1$ (exponent of the reach in $N_j+\\theta_2$)"}
     rows = []
     for k, l in lab.items():
         r = sm.loc[k]
-        rows.append([l, num(r["default (discovery median)"], 3), num(r["median (67)"], 3),
+        default = (sm.loc["theta3", "default (discovery median)"] / sm.loc["theta1", "default (discovery median)"]
+                   if k == "theta3_over_theta1" else r["default (discovery median)"])
+        rows.append([l, num(default, 3), num(r["median (67)"], 3),
                      f"{num(r['q25 (67)'], 3)}--{num(r['q75 (67)'], 3)}", f"{num(t[k].min(), 3)}--{num(t[k].max(), 3)}",
                      num(r["median se"], 3)])
     th = sm["default (discovery median)"].round(3)
     eta = 2.6 ** th["theta4"] - th["theta0"] * 5.0 ** th["theta1"] / (71.0 + th["theta2"]) ** th["theta3"]
     cap = ("Reach-model constants, $\\eta_{ij}=a_j^{\\theta_4}-\\theta_0 d^{\\theta_1}/(N_j+\\theta_2)^{\\theta_3}$ with $d$ in km, "
            "$a_j$ in km$^2$ and $N_j$ the count of places with at least one visit. Default: the uniform parameter vector used "
-           "for transfer (median over the 35 discovery cities). SE: median standard error of the city fits. $\\theta_0$, "
-           "$\\theta_1$ and $\\theta_3$ are positive in all 67 cities, so the size elasticity rises with distance in every city; "
-           "$\\theta_2$ is negative in four cities ($-1.53$ to $-0.05$). Worked example with the default: a destination 5~km "
+           "for transfer (median over the 35 discovery cities; for $\\theta_3/\\theta_1$, the ratio of the two default values). SE: median standard error of the city fits, clustered by 20 random groups of devices (for $\\theta_2$, over the 62 cities in which its constraint is not active). $\\theta_0$, "
+           "$\\theta_1$ and $\\theta_3$ are positive in all 67 cities, so the size elasticity rises with distance in every city. "
+           "The shift is constrained to $\\theta_2\\ge 1$, which is active in five cities. Without the constraint the fitted "
+           "$\\theta_2$ would be negative in four of them ($-1.53$ to $-0.05$), which leaves the utility undefined for tracts with "
+           f"few POIs; with it their shares change by less than {_theta2_bound_change()}. Worked example with the default: a destination 5~km "
            f"away with $N_j=71$ and $a_j=2.6$~km$^2$ has $\\eta={eta:.3f}$; choice probabilities are $\\exp(\\eta_{{ij}})$ "
            "normalised over the origin's destinations. Per-city constants are in Additional file~2.")
     return table("S5", cap, ["Parameter", "Default", "Median", "IQR", "Range", "SE"], rows, "lrrrrr")
+
+
+# Plain-text labels for Additional file 2 (the workbook has no LaTeX).
+PLAIN = {"null_unif": "Uniform choice", "grav_ref": "Power-law gravity, population (share 0)", "M2_ref": "Flexible model (share 1)",
+         "grav_P": "Power-law gravity, population", "grav_N": "Power-law gravity, POI count",
+         "str3_N": "Relaxed stretched exponential, POI count (strongest benchmark)",
+         "str3a_N": "Relaxed stretched exponential, POI count, + ln a",
+         "int_N": "Interaction logit: relaxed stretched exponential, POI count, + ln a, ln d and ln d x ln(N+1)",
+         "sep_N": "Separable twin of the Reach model", "sk": "Reach model", "sk_lna": "Reach model with theta4 ln a",
+         "sk_plus": "Reach model + gamma ln(N+c)", "sk_plus1": "Reach model + gamma ln(N+1), shift +1",
+         "grav_E": "Power-law gravity, employment", "str3_E": "Relaxed stretched exponential, employment",
+         "sep_E": "Separable twin of the Reach model, employment", "sk_E": "Reach model, employment",
+         "sep_E1": "Separable twin of the Reach model, employment, shift +1", "sk_E1": "Reach model, employment, shift +1",
+         "sk_frozen": "Reach model (main-analysis fit)", "tp_frozen": "Tempered power law (main-analysis fit)",
+         "tr_frozen": "Two-regime power law (main-analysis fit)"}
+LINE_PLAIN = {"all": "all visits", "all2": "all visits, shifts held at +1", "poitrain": "POI count from March-April only",
+              "nonwork": "non-work visits"}
+SET_PLAIN = {"discovery": "discovery", "heldout": "held-out", "confirmation": "confirmation", "source": "discovery", "target": "target"}
+
+
+def _plain_text(v):
+    if not isinstance(v, str):
+        return v
+    return (v.replace("Scaled kernel", "Reach model").replace("(both refitted here)", "(both refitted)")
+            .replace("refit here vs the frozen fit", "refitted vs the main-analysis fit").replace("frozen fit", "main-analysis fit"))
+
+
+FORM_COV = {"log_population": "Population (log)", "road_density": "Main-road density", "compactness": "Residential compactness",
+            "subcentre_job_share": "Employment-centre job share", "circuity": "Road circuity", "pop_density_gini": "Gini of tract population density",
+            "cbd_job_share": "CBD job share", "jobs_housing": "Jobs-housing separation (job-resident dissimilarity index)", "n_subcentres": "Number of employment centres",
+            "no_car_share": "Share of households without a vehicle", "orientation_entropy": "Street-orientation entropy",
+            "poi_mix": "POI class entropy", "secondary_centres": "Secondary-centre job share",
+            "transit_per_1k": "Transit stops per 1,000 inhabitants", "water_share": "Water share of the built-up footprint"}
+_BAND = {"0_1km": "0-1 km", "1_2km": "1-2 km", "2_5km": "2-5 km", "5_10km": "5-10 km", "10_20km": "10-20 km", "20km": "beyond 20 km"}
+_FORMULA = {"c0355r1": "Reach model", "c0262": "Tempered power law", "c0514c1": "Two-regime power law"}
+_QUANTITY = {"theta_turn_c0514c1": "Two-regime power law: turning distance r (km)",
+             "gain_grav_m2": "NLL gap between population gravity and the flexible model (nats per visit)",
+             "share_s0_main": "Reach model: fit share with shifted gravity as the lower reference",
+             "opp_near": "Variable-exponent control family fits near the best formula (0/1)",
+             "ed_5_10km_resid": "Flexible model: e_d at 5-10 km minus the discovery-city trend with log population"}
+
+
+def quantity_label(o: str) -> str:
+    """Plain name of a city-level model quantity of the urban-form analyses (Fig. 4)."""
+    if o in _QUANTITY:
+        return _QUANTITY[o]
+    stem, _, tag = o.rpartition("_")
+    who, base = (_FORMULA[tag], stem) if tag in _FORMULA else ("Flexible model", o)
+    if base.startswith(("ed_", "eN_")) and base[3:] in _BAND:
+        band = _BAND[base[3:]]
+        return f"{who}: e_{base[1]} {band if band.startswith('beyond') else 'at ' + band}"
+    if base == "slope_eN_logd":
+        return f"{who}: slope of e_N on ln d"
+    if base == "transfer_loss":
+        return f"{who}: transfer loss, extra NLL with discovery-median parameters (nats per visit)"
+    if base == "transfer_frac":
+        return f"{who}: transfer loss as a fraction of the gravity-to-flexible NLL gap"
+    raise KeyError(f"no plain name for the model quantity {o!r}")
+
+
+def form_relations() -> pd.DataFrame:
+    """The ten tested relationships of Fig. 4a and the 69 further relationships of Fig. 4b: standardised slopes in the
+    discovery and the held-out cities (figdata/rev/e1_tested.csv from e1_tested.py; figdata/e1_pairs.csv)."""
+    t = pd.read_csv(FD / "rev" / "e1_tested.csv")
+    o = pd.read_csv(FD / "e1_pairs.csv")
+    t = t.assign(group=t["group"].map({"size": "registered hypothesis, city size", "form": "registered hypothesis, urban form"}), fig4a_row=t["row"].astype("Int64"))
+    o = o.assign(group="further relationship", fig4a_row=pd.array([pd.NA] * len(o), dtype="Int64"))
+    r = pd.concat([t, o], ignore_index=True)
+    return pd.DataFrame({"group": r["group"], "fig4a_row": r["fig4a_row"], "city_characteristic": r["covariate"].map(FORM_COV),
+                         "model_quantity": r["outcome"].map(quantity_label), "slope_discovery": r["d_std"], "slope_heldout": r["l_std"],
+                         "same_sign": (np.sign(r["d_std"]) == np.sign(r["l_std"])).map({True: "yes", False: "no"})})
 
 
 def additional_file_2(path: Path):
@@ -419,30 +635,45 @@ def additional_file_2(path: Path):
     c = cities()[["city", "name", "set", "role", "population", "n_units", "train_trips", "val_trips", "test_trips", "poi", "jobs",
                   "home_devices"]]
     sheets = {"README": pd.DataFrame({"sheet": ["cities", "fit_by_city", "reach_model_constants", "elasticities",
-                                                "ablation_by_city", "ablation_contrasts"],
+                                                "form_relations"],
                                       "content": ["the 67 metropolitan areas: group, population, tracts, visits by period, POIs, jobs, devices",
                                                   "NLL (nats per visit) per city and model, test period x reserved block",
-                                                  "Reach-model constants and standard errors per city (local fits)",
-                                                  "banded flexible model and library formulas: e_d and e_N per city and distance band, "
-                                                  "at band-specific and common reference points, for four measurements",
-                                                  "NLL and share per city, model, parameter level and input line of the ablation ladder",
-                                                  "paired NLL differences (all contrasts, both parameter levels, 32 target and 67 cities)"]}),
+                                                  "Reach-model constants and standard errors per city (local fits); theta2 has no standard error in the five cities where the constraint theta2 >= 1 is active",
+                                                  "banded flexible model and the three formulas: e_d and e_N per city and distance band, "
+                                                  "at band-specific and common reference points (ref), for four measurements of size, for weekend visits, for the flexible model with POI count and area only and for thirds of origins by distance to the CBD",
+                                                  "urban form (Fig. 4a,b): the ten registered hypotheses and the 69 further relationships "
+                                                  "significant in the discovery cities, with standardised slopes in the discovery and the "
+                                                  "held-out cities"]}),
               "cities": c, "fit_by_city": pd.read_csv(RT / "abs_nll.csv", dtype={"city": str}),
               "reach_model_constants": pd.read_csv(RT / "sk_params.csv", dtype={"city": str})}
     el = [pd.read_csv(FD / "bands.csv", dtype={"city": str}).assign(variant="POI count", ref="band")]
-    for v, lab in (("fixed", "POI count"), ("emp", "employment"), ("empN", "employment, log N fixed"), ("nonwork", "POI count, non-work visits")):
+    for v, lab in (("fixed", "POI count"), ("emp", "employment"), ("empN", "employment, log N fixed"), ("nonwork", "POI count, non-work visits"),
+                   ("weekend", "POI count, weekend visits"), ("poiarea", "POI count, flexible model with POI count and area only")):
         p = FD / "rev" / f"banded_{v}.parquet"
         if p.exists():
             el.append(pd.read_parquet(p).assign(variant=lab))
+    p = FD / "rev" / "banded_strata.parquet"
+    if p.exists():
+        t3 = pd.read_parquet(p)
+        el += [t3[t3["stratum"] == k].assign(variant=f"POI count, {k} third of origins") for k in ("inner", "middle", "outer")]
     sheets["elasticities"] = pd.concat(el, ignore_index=True)[["city", "variant", "ref", "model", "band", "d_ref", "ed", "eN"]]
-    ab = []
-    for line in ("all", "all2", "poitrain", "nonwork"):
-        p = FD / "rev" / f"models_{line}_scored.parquet"
-        if p.exists():
-            ab.append(pd.read_parquet(p)[["city", "set", "model", "level", "nll", "share"]].assign(line=line))
-    sheets["ablation_by_city"] = pd.concat(ab, ignore_index=True)
-    sheets["ablation_contrasts"] = pd.concat([pd.read_csv(RT / f"models_{l}_contrasts.csv").assign(line=l)
-                                              for l in ("all", "poitrain", "nonwork") if (RT / f"models_{l}_contrasts.csv").exists()])
+    sheets["form_relations"] = form_relations()
+    c2 = sheets["cities"]
+    sheets["cities"] = c2.assign(set=c2["set"].map(SET_PLAIN), search_city=(c2["role"] == "search").map({True: "yes", False: "no"}))[
+        ["city", "name", "set", "search_city", "population", "n_units", "train_trips", "val_trips", "test_trips", "poi", "jobs", "home_devices"]]
+    for k in ("fit_by_city", "reach_model_constants"):
+        sheets[k] = sheets[k].assign(set=sheets[k]["set"].map(SET_PLAIN))
+    e = sheets["elasticities"]
+    sheets["elasticities"] = e.assign(model=e["model"].map(_plain_text), ref=e["ref"].map({"band": "band-specific", "fixed": "common"}))
+    notes = pd.DataFrame({"sheet": ["notes"], "content": [
+        "NLL: negative log-likelihood in nats per visit; share = (NLL_gravity - NLL) / (NLL_gravity - NLL_flexible); "
+        "level: local = parameters fitted in the city, uniform = medians of the 35 discovery-city fits; "
+        "nll_strexp3_poi: relaxed stretched exponential with POI count (the strongest benchmark); "
+        "form_relations: slopes are standardised (both variables z-scored within the city set) and, for urban-form "
+        "characteristics, controlled for log population; the two city-size rows are slopes on log population itself"]})
+    sheets["README"] = pd.concat([sheets["README"], notes], ignore_index=True)
+    fr = sheets["form_relations"]
+    assert len(fr) == 79 and not fr[["city_characteristic", "model_quantity"]].isna().any().any(), "form_relations: 10 + 69 named rows"
     with pd.ExcelWriter(path) as w:
         for k, df in sheets.items():
             df.to_excel(w, sheet_name=k, index=False)

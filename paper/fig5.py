@@ -200,7 +200,7 @@ def build(d: dict):
     for tr, lab in ((NAME, "Model"), (SRC, "Source")):
         ax_a.text(0, top + 0.95, lab, transform=tr, fontsize=6, color=P["ref"], va="bottom", ha="left", clip_on=False)
     ax_a.text(0, top + 0.95, "Constants", transform=NFREE, fontsize=6, color=P["ref"], va="bottom", ha="center", clip_on=False)
-    ax_a.text(0, -0.78, "* baseline, this study", transform=NAME, fontsize=5.5, color=P["grey"], va="center", ha="left", clip_on=False)
+    ax_a.text(0, -0.78, "* strengthened benchmark", transform=NAME, fontsize=5.5, color=P["grey"], va="center", ha="left", clip_on=False)
     ax_a.set_yticks([])
     ax_a.tick_params(axis="y", length=0)
     ax_a.spines["left"].set_visible(False)
@@ -288,9 +288,9 @@ def build(d: dict):
     ax_d.spines["bottom"].set_bounds(-0.15, 3.15)
     ax_d.spines["left"].set_bounds(0.55, 1.0)
     ax_d.plot([0.72, 3.2], [1.035, 1.035], color=P["grey"], lw=0.5, clip_on=False)          # the three sources that use no local trips
-    ax_d.text(1.96, 1.045, "no local trips", fontsize=5.5, color=P["grey"], ha="center", va="bottom")
+    ax_d.text(1.96, 1.045, "transferred", fontsize=5.5, color=P["grey"], ha="center", va="bottom")
     ax_d.plot([-0.2, 0.28], [1.035, 1.035], color=P["grey"], lw=0.5, clip_on=False)
-    ax_d.text(0.04, 1.045, "local trips", fontsize=5.5, color=P["grey"], ha="center", va="bottom")
+    ax_d.text(0.04, 1.045, "fitted locally", fontsize=5.5, color=P["grey"], ha="center", va="bottom")
     style.panel_label(ax_d, "d", dx=dx_bottom[0], dy=5)
 
     # ---- e: CPC against share

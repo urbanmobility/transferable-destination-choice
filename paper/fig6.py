@@ -29,10 +29,22 @@ LEVEL = "uniform"
 OURS = "c0355r1"
 FAMILIES = [("grav_power", "Gravity", "o", "-"), ("rad", "Radiation", "s", (0, (4, 1.5))), ("strexp1", "Stretched exponential", "^", (0, (1, 1.2)))]
 SHORT = {}                                    # full names everywhere: an abbreviation would end in a full stop
-VERSION = {"P": ("as published", P["grey"]), "N": ("with POI count", P["prior_poi"])}     # a grey as dark as the green: equal weight
+VERSION = {"P": ("with population", P["grey"]), "N": ("with POI count", P["prior_poi"])}     # a grey as dark as the green: equal weight
 TIER_WIDTH = (1.3, 1.0, 0.7, 0.45, 0.3)           # rank tiers of a flow: top 100, 200, 500, 1,000, 2,000
 TIER_ALPHA = (0.9, 0.85, 0.75, 0.6, 0.5)
 N_TOP = 2000
+
+
+RELAXED = ("strexp1", "N")                      # with POI count the stretched exponential is drawn in its relaxed form,
+                                                # the strongest benchmark of Fig. 5 (2026-11-22)
+
+
+def mid(f: str, v: str) -> str:
+    return "strexp3_N" if (f, v) == RELAXED else f"{f}_{v}"
+
+
+def fam_name(name: str, f: str, v: str) -> str:
+    return "Stretched exp., relaxed" if (f, v) == RELAXED else name
 
 
 def key(m: str) -> str:
@@ -115,7 +127,7 @@ def build(d: dict, od: dict = None):
     under(ax, f"{shared[OURS]:,} in observed top {N_TOP:,}")
     for c, (f, name, _, _) in enumerate(FAMILIES, start=2):
         for r, v in enumerate("PN"):
-            m = f"{f}_{v}"
+            m = mid(f, v)
             lab, colour = VERSION[v]
             ax = fig.add_subplot(top[r, c])
             flow_map(ax, g, t, win, key(m), colour)
@@ -123,12 +135,14 @@ def build(d: dict, od: dict = None):
             under(ax, f"{shared[m]:,} in observed top {N_TOP:,}")
             if r == 0:
                 ax.set_title(name, fontsize=7, pad=3, color="black")
+            elif (f, v) == RELAXED:
+                ax.text(0.5, 1.02, "relaxed form", transform=ax.transAxes, fontsize=6.5, color=colour, ha="center", va="bottom")
             if c == 2:
                 ax.text(-0.035, 0.5, lab, transform=ax.transAxes, rotation=90, fontsize=6.5, color=colour, ha="right", va="center")
     style.panel_label(ax_obs, "a", dx=10, dy=4)
 
     models = [(OURS, "Reach model, ours", P["ours"], "o", "-", 1.5)] + \
-             [(f"{f}_{v}", name, VERSION[v][1], mk, ls, 1.0) for f, name, mk, ls in FAMILIES for v in "PN"]
+             [(mid(f, v), fam_name(name, f, v), VERSION[v][1], mk, ls, 1.0) for f, name, mk, ls in FAMILIES for v in "PN"]
 
     def face(m, colour):                          # hollow = as published, filled = with the POI count (as in Fig. 5a)
         return "white" if m.endswith("_P") else colour
@@ -155,8 +169,9 @@ def build(d: dict, od: dict = None):
         lab, colour = VERSION[v]
         hollow = v == "P"
         leg = ax_b.legend(handles=[Line2D([], [], color=colour, lw=1.0, ls=ls, marker=mk, ms=2.8, mfc="white" if hollow else colour,
-                                          mec=colour if hollow else "white", mew=0.7 if hollow else 0.3, label=SHORT.get(name, name))
-                                   for _, name, mk, ls in FAMILIES],
+                                          mec=colour if hollow else "white", mew=0.7 if hollow else 0.3,
+                                          label=fam_name(name, f, v))
+                                   for f, name, mk, ls in FAMILIES],
                           loc=loc, bbox_to_anchor=(x0, 1.04), fontsize=5.5, handlelength=2.0, handletextpad=0.4, labelspacing=0.2, title=lab,
                           title_fontsize=5.5,
                           alignment="left")
@@ -207,11 +222,11 @@ def build(d: dict, od: dict = None):
         lab, colour = VERSION[v]
         for i, (f, name, mk, _) in enumerate(FAMILIES):
             yy = y_of[(v, i)]
-            ax_d.plot([0.24, cp[f"{f}_{v}"]], [yy, yy], color=P["light"], lw=0.6, zorder=1)
-            ax_d.scatter([cp[f"{f}_{v}"]], [yy], s=16, marker=mk, facecolor="white" if v == "P" else colour, edgecolor=colour if v == "P" else "white",
+            ax_d.plot([0.24, cp[mid(f, v)]], [yy, yy], color=P["light"], lw=0.6, zorder=1)
+            ax_d.scatter([cp[mid(f, v)]], [yy], s=16, marker=mk, facecolor="white" if v == "P" else colour, edgecolor=colour if v == "P" else "white",
                          linewidth=0.9 if v == "P" else 0.3, zorder=4)
             ticks.append(yy)
-            labels.append(SHORT.get(name, name))
+            labels.append(fam_name(name, f, v))
         ax_d.text(-0.04, y_of[(v, 0)] + 0.72, lab, transform=ax_d.get_yaxis_transform(), fontsize=6, color=colour, ha="right", va="center")
     ax_d.set_yticks(ticks, labels=labels)
     ax_d.tick_params(axis="y", length=0, labelsize=6)

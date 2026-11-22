@@ -4,6 +4,8 @@ Claim: the pre-registered form hypotheses did not hold out of sample — their e
 signal that remains sits in the spatial distribution of jobs.
   a  the ten registered hypotheses: held-out slope as a fraction of the discovery slope, Holm-adjusted p (hero panel)
   b  discovery against held-out standardized slopes of the 69 further beyond-size relations   (exploratory)
+     with the ten hypotheses of panel a on the same axes, numbered by their row in a (2026-11-20: the panel
+     continues a — the tested hypotheses sit in the same cloud: directions hold, effects shrink)
   c  standardized slopes of the elasticities on 14 form measures, 67 cities                   (exploratory)
   d  first form axis against long-distance decay net of size                                  (exploratory)
 Design. a: the legend names both intervals and the criterion, and a column gives the
@@ -14,6 +16,7 @@ No panel carries an "exploratory" tag or grey axes: the legend says that b, c an
 """
 import numpy as np
 import pandas as pd
+import matplotlib.patheffects as pe
 from matplotlib.lines import Line2D
 from matplotlib.patches import Rectangle
 from matplotlib.transforms import Bbox
@@ -23,15 +26,17 @@ import style
 
 P = style.PALETTE
 COV = {"log_population": "Population", "road_density": "Road density", "compactness": "Compactness",
-       "subcentre_job_share": "Subcentre job share", "circuity": "Circuity", "pop_density_gini": "Density inequality",
-       "cbd_job_share": "CBD job share", "jobs_housing": "Jobs–housing separation", "n_subcentres": "Subcentres",
+       "subcentre_job_share": "Centre job share", "circuity": "Circuity", "pop_density_gini": "Density inequality",
+       "cbd_job_share": "CBD job share", "jobs_housing": "Jobs–housing separation", "n_subcentres": "Employment centres",
        "no_car_share": "Car-free households", "orientation_entropy": "Street-grid entropy", "poi_mix": "POI mix",
-       "secondary_centres": "Subcentre − CBD jobs", "transit_per_1k": "Transit supply", "water_share": "Water share"}
+       "secondary_centres": "Secondary-centre job share", "transit_per_1k": "Transit supply", "water_share": "Water share"}
 OUT = {"theta_turn_c0514c1": "turning distance", "transfer_loss_c0355r1": "transfer loss",
-       "ed_5_10km_c0262": "decay 5–10 km, tempered", "ed_5_10km_c0355r1": "decay 5–10 km, kernel", "ed_10_20km": "decay 10–20 km",
+       "ed_5_10km_c0262": "decay 5–10 km, tempered", "ed_5_10km_c0355r1": "decay 5–10 km, Reach", "ed_10_20km": "decay 10–20 km",
        "ed_1_2km": "decay 1–2 km", "ed_20km": "decay >20 km", "slope_eN_logd_c0355r1": "size-effect slope"}
 BANDS = ["0_1km", "1_2km", "2_5km", "5_10km", "10_20km", "20km"]
 BAND_LAB = ["0–1", "1–2", "2–5", "5–10", "10–20", ">20"]
+B_LABEL_OFFSET = {1: (0.0, -0.085), 2: (0.02, 0.085), 3: (0.075, -0.06), 4: (-0.085, 0.0), 5: (-0.085, 0.045), 6: (-0.01, 0.09),
+                  7: (-0.075, -0.055), 8: (0.075, -0.05), 9: (0.075, 0.0), 10: (-0.08, 0.035)}   # row number beside its symbol, panel b
 
 
 def holm_adjusted(p) -> np.ndarray:
@@ -127,6 +132,22 @@ def build(d: dict):
                 loc="upper left", bbox_to_anchor=(0.0, 1.0), handletextpad=0.4, labelspacing=0.3, handlelength=1.4,
 )
     ax_b.text(0, 1.01, f"{len(e1)} further relations", transform=ax_b.transAxes, fontsize=6, va="bottom", ha="left")
+    tested = d["e1_tested"]                                        # the ten rows of panel a, same definition of the slopes
+    # the legend names them by their rows in a, not as "tested": the 69 others were examined in the held-out cities too
+    if tested["row"].tolist() != list(range(1, len(T) + 1)) or tested["id"].tolist() != T["id"].tolist():
+        raise ValueError("e1_tested.csv does not list the rows of panel a in order")
+    kt = P["ours"]
+    for grp, mk, sz in (("size", "s", 15), ("form", "D", 17)):
+        for r in tested[tested["group"] == grp].itertuples():
+            ax_b.scatter([r.d_std], [r.l_std], s=sz, marker=mk, facecolor=kt, edgecolor="white", linewidth=0.5, zorder=5)
+            dx, dy = B_LABEL_OFFSET[r.row]
+            ax_b.text(r.d_std + dx, r.l_std + dy, str(r.row), fontsize=5.5, ha="center", va="center", zorder=6, color=kt,
+                      fontweight="bold", path_effects=[pe.withStroke(linewidth=1.6, foreground="white")])
+    leg_b = ax_b.get_legend()
+    ax_b.legend(handles=[Line2D([], [], ls="none", marker="s", ms=3.2, mfc=kt, mec="white", mew=0.4, label=r"rows 1–2 of $\mathbf{a}$"),
+                         Line2D([], [], ls="none", marker="D", ms=3.2, mfc=kt, mec="white", mew=0.4, label=r"rows 3–10 of $\mathbf{a}$")],
+                loc="lower right", bbox_to_anchor=(1.02, -0.01), handletextpad=0.3, labelspacing=0.3, handlelength=1.0)
+    ax_b.add_artist(leg_b)
     ax_b.text(0.70, 0.80, "1:1", fontsize=6, color=P["ref"], rotation=45, ha="center", va="center")
     ax_b.set_xlim(-lim, lim)
     ax_b.set_ylim(-lim, lim)
@@ -194,7 +215,7 @@ def build(d: dict):
                      extra=[Line2D([], [], color=P["ref"], lw=1.0, label="Fit, all cities")])
     style.panel_label(ax_d, "d", dx=26)
 
-    return fig, {"a": T, "b": e1, "c": M.reset_index(), "c_fdr": S.reset_index(), "d": a1}
+    return fig, {"a": T, "b": e1, "b_tested": tested, "c": M.reset_index(), "c_fdr": S.reset_index(), "d": a1}
 
 
 def main():

@@ -14,6 +14,7 @@ def load(root=None) -> dict:
     root = root or style.DATA
     d = {k: pd.read_csv(root / f"{k}.csv", dtype={"city": str}) for k in _CSV}
     d.update({k: json.loads((root / f"{k}.json").read_text()) for k in _JSON})
+    d["e1_tested"] = pd.read_csv(root / "rev" / "e1_tested.csv")     # Fig. 4b: the ten hypotheses of Fig. 4a (e1_tested.py)
     d["od"] = load_od(DENVER, root)                # Fig. 6
     return d
 
@@ -37,4 +38,5 @@ def load_od(city: str, root=None) -> dict:
 
 def available(root=None) -> bool:
     root = root or style.DATA
-    return all((root / f"{k}.csv").exists() for k in _CSV) and (root / "od_maps" / DENVER / "pairs.csv").exists()
+    return (all((root / f"{k}.csv").exists() for k in _CSV) and (root / "od_maps" / DENVER / "pairs.csv").exists()
+            and (root / "rev" / "e1_tested.csv").exists())

@@ -317,13 +317,21 @@ def main():
     L += ["## Absolute NLL (nats per visit), test period x reserved block: medians over 67 cities", ""] + \
          [f"- {k}: {num[k].median():.4f} (min {num[k].min():.4f}, max {num[k].max():.4f})" for k in num.columns] + [""]
     L += ["Smallest gravity-to-flexible gaps:", ""] + _md(ab.nsmallest(5, "gap_nats")[["city", "name", "set", "gap_nats"]]) + [""]
-    for v in ("fixed", "emp", "empN", "nonwork"):
+    for v in ("fixed", "emp", "empN", "nonwork", "weekend", "poiarea"):
         med, rise = t_banded(v)
         if med is None:
             continue
         med.to_csv(OUT / f"banded_{v}_medians.csv", index=False)
         rise.to_csv(OUT / f"banded_{v}_rise.csv", index=False)
         L += [f"## Banded flexible model, variant {v}", ""] + _md(rise) + [""] + _md(med) + [""]
+    p = RV / "banded_strata.parquet"                    # thirds of origins by distance to the CBD (rev_strata.py)
+    if p.exists():
+        t3 = pd.read_parquet(p)
+        for k in ("inner", "middle", "outer"):
+            t3[t3["stratum"] == k].drop(columns="stratum").to_parquet(RV / f"banded_strata_{k}.parquet", index=False)
+            med, rise = t_banded(f"strata_{k}")
+            med.to_csv(OUT / f"banded_strata_{k}_medians.csv", index=False)
+            rise.to_csv(OUT / f"banded_strata_{k}_rise.csv", index=False)
     for line in ("all", "nonwork", "poitrain"):
         med, con = t_r1(line)
         if med is None:

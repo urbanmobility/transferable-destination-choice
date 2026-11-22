@@ -6,9 +6,15 @@
 d_ij: straight-line distance between the origin and destination tracts in km (floored at 0.05 km);
 N_j: number of points of interest (places) in destination tract j; a_j: land area of tract j in km^2.
 
+The constraint theta2 >= 1 is part of the model's specification: it keeps N_j + theta2 positive for every tract,
+including tracts without POIs. The city fits of the paper are estimated under it (it is active in five of the 67
+cities, where theta2 = 1). The functions below do not enforce it; utility() only requires N_j + theta2 > 0 for the
+destinations it is given.
+
 DEFAULT holds the uniform parameter vector of the paper (median of the 35 discovery-city fits, Additional file 1,
-Table S5). With it the formula retained a median 94% of the likelihood gap between population-based gravity and a
-22-parameter flexible model in 32 cities whose visits played no part in estimating it. Only numpy is needed.
+Table S5); it satisfies theta2 >= 1. With it the formula retained a median 94% of the likelihood gap between
+population-based gravity and a 22-parameter flexible model in 32 cities whose visits played no part in estimating it.
+Only numpy is needed.
 """
 from __future__ import annotations
 
