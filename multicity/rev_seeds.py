@@ -17,7 +17,11 @@ Stage "run bound" (after theta_2 >= 1 became part of the specification of the Re
 with the Reach model fitted as in the amended main analysis, i.e. the fit above where its shift is at least 1 and
 otherwise the bounded refit of rev_theta2.fit_bounded. Output: rev/seeds_bound.parquet (adds theta2 and bounded);
 the paper reports this stage.
-Usage (run_stage.sh, M line): rev_seeds.py run [bound] | summary [bound]
+
+Stage "run allorig": the paper's blocks, the formulas fitted on every origin of the city instead of a sample
+of 300 (the flexible reference model is fitted on every origin); Reach model with theta_2 >= 1 as above.
+Output: rev/seeds_allorig.parquet.
+Usage (run_stage.sh, M line): rev_seeds.py run [bound|allorig] | summary [bound|allorig]
 """
 import sys
 from pathlib import Path
@@ -44,7 +48,7 @@ def job(args) -> dict:
     base_seed = _G["fold_seed"]
     sr_data.FOLD_SEED = base_seed + dfold
     try:
-        tr = sr_data.build([city], "tract", "train", "search", library.LIB_N_ORIG, oseed)
+        tr = sr_data.build([city], "tract", "train", "search", _G.get("n_orig", library.LIB_N_ORIG), oseed)
         ev = sr_data.build([city], "tract", "test", "fold:0", None, 0)
     finally:
         sr_data.FOLD_SEED = base_seed
@@ -71,35 +75,43 @@ def job(args) -> dict:
     return out
 
 
-def stage_run(bound=None):
+FILES = {None: "seeds.parquet", "bound": "seeds_bound.parquet", "allorig": "seeds_allorig.parquet"}
+
+
+def stage_run(mode=None):
     import ledger
     import p9
     import sr_data
     cfg = p9.require_fixed()
-    _G.update(cand=p9.ours_candidates()[REACH], starts=int(cfg["starts"]), fit_seed=int(cfg["fit_seed"]), fold_seed=int(sr_data.FOLD_SEED), bound=bound)
+    _G.update(cand=p9.ours_candidates()[REACH], starts=int(cfg["starts"]), fit_seed=int(cfg["fit_seed"]), fold_seed=int(sr_data.FOLD_SEED), bound=None if mode is None else 1.0)
+    bound = _G["bound"]
+    configs = CONFIGS
+    if mode == "allorig":
+        _G["n_orig"] = None
+        configs = [("all origins", 0, 0)]
     cities = p9.cities("target")
-    jobs = [(name, df, os_, c) for name, df, os_ in CONFIGS for c in cities]
+    jobs = [(name, df, os_, c) for name, df, os_ in configs for c in cities]
     t = pd.DataFrame(p9._pool_map(job, jobs)).sort_values(["config", "city"]).reset_index(drop=True)
-    p = rev_banded.out_dir() / ("seeds.parquet" if bound is None else "seeds_bound.parquet")
-    assert bound is None or not p.exists(), f"{p} exists"
+    p = rev_banded.out_dir() / FILES[mode]
+    assert mode is None or not p.exists(), f"{p} exists"
     t.to_parquet(p, index=False)
     ledger.add(f"Revision 2026-11-22 (post hoc, supplementary): rev_seeds run: Reach model vs relaxed stretched exponential, local "
-               f"fits, {len(CONFIGS)} designs (base, 5 block assignments, 5 origin samples) x {len(cities)} target cities; "
+               f"fits, {len(configs)} designs ({'base, 5 block assignments, 5 origin samples' if mode != 'allorig' else 'every origin used for fitting'}) x {len(cities)} target cities; "
                f"rev/{p.name} sha {ledger.sha(p)}" + ("" if bound is None else f"; Reach model with theta_2 >= {bound}, bounded refit in "
                f"{int(t['bounded'].sum())} of {len(t)} fits"))
-    stage_summary(bound)
+    stage_summary(mode)
 
 
-def stage_summary(bound=None):
-    t = pd.read_parquet(rev_banded.out_dir() / ("seeds.parquet" if bound is None else "seeds_bound.parquet"))
+def stage_summary(mode=None):
+    t = pd.read_parquet(rev_banded.out_dir() / FILES[mode])
     t["d"] = t["nll_bench"] - t["nll_reach"]
-    for name, _, _ in CONFIGS:
+    for name in t["config"].drop_duplicates():
         g = t[t["config"] == name]
         d = g["d"].dropna()
         print(f"{name}: median dNLL {d.median():.4f}, Reach better in {int((d > 0).sum())}/{len(g)} (not finite {int(g['d'].isna().sum())})", flush=True)
 
 
 if __name__ == "__main__":
-    if len(sys.argv) not in (2, 3) or sys.argv[1] not in ("run", "summary") or sys.argv[2:] not in ([], ["bound"]):
+    if len(sys.argv) not in (2, 3) or sys.argv[1] not in ("run", "summary") or sys.argv[2:] not in ([], ["bound"], ["allorig"]):
         sys.exit(__doc__)
-    {"run": stage_run, "summary": stage_summary}[sys.argv[1]](1.0 if sys.argv[2:] else None)
+    {"run": stage_run, "summary": stage_summary}[sys.argv[1]](sys.argv[2] if sys.argv[2:] else None)

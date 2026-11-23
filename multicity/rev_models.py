@@ -3,8 +3,8 @@
 Post-freeze, supplementary. Nothing frozen and nothing of plan 9 is rewritten; outputs go to results/multicity/rev/.
 
 What is fitted (REV_EQ; #1 d, #2 ln d, #4 P_j, #5 E_j (LODES jobs), #6 N_j, #7 a_j; every numeral is a constant):
-  an ablation ladder with POI count as the mass (gravity -> stretched exponential -> + area -> + a parametric
-  distance x size interaction -> Reach model -> + a separate log N term); the separable twin of the Reach model
+  an ablation ladder with POI count as the mass (gravity -> stretched exponential -> + area -> Reach model ->
+  + a separate log N term); the separable twin of the Reach model
   (same inputs, same five constants, no coupling); the Reach model with ln a_j instead of a_j^theta4 (invariant to
   the area unit); the same comparisons with LODES employment as the mass (independent of the POI catalogue); a
   uniform-choice null model (pseudo-R2).
@@ -37,8 +37,6 @@ REV_EQ = {
     "grav_N": ("f = 1.0*log(#6 + 1.0) - 1.5*#2", (_T, _F, _T)),
     "str3_N": ("f = 1.0*log(#6 + 1.0) - 1.0*#1^0.45", (_T, _F, _T, _T)),
     "str3a_N": ("f = 1.0*log(#6 + 1.0) - 1.0*#1^0.45 + 0.1*log(#7)", (_T, _F, _T, _T, _T)),
-    "int_N": ("f = 1.0*log(#6 + 1.0) - 1.0*#1^0.45 + 0.1*log(#7) - 0.5*#2 + 0.05*#2*log(#6 + 1.0)",
-              (_T, _F, _T, _T, _T, _T, _T, _F)),
     "sep_N": ("f = #7^0.1299 + 0.8*log(#6 + 1.0) - 1.0*#1^0.45", (_T,) * 5),
     "sk": (f"f = {_SK} + #7^0.1299", (_T,) * 5),
     "sk_lna": (f"f = {_SK} + 0.13*log(#7)", (_T,) * 5),
@@ -57,17 +55,15 @@ LINES = {"all": ("n_dev_5", False), "nonwork": ("n_nonwork_5", False), "poitrain
          "all2": ("n_dev_5", False)}
 POI_TRAIN = config.ROOT / "derived/multicity_poitrain/poi_tracts.parquet"     # places seen in March-April only
 LINE_MODELS = {"all": list(REV_EQ),
-               "nonwork": ["null_unif", "grav_P", "grav_N", "str3_N", "str3a_N", "int_N", "sep_N", "sk"],
-               "poitrain": ["null_unif", "grav_N", "str3_N", "str3a_N", "int_N", "sep_N", "sk"],
+               "nonwork": ["null_unif", "grav_P", "grav_N", "str3_N", "str3a_N", "sep_N", "sk"],
+               "poitrain": ["null_unif", "grav_N", "str3_N", "str3a_N", "sep_N", "sk"],
                "all2": ["null_unif", "sep_E1", "sk_E1", "sk_plus1"]}
 # (a, b, label): NLL_b - NLL_a > 0 means a fits better. "_frozen" = the frozen library fits (line "all" only).
 CONTRASTS = [
     ("grav_N", "grav_P", "POI count instead of population as the mass"),
     ("str3_N", "grav_N", "stretched-exponential distance instead of a power law"),
     ("str3a_N", "str3_N", "+ log area"),
-    ("int_N", "str3a_N", "+ parametric distance x size interaction"),
     ("sk", "sep_N", "coupling: Reach model vs its separable twin (same inputs, 5 constants each)"),
-    ("sk", "int_N", "Reach model vs the interaction logit"),
     ("sk", "str3_N", "Reach model vs the strongest benchmark (both refitted here)"),
     ("sk_plus", "sk", "+ a separate log N term"),
     ("sk_lna", "sk", "ln a instead of a^theta4"),

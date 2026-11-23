@@ -28,7 +28,7 @@ P = style.PALETTE
 COV = {"log_population": "Population", "road_density": "Road density", "compactness": "Compactness",
        "subcentre_job_share": "Centre job share", "circuity": "Circuity", "pop_density_gini": "Density inequality",
        "cbd_job_share": "CBD job share", "jobs_housing": "Jobs–housing separation", "n_subcentres": "Employment centres",
-       "no_car_share": "Car-free households", "orientation_entropy": "Street-grid entropy", "poi_mix": "POI mix",
+       "no_car_share": "Car-free households", "orientation_entropy": "Street-orientation entropy", "poi_mix": "POI mix",
        "secondary_centres": "Secondary-centre job share", "transit_per_1k": "Transit supply", "water_share": "Water share"}
 OUT = {"theta_turn_c0514c1": "turning distance", "transfer_loss_c0355r1": "transfer loss",
        "ed_5_10km_c0262": "decay 5–10 km, tempered", "ed_5_10km_c0355r1": "decay 5–10 km, Reach", "ed_10_20km": "decay 10–20 km",
