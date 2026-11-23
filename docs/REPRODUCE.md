@@ -14,13 +14,13 @@ The stages, in the order they were run:
    53 cities into 27 discovery and 26 held-out cities.
 3. **Search.** PySR runs from `run_queue.sh config/queue_search*.txt` with `snap_hof.sh` (first rounds;
    `orchestrate.py` then selects, simplifies and fits the candidate library), followed by the iterative loop
-   `loop.py run` (search rounds, candidate review, outer cycles that register and test cross-city hypotheses).
+   `loop.py run` (search rounds, candidate review, outer cycles that record and test cross-city hypotheses).
 4. **Consolidation before the freeze.** `run_prefreeze.sh` (`prefreeze.py`), `banded.py`, `sensitivity.py`,
    `merge_variants.py`, `v3_library.py`, `lawtest_extra.py`.
 5. **Freeze and confirmation.** `confirm.py freeze | refs | fit | rescore | banded | analyze | report`. After the freeze
    every stage that reads the test period or the confirmation cities calls `frozen.require()`, which refuses to run
    before the library is frozen or after a frozen input has changed.
-6. **Second registered set.** `form_p7.py`, `city_outcomes.py`, `explore_p7.py` (selection), `p7seal.py` (sign-off guard),
+6. **Second pre-specified set.** `form_p7.py`, `city_outcomes.py`, `explore_p7.py` (selection), `p7seal.py` (sign-off guard),
    `p8_test.py test | report`.
 7. **Exploratory urban form.** `explore_form.py fix | e1 | e2 | axes_ta | report`, `city_types.py types | report`.
 8. **Benchmarks and parameter transfer.** `p9.py fix | source | prerun | select | target | contrasts | report`,
@@ -34,14 +34,19 @@ The stages, in the order they were run:
     `rev_theta2_se.py run` (their standard errors), `rev_seeds.py run bound` (the seed checks, `seeds_bound.parquet`)
     and `rev_models_bound.py run <line>` for the lines `all`, `all2`, `nonwork`, `poitrain` (the model comparisons;
     output in `rev/bound/`). The frozen fits (`sk_frozen`, `tp_frozen`, `tr_frozen`) keep their recorded values, and
-    the separable twins keep a free shift.
+    the separable twins keep a free shift. With the bounded fits in place: `rev_seeds.py run allorig` (the formulas
+    fitted on every origin, `seeds_allorig.parquet`) and `rev_round5.py decomp | knots | uncond | rstar`.
 11. **Figures and tables.** `paper_figdata.py export` and a copy of `results/multicity/{p7,confirm,p9,refs_test,rev}`
     in `paper/figdata/rev/` (with `results/multicity/explore/e1_pairs.csv` as `explore_e1_pairs.csv`), taking for each
     line the files of `rev/bound/` (`models_<line>_*.parquet`, `summary_models_<line>.json`, `report_models_<line>.md`)
     in place of those of `rev/`; then, in
     this order: `paper/e1_tested.py`; `paper/rev_tables.py`; `paper/amend_theta2.py` and `paper/amend_theta2_se.py`,
     which write the bounded city fits into the exported tables (each runs once; keep a copy of the files they replace);
-    `paper/rev_tables.py` again; `paper/make.py`, `paper/figS1.py` and `paper/supp_tex.py`.
+    `paper/rev_tables.py` again; `paper/make.py`, `paper/make.py tables`, `paper/figS1.py` and `paper/supp_tex.py`.
+    `supp_tex.py` also reads three files that no stage above writes into `paper/`: `paper/tables/tableS_od_cities.csv`
+    (from `make.py tables`), `results/multicity/qc/cities_qc.csv`, expected as `manuscript/sources/cities_qc.csv` next
+    to the data root, and `paper/figdata/rev/city_controls_r5.csv`, which is `results/city_level/city_controls.csv` of
+    this repository (definitions in [`DATA.md`](DATA.md)).
 
 Unit tests: `pytest multicity/tests`, `pytest sr/tests`, `pytest paper/tests`, `pytest reach_model` (run each
 directory separately). Tests that need the full data root are skipped or fail without it.
@@ -54,7 +59,7 @@ Comments and log messages refer to the stages by number:
 |---|---|
 | plan 1 | data pipeline (cities, visits, tracts, attributes, quality checks, reference models) |
 | plan 2 | first search rounds and the candidate library |
-| plan 4 | iterative search loop with candidate review and registered cross-city hypotheses |
+| plan 4 | iterative search loop with candidate review and pre-specified cross-city hypotheses |
 | plan 5 | consolidation before the freeze (rewrites, banded flexible model, selection rules) |
 | plan 6 | freeze and confirmation ([`confirmation_criteria.md`](confirmation_criteria.md)) |
 | plan 7 / plan 8 | selection, registration and held-out test of the second hypothesis set |

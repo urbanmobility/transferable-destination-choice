@@ -7,7 +7,7 @@ Code and city-level results for
 > Submitted to EPJ Data Science (2026). † Equal contribution.
 
 We model where residents go when they leave home as a conditional-logit choice among the census tracts of their
-metropolitan area, and search for a compact utility by symbolic regression on 192.1 million home-based visits to points
+metropolitan area, and search for a compact utility by symbolic regression on 192.2 million home-based visits to points
 of interest (POIs) from 41,688 home tracts in 67 US metropolitan areas (March–May 2024). The search, fitted to the raw
 visit counts, found the **Reach model**
 
@@ -49,7 +49,7 @@ Table S7). Run the module's tests with `pytest reach_model`.
 | Path | Content |
 |---|---|
 | `reach_model/` | the formula, its elasticities and default parameters |
-| `multicity/` | the full multi-city pipeline: data build, symbolic-regression search and candidate library, scoring, registered hypotheses, freeze and confirmation, benchmarks and parameter transfer, exploratory and revision analyses (`multicity/tests/` for unit tests) |
+| `multicity/` | the full multi-city pipeline: data build, symbolic-regression search and candidate library, scoring, pre-specified hypotheses, freeze and confirmation, benchmarks and parameter transfer, exploratory and revision analyses (`multicity/tests/` for unit tests) |
 | `sr/` | data rows, PySR set-up and conditional-logit loss, refitting, reference models |
 | `model/` | the conditional-logit engine and the flexible reference models |
 | `osm/` | OpenStreetMap feature rules |
@@ -74,14 +74,18 @@ order in which the stages were run.
   with the variants of Additional file 1, Table S6: common reference point, employment, non-work and weekend visits,
   the flexible model with POI count and area only, and thirds of origins by distance to the CBD) and the urban-form
   relationships of Fig. 4a,b (`form_relations.csv`). These five files are the sheets of Additional file 2 of the
-  paper. `ablation_by_city.csv` and `ablation_contrasts.csv` give the NLL and fit share of every model of the model
-  comparisons per city, parameter source and input line, and their paired differences (Additional file 1, Table S7
-  draws on them);
+  paper. `ablation_by_city.csv` and `ablation_contrasts.csv` give the NLL and fit share of the models compared in
+  Additional file 1, Table S7, per city, parameter source and input line, and their paired differences. Three further
+  files hold the city-level inputs of the checks of Additional file 1, Table S8: `elasticities_same_knots.csv` (the
+  banded flexible model refitted with the same spline knots in every city), `turning_distance_flexible.csv` (the
+  distance beyond which the flexible model's distance elasticity stays below −1.25, −1.5 and −1.75, in km) and
+  `city_controls.csv` (mean commute time and POI density; definitions in [`docs/DATA.md`](docs/DATA.md));
 - `benchmarks/` — the 29 model versions (24 benchmark versions, the three formulas and two further expressions from
-  the search) under four parameter sources in the 32 target cities, the selected opponents, the registered contrasts,
+  the search) under four parameter sources in the 32 target cities, the selected opponents, the pre-specified contrasts,
   and `seeds_bound.csv`: the Reach model and the strongest benchmark under five other assignments of destination
-  blocks and five other samples of origins (Additional file 1, Table S11);
-- `registry/` — the registered hypotheses and their held-out results (`registry_en.csv` gives all 25 in English, as in
+  blocks and five other samples of origins, and `seeds_allorig.csv`: the same comparison with the formulas fitted on
+  every origin of the city (Additional file 1, Table S11);
+- `registry/` — the pre-specified hypotheses and their held-out results (`registry_en.csv` gives all 25 in English, as in
   Additional file 1, Table S3);
 - `freeze/` — the fixed formula library and the candidate pool it was drawn from;
 - `figure_source_data/` — the city-level data behind the figures (the tract-level layers of Fig. 1b,c and the tract-pair
@@ -97,7 +101,7 @@ block of a city has no NLL there.
 
 ## Language
 
-Code, comments and reports are in English. Texts that became part of the registered hypotheses (statement and criterion templates in `multicity/laws.py`, `city_outcomes.py`, `lawtest_extra.py`, `v3_library.py`, `explore_p7.py` and `multicity/config/p7_covariates.json`) keep their original Chinese wording so that the code reproduces the registered records in `results/registry/`; English versions are in `results/registry/registry_en.csv` and in comments next to them. The language-model prompts were issued in Chinese in the original runs; the prompts in the code are translations.
+Code, comments and reports are in English. Texts that became part of the pre-specified hypotheses (statement and criterion templates in `multicity/laws.py`, `city_outcomes.py`, `lawtest_extra.py`, `v3_library.py`, `explore_p7.py` and `multicity/config/p7_covariates.json`) keep their original Chinese wording so that the code reproduces the records in `results/registry/`; English versions are in `results/registry/registry_en.csv` and in comments next to them. The language-model prompts were issued in Chinese in the original runs; the prompts in the code are translations.
 
 ## Licence
 
