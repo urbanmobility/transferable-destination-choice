@@ -1,14 +1,14 @@
 group,fig4a_row,city_characteristic,model_quantity,slope_discovery,slope_heldout,same_sign
-"registered hypothesis, city size",1.0,Population (log),Two-regime power law: turning distance r (km),-0.6920665834954446,-0.5561894146657174,yes
-"registered hypothesis, city size",2.0,Population (log),"Reach model: transfer loss, extra NLL with discovery-median parameters (nats per visit)",0.6796821547265005,0.1629317167043572,yes
-"registered hypothesis, urban form",3.0,Main-road density,Tempered power law: e_d at 5-10 km,-0.3717661297198646,-0.2853748677995669,yes
-"registered hypothesis, urban form",4.0,Residential compactness,Reach model: slope of e_N on ln d,-0.7492169719676605,-0.4221150986245879,yes
-"registered hypothesis, urban form",5.0,Employment-centre job share,Reach model: slope of e_N on ln d,-0.7816450404836076,-0.2389470640182754,yes
-"registered hypothesis, urban form",6.0,Main-road density,Flexible model: e_d at 10-20 km,-0.5676767284559202,-0.2227483682808851,yes
-"registered hypothesis, urban form",7.0,Road circuity,Reach model: e_d at 5-10 km,0.3590819141587537,0.1708094643555373,yes
-"registered hypothesis, urban form",8.0,Road circuity,Flexible model: e_d at 1-2 km,0.4625513267260816,0.0879314809644449,yes
-"registered hypothesis, urban form",9.0,Employment-centre job share,Flexible model: e_d beyond 20 km,0.7755081583523815,0.1425734030889142,yes
-"registered hypothesis, urban form",10.0,Gini of tract population density,Flexible model: e_d at 10-20 km,-0.4350712098576914,-0.0940042415882986,yes
+"pre-specified hypothesis, city size",1.0,Population (log),Two-regime power law: turning distance r (km),-0.6920665834954446,-0.5561894146657174,yes
+"pre-specified hypothesis, city size",2.0,Population (log),"Reach model: transfer loss, extra NLL with discovery-median parameters (nats per visit)",0.6796821547265005,0.1629317167043572,yes
+"pre-specified hypothesis, urban form",3.0,Main-road density,Tempered power law: e_d at 5-10 km,-0.3717661297198646,-0.2853748677995669,yes
+"pre-specified hypothesis, urban form",4.0,Residential compactness,Reach model: slope of e_N on ln d,-0.7492169719676605,-0.4221150986245879,yes
+"pre-specified hypothesis, urban form",5.0,Employment-centre job share,Reach model: slope of e_N on ln d,-0.7816450404836076,-0.2389470640182754,yes
+"pre-specified hypothesis, urban form",6.0,Main-road density,Flexible model: e_d at 10-20 km,-0.5676767284559202,-0.2227483682808851,yes
+"pre-specified hypothesis, urban form",7.0,Road circuity,Reach model: e_d at 5-10 km,0.3590819141587537,0.1708094643555373,yes
+"pre-specified hypothesis, urban form",8.0,Road circuity,Flexible model: e_d at 1-2 km,0.4625513267260816,0.0879314809644449,yes
+"pre-specified hypothesis, urban form",9.0,Employment-centre job share,Flexible model: e_d beyond 20 km,0.7755081583523815,0.1425734030889142,yes
+"pre-specified hypothesis, urban form",10.0,Gini of tract population density,Flexible model: e_d at 10-20 km,-0.4350712098576914,-0.0940042415882986,yes
 further relationship,,POI class entropy,Variable-exponent control family fits near the best formula (0/1),0.3527297067524294,-0.0179510044966856,no
 further relationship,,CBD job share,NLL gap between population gravity and the flexible model (nats per visit),-0.3279675243027429,-0.0344662258404185,yes
 further relationship,,"Transit stops per 1,000 inhabitants",Reach model: fit share with shifted gravity as the lower reference,0.4837766620188694,-0.1946763748228208,no

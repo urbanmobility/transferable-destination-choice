@@ -11,18 +11,10 @@ str3a_N,str3_N,local,target,0.0084509020344007,0.0035375901242638,0.017620281109
 str3a_N,str3_N,local,all,0.0095915163831654,0.006904730613721,0.0131331984169147,54/67,0,+ log area,all
 str3a_N,str3_N,uniform,target,0.0074568479811367,0.0018948984908817,0.0168046434126322,23/32,0,+ log area,all
 str3a_N,str3_N,uniform,all,0.0092623752164375,0.0057084515757299,0.0157194712408648,50/67,0,+ log area,all
-int_N,str3a_N,local,target,0.0022313558131532,0.0011043083553423,0.0039051095357893,27/32,0,+ parametric distance x size interaction,all
-int_N,str3a_N,local,all,0.0035932710232975,0.0017043465212069,0.0046221928744667,56/67,0,+ parametric distance x size interaction,all
-int_N,str3a_N,uniform,target,0.0030277622886865,-0.0001283552737965,0.0049858974686043,21/32,0,+ parametric distance x size interaction,all
-int_N,str3a_N,uniform,all,0.002833291927589,-0.0001605438855412,0.0049858974686043,41/67,0,+ parametric distance x size interaction,all
 sk,sep_N,local,target,0.0005820877569009,-0.0018331497446668,0.0029569500571529,17/32,0,"coupling: Reach model vs its separable twin (same inputs, 5 constants each)",all
 sk,sep_N,local,all,0.0004119988957933,-0.0012541875152063,0.0022239270477539,34/67,0,"coupling: Reach model vs its separable twin (same inputs, 5 constants each)",all
 sk,sep_N,uniform,target,-2.502077131461e-05,-0.0026601066377813,0.0037233562301812,16/32,0,"coupling: Reach model vs its separable twin (same inputs, 5 constants each)",all
 sk,sep_N,uniform,all,0.0003429333428419,-0.0020548816803205,0.0036395578123853,35/67,0,"coupling: Reach model vs its separable twin (same inputs, 5 constants each)",all
-sk,int_N,local,target,-0.0019320098172355,-0.0044521297425306,-0.0010954410902246,6/32,0,Reach model vs the interaction logit,all
-sk,int_N,local,all,-0.0026116811336427,-0.0043856327550821,-0.0019192374850112,11/67,0,Reach model vs the interaction logit,all
-sk,int_N,uniform,target,-0.0016149700004095,-0.0053139686724272,0.0009933723905635,13/32,0,Reach model vs the interaction logit,all
-sk,int_N,uniform,all,-0.0007175921228341,-0.0040023420501564,0.0011631245880869,32/67,0,Reach model vs the interaction logit,all
 sk,str3_N,local,target,0.0077323867304792,0.0028796252658889,0.0170168423562659,26/32,0,Reach model vs the strongest benchmark (both refitted here),all
 sk,str3_N,local,all,0.0120083636107426,0.0050482996376137,0.0143863612366161,52/67,0,Reach model vs the strongest benchmark (both refitted here),all
 sk,str3_N,uniform,target,0.0058834572619896,0.0022904071944571,0.0163653101547163,26/32,0,Reach model vs the strongest benchmark (both refitted here),all
@@ -75,18 +67,10 @@ str3a_N,str3_N,local,target,0.0078364290502654,0.0022308267251247,0.017464699983
 str3a_N,str3_N,local,all,0.0090984417262895,0.006571027982249,0.0129386734901721,55/67,0,+ log area,poitrain
 str3a_N,str3_N,uniform,target,0.0075257537038755,0.0020342161132762,0.016562319457908,23/32,0,+ log area,poitrain
 str3a_N,str3_N,uniform,all,0.0088541929065413,0.0057772776351283,0.0145090247304899,50/67,0,+ log area,poitrain
-int_N,str3a_N,local,target,0.0023461176581718,0.0011582198058053,0.0037935409814937,27/32,0,+ parametric distance x size interaction,poitrain
-int_N,str3a_N,local,all,0.0035961597859408,0.001641658999544,0.0043574408297253,56/67,0,+ parametric distance x size interaction,poitrain
-int_N,str3a_N,uniform,target,0.0031990176340783,0.0002182855657482,0.0046733014999222,22/32,0,+ parametric distance x size interaction,poitrain
-int_N,str3a_N,uniform,all,0.0030821097429609,-4.283958893003259e-05,0.005176222201924,41/67,0,+ parametric distance x size interaction,poitrain
 sk,sep_N,local,target,0.0002398020116252,-0.0019602065807343,0.0028731594928308,16/32,0,"coupling: Reach model vs its separable twin (same inputs, 5 constants each)",poitrain
 sk,sep_N,local,all,-0.0001184598324881,-0.0013410377865028,0.0023352635825291,33/67,0,"coupling: Reach model vs its separable twin (same inputs, 5 constants each)",poitrain
 sk,sep_N,uniform,target,-0.0001736182718496,-0.0029490820720994,0.0035172113507133,16/32,0,"coupling: Reach model vs its separable twin (same inputs, 5 constants each)",poitrain
 sk,sep_N,uniform,all,0.0003907880504079,-0.0025892347909568,0.0034700710181869,37/67,0,"coupling: Reach model vs its separable twin (same inputs, 5 constants each)",poitrain
-sk,int_N,local,target,-0.0021599813344699,-0.0043952476002533,-0.0010134470439795,6/32,0,Reach model vs the interaction logit,poitrain
-sk,int_N,local,all,-0.0027303723702996,-0.004261709849187,-0.0019829529596573,12/67,0,Reach model vs the interaction logit,poitrain
-sk,int_N,uniform,target,-0.0016580841053013,-0.0050094418070809,0.0007988503973381,12/32,0,Reach model vs the interaction logit,poitrain
-sk,int_N,uniform,all,-0.0010760448650586,-0.003194793980187,0.0010191130467764,29/67,0,Reach model vs the interaction logit,poitrain
 sk,str3_N,local,target,0.0067542243486153,0.002623337053186,0.0166561729551306,25/32,0,Reach model vs the strongest benchmark (both refitted here),poitrain
 sk,str3_N,local,all,0.0112294575456828,0.0044245639232025,0.0142658826004247,52/67,0,Reach model vs the strongest benchmark (both refitted here),poitrain
 sk,str3_N,uniform,target,0.0068898281259812,0.0012775854485393,0.0148559649206353,25/32,0,Reach model vs the strongest benchmark (both refitted here),poitrain
@@ -103,18 +87,10 @@ str3a_N,str3_N,local,target,0.0021563802871811,-0.002394104500599,0.007134044763
 str3a_N,str3_N,local,all,0.0024717233019249,-2.927632247784473e-05,0.0065319039686473,41/67,0,+ log area,nonwork
 str3a_N,str3_N,uniform,target,0.0002728036470478,-0.0037055045084817,0.0086612107104293,17/32,0,+ log area,nonwork
 str3a_N,str3_N,uniform,all,0.0042072535879333,0.0002261607563536,0.009172856526745,42/67,0,+ log area,nonwork
-int_N,str3a_N,local,target,0.0017552204378603,0.0008458876212094,0.0024953149394164,26/32,0,+ parametric distance x size interaction,nonwork
-int_N,str3a_N,local,all,0.0023950038791324,0.0016210079868579,0.0033099729389505,53/67,0,+ parametric distance x size interaction,nonwork
-int_N,str3a_N,uniform,target,0.0015462154496908,0.0005945797588797,0.0037345796480177,25/32,0,+ parametric distance x size interaction,nonwork
-int_N,str3a_N,uniform,all,0.0026536295377006,0.0009691813960701,0.004386051112637,51/67,0,+ parametric distance x size interaction,nonwork
 sk,sep_N,local,target,0.0014073067460251,-0.0017163371541462,0.0044071794193447,19/32,2,"coupling: Reach model vs its separable twin (same inputs, 5 constants each)",nonwork
 sk,sep_N,local,all,0.0005757708875835,-0.0011179766401561,0.002366492026987,36/67,3,"coupling: Reach model vs its separable twin (same inputs, 5 constants each)",nonwork
 sk,sep_N,uniform,target,0.0002051242746425,-0.0039015077507151,0.0036957853179937,17/32,0,"coupling: Reach model vs its separable twin (same inputs, 5 constants each)",nonwork
 sk,sep_N,uniform,all,0.0002369779845365,-0.0019837482094899,0.0031606180604368,35/67,0,"coupling: Reach model vs its separable twin (same inputs, 5 constants each)",nonwork
-sk,int_N,local,target,-0.0010477361164653,-0.0033035494933347,0.0007370554632255,11/32,0,Reach model vs the interaction logit,nonwork
-sk,int_N,local,all,-0.0021356926112305,-0.0034042018849822,-0.0007557595252709,21/67,0,Reach model vs the interaction logit,nonwork
-sk,int_N,uniform,target,-0.0018791835432923,-0.0035558138617961,0.0008079346270477,11/32,0,Reach model vs the interaction logit,nonwork
-sk,int_N,uniform,all,-0.0018830348948015,-0.0034479958881088,-0.0007161300758538,21/67,0,Reach model vs the interaction logit,nonwork
 sk,str3_N,local,target,0.0034526475818692,-0.0014007160137101,0.0092470647297924,18/32,0,Reach model vs the strongest benchmark (both refitted here),nonwork
 sk,str3_N,local,all,0.0042932082968656,0.0006027223584763,0.0092141337751079,42/67,0,Reach model vs the strongest benchmark (both refitted here),nonwork
 sk,str3_N,uniform,target,0.0017746724310923,-0.0039893311590462,0.0105476676398961,17/32,0,Reach model vs the strongest benchmark (both refitted here),nonwork
