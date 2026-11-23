@@ -12,7 +12,12 @@ model, prior_models.fit_eq for the benchmark, as in the main analysis). Score: t
 every origin. Only locally fitted parameters: uniform parameters would need the discovery cities refitted as well.
 
 Output: results/multicity/rev/seeds.parquet (config, city, nll_reach, nll_bench), one ledger line.
-Usage (run_stage.sh, M line): rev_seeds.py run | summary
+
+Stage "run bound" (after theta_2 >= 1 became part of the specification of the Reach model): the same designs
+with the Reach model fitted as in the amended main analysis, i.e. the fit above where its shift is at least 1 and
+otherwise the bounded refit of rev_theta2.fit_bounded. Output: rev/seeds_bound.parquet (adds theta2 and bounded);
+the paper reports this stage; seeds.parquet of the stage without the bound is not used.
+Usage (run_stage.sh, M line): rev_seeds.py run [bound] | summary [bound]
 """
 import sys
 from pathlib import Path
@@ -46,8 +51,18 @@ def job(args) -> dict:
     c = library.to_single(_G["cand"])
     out = {"config": name, "city": city, "nll_reach": np.nan, "nll_bench": np.nan}
     best = library._multistart(c, tr, _G["starts"], 0)
-    if best is not None:
-        out["nll_reach"] = float(pm.score_cand(c, best[1].consts, ev)["nll"])
+    consts = None if best is None else np.asarray(best[1].consts, float)
+    if _G.get("bound") is not None:
+        import rev_theta2
+        out["bounded"] = bool(consts is None or consts[rev_theta2.I2] < _G["bound"])
+        if out["bounded"]:
+            try:
+                consts = np.asarray(rev_theta2.fit_bounded(c, tr, _G["bound"])[1], float)
+            except RuntimeError:
+                consts = None
+        out["theta2"] = np.nan if consts is None else float(consts[rev_theta2.I2])
+    if consts is not None:
+        out["nll_reach"] = float(pm.score_cand(c, consts, ev)["nll"])
     s = pm.EQ_MODELS[BENCH]
     b = pm.fit_eq(s.equation, s.free, tr, _G["starts"], _G["fit_seed"])
     if b is not None:
@@ -56,25 +71,27 @@ def job(args) -> dict:
     return out
 
 
-def stage_run():
+def stage_run(bound=None):
     import ledger
     import p9
     import sr_data
     cfg = p9.require_fixed()
-    _G.update(cand=p9.ours_candidates()[REACH], starts=int(cfg["starts"]), fit_seed=int(cfg["fit_seed"]), fold_seed=int(sr_data.FOLD_SEED))
+    _G.update(cand=p9.ours_candidates()[REACH], starts=int(cfg["starts"]), fit_seed=int(cfg["fit_seed"]), fold_seed=int(sr_data.FOLD_SEED), bound=bound)
     cities = p9.cities("target")
     jobs = [(name, df, os_, c) for name, df, os_ in CONFIGS for c in cities]
     t = pd.DataFrame(p9._pool_map(job, jobs)).sort_values(["config", "city"]).reset_index(drop=True)
-    p = rev_banded.out_dir() / "seeds.parquet"
+    p = rev_banded.out_dir() / ("seeds.parquet" if bound is None else "seeds_bound.parquet")
+    assert bound is None or not p.exists(), f"{p} exists"
     t.to_parquet(p, index=False)
     ledger.add(f"Revision 2026-11-22 (post hoc, supplementary): rev_seeds run: Reach model vs relaxed stretched exponential, local "
                f"fits, {len(CONFIGS)} designs (base, 5 block assignments, 5 origin samples) x {len(cities)} target cities; "
-               f"rev/{p.name} sha {ledger.sha(p)}")
-    stage_summary()
+               f"rev/{p.name} sha {ledger.sha(p)}" + ("" if bound is None else f"; Reach model with theta_2 >= {bound}, bounded refit in "
+               f"{int(t['bounded'].sum())} of {len(t)} fits"))
+    stage_summary(bound)
 
 
-def stage_summary():
-    t = pd.read_parquet(rev_banded.out_dir() / "seeds.parquet")
+def stage_summary(bound=None):
+    t = pd.read_parquet(rev_banded.out_dir() / ("seeds.parquet" if bound is None else "seeds_bound.parquet"))
     t["d"] = t["nll_bench"] - t["nll_reach"]
     for name, _, _ in CONFIGS:
         g = t[t["config"] == name]
@@ -83,6 +100,6 @@ def stage_summary():
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2 or sys.argv[1] not in ("run", "summary"):
+    if len(sys.argv) not in (2, 3) or sys.argv[1] not in ("run", "summary") or sys.argv[2:] not in ([], ["bound"]):
         sys.exit(__doc__)
-    {"run": stage_run, "summary": stage_summary}[sys.argv[1]]()
+    {"run": stage_run, "summary": stage_summary}[sys.argv[1]](1.0 if sys.argv[2:] else None)
