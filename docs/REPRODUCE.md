@@ -2,8 +2,8 @@
 
 Environment: `conda env create -f environment.yml` (PySR also installs Julia on first use; `sr/install_env.sh`).
 Set `ODSR_ROOT` (data root; the repository lives in `$ODSR_ROOT/scripts`) and, for the search loop, the language-model
-endpoint (`LLM_API`, `LLM_BASE_URL`, `LLM_MODEL`, and a key in `LLM_KEY_FILE` or `OPENAI_API_KEY`; see
-`multicity/llm.py`). Long stages are run through `multicity/run_stage.sh SCRIPT STAGE [ARGS]`, which writes a log to
+endpoint (`LLM_API`, `LLM_BASE_URL`, `LLM_MODEL`, and a key in `LLM_KEY_FILE` or `OPENAI_API_KEY`; there is no
+default endpoint or key location; see `multicity/llm.py`). Long stages are run through `multicity/run_stage.sh SCRIPT STAGE [ARGS]`, which writes a log to
 `results/multicity/logs/`. Each module's docstring lists its stages and outputs.
 
 The stages, in the order they were run:

@@ -736,7 +736,7 @@ def _dry_run(cfg):
     checks = {"pool (library or loop)": (config.RESULTS / "library/pool.json").exists()
               or (config.RESULTS / "loop/pool.json").exists(),
               "cities discovery / lawtest": bool(config.cities_with_role("discovery")) and bool(config.cities_with_role("lawtest")),
-              "LLM key file": Path(os.path.expanduser(os.environ.get("LLM_KEY_FILE", "~/.config/odsr/minimax_api_key"))).exists()}
+              "LLM key file": bool(os.environ.get("LLM_KEY_FILE")) and Path(os.path.expanduser(os.environ["LLM_KEY_FILE"])).exists()}
     for c in config.cities_with_role("search"):
         p = config.RESULTS / f"refs/{c}.json"
         r = json.loads(p.read_text()) if p.exists() else {}

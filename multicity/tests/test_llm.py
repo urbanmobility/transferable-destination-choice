@@ -37,6 +37,7 @@ def llm_env(monkeypatch):
         monkeypatch.delenv(k, raising=False)
     monkeypatch.setenv("LLM_API", "openai")           # plan 4: the default is the Anthropic format (MiniMax)
     monkeypatch.setenv("OPENAI_API_KEY", "sk-test")
+    monkeypatch.setenv("LLM_BASE_URL", "http://llm.test/v1")
     import llm
     importlib.reload(llm)
     monkeypatch.setattr(llm, "BACKOFF", 0.0)
@@ -56,7 +57,7 @@ def test_call_returns_validated_json_and_retries(llm_env, monkeypatch):
     body = seen[-1]["body"]
     assert body["model"] == llm.DEFAULT_MODEL and body["response_format"]["type"] == "json_schema"
     assert body["response_format"]["json_schema"]["schema"] == SCHEMA and body["reasoning_effort"] == "low"
-    assert seen[-1]["url"] == "http://127.0.0.1:8081/v1/chat/completions"
+    assert seen[-1]["url"] == "http://llm.test/v1/chat/completions"
     assert seen[-1]["headers"]["Authorization"] == "Bearer sk-test" and body["messages"] == MSG
 
 
@@ -88,14 +89,14 @@ def test_validate(llm_env):
 
 def test_endpoint_from_env(llm_env, monkeypatch):
     llm = llm_env
-    assert llm.endpoint() == ("http://127.0.0.1:8081/v1", llm.DEFAULT_MODEL)
-    monkeypatch.setenv("LLM_BASE_URL", "http://localhost:3000/api/")
+    assert llm.endpoint() == ("http://llm.test/v1", llm.DEFAULT_MODEL)
+    monkeypatch.setenv("LLM_BASE_URL", "http://llm.example/api/")
     monkeypatch.setenv("LLM_MODEL", "qwen3.8-flash-next")
-    assert llm.endpoint() == ("http://localhost:3000/api", "qwen3.8-flash-next")
+    assert llm.endpoint() == ("http://llm.example/api", "qwen3.8-flash-next")
     seen = []
     monkeypatch.setattr(llm.requests, "post", _server([(200, {"sympy": "x1", "reason": "r"})], seen))
     llm.call(MSG, SCHEMA)
-    assert seen[0]["url"] == "http://localhost:3000/api/chat/completions" and seen[0]["body"]["model"] == "qwen3.8-flash-next"
+    assert seen[0]["url"] == "http://llm.example/api/chat/completions" and seen[0]["body"]["model"] == "qwen3.8-flash-next"
 
 
 def test_key_from_file_and_never_in_errors(llm_env, monkeypatch, tmp_path):
@@ -267,9 +268,10 @@ def _anth(script, seen):
 def anth_env(monkeypatch, tmp_path):
     for k in ("LLM_BASE_URL", "LLM_MODEL", "LLM_API", "OPENAI_API_KEY", "LLM_LOG_DIR"):
         monkeypatch.delenv(k, raising=False)
-    kf = tmp_path / "minimax_api_key"
+    kf = tmp_path / "api_key"
     kf.write_text("sk-cp-test\n")
     monkeypatch.setenv("LLM_KEY_FILE", str(kf))
+    monkeypatch.setenv("LLM_BASE_URL", "https://llm.test/anthropic")
     import llm
     importlib.reload(llm)
     monkeypatch.setattr(llm, "BACKOFF", 0.0)
@@ -287,14 +289,14 @@ def test_anthropic_request_shape(anth_env, monkeypatch):
     msgs = [{"role": "system", "content": "You are a reviewer."}, {"role": "user", "content": "Review this expression"}]
     assert llm.call(msgs, SCH_A, max_tokens=8000) == {"a": 1}
     q = seen[0]
-    assert q["url"] == "https://api.minimax.cn/anthropic/v1/messages"
+    assert q["url"] == "https://llm.test/anthropic/v1/messages"
     assert q["headers"]["x-api-key"] == "sk-cp-test" and q["headers"]["anthropic-version"] == "2023-06-01"
     assert "Authorization" not in q["headers"]
     b = q["body"]
     assert b["model"] == "MiniMax-M3.1-Flash" and b["messages"] == [{"role": "user", "content": "Review this expression"}]
     assert b["system"].startswith("You are a reviewer.") and '"required": ["a"]' in b["system"]       # schema in the prompt
     assert b["max_tokens"] >= 32000 and "response_format" not in b and "reasoning_effort" not in b   # 11-06 seeds
-    assert llm.MAX_CONCURRENT == 3 and llm.endpoint() == ("https://api.minimax.cn/anthropic", "MiniMax-M3.1-Flash")
+    assert llm.MAX_CONCURRENT == 3 and llm.endpoint() == ("https://llm.test/anthropic", "MiniMax-M3.1-Flash")
 
 
 def test_extract_json():
@@ -378,3 +380,13 @@ def test_check_input_does_not_confuse_decimal_constants_with_city_ids(anth_env):
     for bad in (f"城市 {cid}。", f"city {cid}.", f"({cid})"):
         with pytest.raises(ValueError):
             llm.check_input({"t": bad})
+
+
+def test_no_default_endpoint_or_key_location(anth_env, monkeypatch):
+    llm = anth_env
+    monkeypatch.delenv("LLM_BASE_URL")
+    with pytest.raises(llm.LLMError, match="LLM_BASE_URL"):
+        llm.endpoint()
+    monkeypatch.delenv("LLM_KEY_FILE")
+    with pytest.raises(llm.LLMError, match="LLM_KEY_FILE"):
+        llm.key()

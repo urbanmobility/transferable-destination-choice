@@ -2,13 +2,14 @@
 the client, retries with back-off, at most MAX_CONCURRENT = 3 concurrent requests, an input whitelist, a call log and a
 file interface. The LLM only proposes; the code decides.
 
-LLM_API = anthropic (default; MiniMax-M3.1-Flash): POST {LLM_BASE_URL}/v1/messages (default
-https://api.minimax.cn/anthropic) with x-api-key / anthropic-version headers; the first system message becomes
+LLM_API = anthropic (default; MiniMax-M3.1-Flash in the paper): POST {LLM_BASE_URL}/v1/messages with x-api-key /
+anthropic-version headers; the first system message becomes
 `system` (with the JSON schema appended), the reply's text blocks are joined and the first balanced JSON object in
-them is taken (extract_json); thinking blocks are only counted. Key file LLM_KEY_FILE (default
-~/.config/odsr/minimax_api_key).
+them is taken (extract_json); thinking blocks are only counted. Key: the file named by LLM_KEY_FILE.
 LLM_API = openai (plans 2-3: a locally served Qwen model): POST {LLM_BASE_URL}/chat/completions with a json_schema
-response format; key OPENAI_API_KEY, else LLM_KEY_FILE (default ~/.config/odsr/llm_api_key).
+response format; key OPENAI_API_KEY, else the file named by LLM_KEY_FILE.
+There is no default endpoint and no default key location: LLM_BASE_URL and a key must be set in the environment
+(LLM_MODEL overrides the model name).
 The key is read at call time and never printed, logged, or written to any product — error messages are redacted.
 LLM_LOG_DIR: when set, every call writes <dir>/<name>_<YYYYmmddTHHMMSS>_<pid>_<n>.json (messages, reply text,
 thinking length, model, elapsed, attempts, error, parsed result; no header).
@@ -28,12 +29,8 @@ import requests
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from config import CITIES_CSV, CONFIRM  # noqa: E402
 
-DEFAULT_BASE_URL = "http://127.0.0.1:8081/v1"                      # openai backend (plans 2-3)
-DEFAULT_MODEL = "qwen3.8-flash-next-unsloth-ud-q4_k_xl"
-DEFAULT_KEY_FILE = "~/.config/odsr/llm_api_key"
-ANTHROPIC_BASE_URL = "https://api.minimax.cn/anthropic"             # anthropic backend (plan 4, from 2026-11-05)
-ANTHROPIC_MODEL = "MiniMax-M3.1-Flash"
-ANTHROPIC_KEY_FILE = "~/.config/odsr/minimax_api_key"
+DEFAULT_MODEL = "qwen3.8-flash-next-unsloth-ud-q4_k_xl"                # openai backend (plans 2-3)
+ANTHROPIC_MODEL = "MiniMax-M3.1-Flash"                                # anthropic backend (plan 4, from 2026-11-05)
 ANTHROPIC_VERSION = "2023-06-01"
 MIN_TOKENS = 32000          # anthropic: thinking counts against max_tokens (11-06: seed calls hit 16000 with no text)
 MAX_ATTEMPTS, BACKOFF, MAX_CONCURRENT = 3, 1.0, 3
@@ -57,9 +54,15 @@ def api():
     return a
 
 
+def model_name():
+    return os.environ.get("LLM_MODEL", ANTHROPIC_MODEL if api() == "anthropic" else DEFAULT_MODEL)
+
+
 def endpoint():
-    base, model = (ANTHROPIC_BASE_URL, ANTHROPIC_MODEL) if api() == "anthropic" else (DEFAULT_BASE_URL, DEFAULT_MODEL)
-    return os.environ.get("LLM_BASE_URL", base).rstrip("/"), os.environ.get("LLM_MODEL", model)
+    base = os.environ.get("LLM_BASE_URL", "").strip()
+    if not base:
+        raise LLMError("LLM_BASE_URL is not set (there is no default endpoint)")
+    return base.rstrip("/"), model_name()
 
 
 def key():
@@ -67,8 +70,10 @@ def key():
         k = os.environ.get("OPENAI_API_KEY")
         if k:
             return k.strip()
-    default = ANTHROPIC_KEY_FILE if api() == "anthropic" else DEFAULT_KEY_FILE
-    p = Path(os.path.expanduser(os.environ.get("LLM_KEY_FILE", default)))
+    f = os.environ.get("LLM_KEY_FILE", "").strip()
+    if not f:
+        raise LLMError("no API key: set LLM_KEY_FILE" + (" or OPENAI_API_KEY" if api() == "openai" else ""))
+    p = Path(os.path.expanduser(f))
     try:
         k = p.read_text().strip()
     except OSError as e:
@@ -304,7 +309,7 @@ def run_point(name, in_path, out_path, fn):
     payload = json.loads(Path(in_path).read_text())
     check_input(payload)
     t0 = time.time()
-    _TL.last = {"attempt": 0, "effort": None, "model": endpoint()[1], "elapsed_s": 0.0}
+    _TL.last = {"attempt": 0, "effort": None, "model": model_name(), "elapsed_s": 0.0}
     try:
         result, error = fn(payload), None
     except LLMError as e:
