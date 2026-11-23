@@ -8,7 +8,7 @@ Code and city-level results for
 
 We model where residents go when they leave home as a conditional-logit choice among the census tracts of their
 metropolitan area, and search for a compact utility by symbolic regression on 192.1 million home-based visits to points
-of interest (POIs) from 41,688 census tracts in 67 US metropolitan areas (March–May 2024). The search, fitted to the raw
+of interest (POIs) from 41,688 home tracts in 67 US metropolitan areas (March–May 2024). The search, fitted to the raw
 visit counts, found the **Reach model**
 
 $$\eta_{ij} = a_j^{\theta_4} - \frac{\theta_0\, d_{ij}^{\theta_1}}{(N_j+\theta_2)^{\theta_3}},\qquad P(j\mid i)=\frac{e^{\eta_{ij}}}{\sum_k e^{\eta_{ik}}},\qquad \theta_2\ge 1,$$
@@ -41,8 +41,8 @@ which keeps $N_j+\theta_2$ positive for tracts without POIs; `DEFAULT` satisfies
 not enforce it. The default parameters need no fitting in the city where they are applied, but they need a measure of
 destination activity: with the POI counts of this study, which are themselves obtained from visit records, they retain
 a median share of 0.942 of the gravity-to-flexible gap in the 32 target cities; a version of the Reach model with
-LODES workplace employment in place of the POI count, transferred in the same way, retains 0.84 (Additional file 1, Table S7). Run the
-module's tests with `pytest reach_model`.
+LODES workplace employment in place of the POI count, transferred in the same way, retains 0.84 (Additional file 1,
+Table S7). Run the module's tests with `pytest reach_model`.
 
 ## Repository layout
 
@@ -75,7 +75,8 @@ order in which the stages were run.
   the flexible model with POI count and area only, and thirds of origins by distance to the CBD) and the urban-form
   relationships of Fig. 4a,b (`form_relations.csv`). These five files are the sheets of Additional file 2 of the
   paper. `ablation_by_city.csv` and `ablation_contrasts.csv` give the NLL and fit share of every model of the model
-  comparisons per city, parameter source and input line, and their paired differences (Additional file 1, Table S7 draws on them);
+  comparisons per city, parameter source and input line, and their paired differences (Additional file 1, Table S7
+  draws on them);
 - `benchmarks/` — the 29 model versions (24 benchmark versions, the three formulas and two further expressions from
   the search) under four parameter sources in the 32 target cities, the selected opponents, the registered contrasts,
   and `seeds_bound.csv`: the Reach model and the strongest benchmark under five other assignments of destination
@@ -83,15 +84,16 @@ order in which the stages were run.
 - `registry/` — the registered hypotheses and their held-out results (`registry_en.csv` gives all 25 in English, as in
   Additional file 1, Table S3);
 - `freeze/` — the fixed formula library and the candidate pool it was drawn from;
-- `figure_source_data/` — the city-level data behind the figures (the panels that show tracts or tract pairs, Fig. 1b,c
-  and Fig. 6a, are not included).
+- `figure_source_data/` — the city-level data behind the figures (the tract-level layers of Fig. 1b,c and the tract-pair
+  flows of Fig. 6a are not included).
 
-Fits of the Reach model. The Reach model's city fits, and the fits of its variants in the model comparisons (`sk`,
-`sk_E`, `sk_lna`, `sk_plus`, `sk_plus1`) and in the seed checks, are constrained to $\theta_2\ge 1$. In the city fits
-the constraint is active in five of the 67 cities (10740, 15980, 46060, 19430, 40900), where $\theta_2=1$ has no
-standard error. `sk_frozen`, `tp_frozen` and `tr_frozen` are the city fits of the three formulas as recorded when the
-library was fixed, and keep those values. The separable twins (`sep_N`, `sep_E`) are not the Reach model and keep a
-free shift. A model whose utility is undefined on the scoring block of a city has no NLL there.
+Fits of the Reach model. The Reach model's city-level constants, fits and elasticities in `city_level/`, and its fits
+and those of its variants in the model comparisons (`sk`, `sk_E`, `sk_lna`, `sk_plus`, `sk_plus1`) and in the seed
+checks, are constrained to $\theta_2\ge 1$. In the city fits the constraint is active in five of the 67 cities (10740,
+15980, 46060, 19430, 40900), where $\theta_2=1$ has no standard error. `sk_frozen`, `tp_frozen` and `tr_frozen` are
+the city fits of the three formulas as recorded when the library was fixed, and keep those values. The separable twins
+(`sep_N`, `sep_E`) are not the Reach model and keep a free shift. A model whose utility is undefined on the scoring
+block of a city has no NLL there.
 
 ## Language
 

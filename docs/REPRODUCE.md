@@ -36,7 +36,9 @@ The stages, in the order they were run:
     output in `rev/bound/`). The frozen fits (`sk_frozen`, `tp_frozen`, `tr_frozen`) keep their recorded values, and
     the separable twins keep a free shift.
 11. **Figures and tables.** `paper_figdata.py export` and a copy of `results/multicity/{p7,confirm,p9,refs_test,rev}`
-    in `paper/figdata/rev/`, with the files of `rev/bound/` in place of the `models_<line>_*` files of `rev/`; then, in
+    in `paper/figdata/rev/` (with `results/multicity/explore/e1_pairs.csv` as `explore_e1_pairs.csv`), taking for each
+    line the files of `rev/bound/` (`models_<line>_*.parquet`, `summary_models_<line>.json`, `report_models_<line>.md`)
+    in place of those of `rev/`; then, in
     this order: `paper/e1_tested.py`; `paper/rev_tables.py`; `paper/amend_theta2.py` and `paper/amend_theta2_se.py`,
     which write the bounded city fits into the exported tables (each runs once; keep a copy of the files they replace);
     `paper/rev_tables.py` again; `paper/make.py`, `paper/figS1.py` and `paper/supp_tex.py`.

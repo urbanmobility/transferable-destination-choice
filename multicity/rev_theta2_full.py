@@ -1,6 +1,6 @@
 """Revision 2026-11-22 (response to review; post hoc): everything downstream of the Reach model's local fit
 in the cities where theta_2 >= 1 binds, recomputed with the bounded fit of rev_theta2.py. Nothing of the main analysis
-is written: this is the material for deciding whether the bound becomes the formal specification.
+is written here; paper/amend_theta2.py writes these results into the exported tables.
 
 Per city (the cities of rev/theta2_bound.json), for the main-analysis constants and for the bounded ones:
   block   test period x held-out block: NLL, CPC, share (references of p9.refs)

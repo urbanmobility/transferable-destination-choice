@@ -16,7 +16,7 @@ Output: results/multicity/rev/seeds.parquet (config, city, nll_reach, nll_bench)
 Stage "run bound" (after theta_2 >= 1 became part of the specification of the Reach model): the same designs
 with the Reach model fitted as in the amended main analysis, i.e. the fit above where its shift is at least 1 and
 otherwise the bounded refit of rev_theta2.fit_bounded. Output: rev/seeds_bound.parquet (adds theta2 and bounded);
-the paper reports this stage; seeds.parquet of the stage without the bound is not used.
+the paper reports this stage.
 Usage (run_stage.sh, M line): rev_seeds.py run [bound] | summary [bound]
 """
 import sys
