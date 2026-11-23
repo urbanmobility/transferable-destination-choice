@@ -26,9 +26,20 @@ The stages, in the order they were run:
 8. **Benchmarks and parameter transfer.** `p9.py fix | source | prerun | select | target | contrasts | report`,
    `p9_explore.py`, `alldest_check.py`, `od_maps.py`.
 9. **Supplementary analyses.** `rev_models.py fit | transfer | report <line>` for the lines `all`, `nonwork`,
-   `poitrain`, `all2`; `rev_banded.py run fixed | emp | empN | nonwork`; `rev_flows.py run`.
-10. **Figures and tables.** `paper_figdata.py export`; then `paper/make.py`, `paper/figS1.py`, `paper/rev_tables.py`,
-    `paper/supp_tex.py`.
+   `poitrain`, `all2`; `rev_banded.py run fixed | emp | empN | nonwork`; `rev_flows.py run`;
+   `rev_weekend.py build | run`; `rev_matched.py run poiarea`; `rev_strata.py run`; `rev_seeds.py run`.
+10. **The constraint $\theta_2\ge 1$.** The shift of the Reach model is constrained to $\theta_2\ge 1$. The stages above
+    fit it without the bound; the following stages refit it with the bound wherever a fit falls below it:
+    `rev_theta2.py run` (the city fits), `rev_theta2_full.py run` (their scores and elasticities),
+    `rev_theta2_se.py run` (their standard errors), `rev_seeds.py run bound` (the seed checks, `seeds_bound.parquet`)
+    and `rev_models_bound.py run <line>` for the lines `all`, `all2`, `nonwork`, `poitrain` (the model comparisons;
+    output in `rev/bound/`). The frozen fits (`sk_frozen`, `tp_frozen`, `tr_frozen`) keep their recorded values, and
+    the separable twins keep a free shift.
+11. **Figures and tables.** `paper_figdata.py export` and a copy of `results/multicity/{p7,confirm,p9,refs_test,rev}`
+    in `paper/figdata/rev/`, with the files of `rev/bound/` in place of the `models_<line>_*` files of `rev/`; then, in
+    this order: `paper/e1_tested.py`; `paper/rev_tables.py`; `paper/amend_theta2.py` and `paper/amend_theta2_se.py`,
+    which write the bounded city fits into the exported tables (each runs once; keep a copy of the files they replace);
+    `paper/rev_tables.py` again; `paper/make.py`, `paper/figS1.py` and `paper/supp_tex.py`.
 
 Unit tests: `pytest multicity/tests`, `pytest sr/tests`, `pytest paper/tests`, `pytest reach_model` (run each
 directory separately). Tests that need the full data root are skipped or fail without it.
